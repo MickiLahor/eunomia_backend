@@ -7,6 +7,12 @@ import { UsuariosModule } from './usuarios/usuarios.module';
 import { RolesModule } from './roles/roles.module';
 import { PermisosModule } from './permisos/permisos.module';
 import { PersonaModule } from './persona/persona.module';
+import { DefensorModule } from './defensor/defensor.module';
+import { TipoProcesoModule } from './tipoproceso/tipoproceso.module';
+import { ProcesoModule } from './proceso/proceso.module';
+import { AsignacionModule } from './asignacion/asignacion.module';
+import { TipoExcusaModule } from './tipo-excusa/tipo-excusa.module';
+import { ExcusaModule } from './excusa/excusa.module';
 
 @Module({
   imports: [ ConfigModule.forRoot(),
@@ -18,13 +24,19 @@ import { PersonaModule } from './persona/persona.module';
                 username: process.env.DB_USERNAME,
                 password: process.env.DB_PASSWORD,
                 autoLoadEntities: true,
-                synchronize: true
+                synchronize: true,
               }),
               CommonModule,
               SeedModule,
               UsuariosModule,
               RolesModule,
               PermisosModule,
-              PersonaModule]
+              PersonaModule,
+              DefensorModule,
+              TipoProcesoModule,
+              ProcesoModule,
+              AsignacionModule,
+              TipoExcusaModule,
+              ExcusaModule,]
 })
 export class AppModule {}

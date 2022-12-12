@@ -1,13 +1,11 @@
-import { Usuario } from "src/usuarios/entities/usuario.entity";
-import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Defensor } from "src/defensor/entities/defensor.entity";
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Persona {
     @PrimaryGeneratedColumn('uuid')
     id: string;
-    @Column('text',{
-        unique:true
-    })
+    @Column('text',/*{unique:true}*/)
     ci: string;
     @Column('text')
     nombre: string;
@@ -19,20 +17,23 @@ export class Persona {
     materno: string;
 
     @Column('text')
+    nombreCompleto: string;
+
+    @Column('text')
     fotografia: string;
+    
+    @Column({ length: 1 })
+    sexo: string;
 
     @Column('text')
     usuarioRegistro: string;
     
-    @Column('date')
+    @Column('timestamp')
     fechaRegistro: Date;
     
-    @Column('bit')
+    @Column('boolean')
     registroActivo: boolean;
 
-    // @OneToMany(() => Usuario,
-    // (usuario) => usuario.persona,
-    // {cascade:true, eager:true}
-    // )
-    // usuario: Usuario;
+    @OneToOne(() => Defensor, (defensor) => defensor.persona)
+    defensor: Defensor  
 }

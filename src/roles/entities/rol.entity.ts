@@ -11,12 +11,12 @@ export class Rol {
 
     @Column('text')
     usuarioRegistro: string;
-    @Column('date')
+    @Column('timestamp')
     fechaRegistro: Date;
-    @Column('bit')
+    @Column('boolean')
     registroActivo: boolean;
 
-    @ManyToMany(() => Permiso) 
+    @ManyToMany(() => Permiso, (permiso) => permiso.roles,{ eager:true,cascade:true }) 
     @JoinTable({name:"rol_permiso"})
     permisos: Permiso[]
 }

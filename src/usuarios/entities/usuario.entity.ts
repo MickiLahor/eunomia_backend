@@ -6,27 +6,23 @@ import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGen
 export class Usuario {
     @PrimaryGeneratedColumn('uuid')
     id: string;
-
     @Column('text')
     usuario: string;
-
     @Column('text')
     clave: string;
-
-    @Column('numeric')
+    @Column('integer')
     idOficina: number; 
-
+    @Column('integer')
+    idCiudad: number; 
     @Column('text')
     usuarioRegistro: string;
-    @Column('date')
+    @Column('timestamp')
     fechaRegistro: Date;
-    @Column('bit')
+    @Column('boolean')
     registroActivo: boolean;
-
-    @OneToOne(() => Persona)
+    @OneToOne(() => Persona,{cascade:true,eager:true})
     @JoinColumn()
     persona: Persona  
-
     @ManyToMany(() => Rol) 
     @JoinTable({name:"usuario_rol"})
     roles: Rol[]

@@ -1,26 +1,81 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { PaginationDto } from 'src/common/dtos/pagination.dto';
+import { Repository } from 'typeorm';
 import { CreatePermisoDto } from './dto/create-permiso.dto';
 import { UpdatePermisoDto } from './dto/update-permiso.dto';
+import { Permiso } from './entities/permiso.entity';
 
 @Injectable()
 export class PermisosService {
-  create(createPermisoDto: CreatePermisoDto) {
-    return 'This action adds a new permiso';
+  private readonly logger = new Logger('PermisosService')
+
+  constructor(
+    @InjectRepository(Permiso)
+    private readonly permisosRepository: Repository<Permiso>,
+  ){}
+
+
+  async create(createPermisoDto: CreatePermisoDto) {
+    try {
+      const permiso = this.permisosRepository.create({
+        ...createPermisoDto,
+        fechaRegistro:new Date(),
+        registroActivo: true
+      });
+
+      await this.permisosRepository.save(permiso);
+      
+      return permiso;
+    }
+    catch(error) {
+      console.log(error);
+      
+      this.handleDBExpeptions(error);
+    }
   }
 
-  findAll() {
-    return `This action returns all permisos`;
+  async findAll(paginationDto: PaginationDto) {
+    const {limit = 10,page= 0} = paginationDto
+    const permisos = await this.permisosRepository.find({
+      take: limit,
+      skip: page,
+      where:{registroActivo:true}
+  });
+  return permisos;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} permiso`;
+  async findOne(id: string) {
+    const permiso = await this.permisosRepository.findOne({where:{id,registroActivo:true}});
+    if ( !permiso ) throw new NotFoundException(`El permiso con id: ${id} no existe.`);
+    return permiso;
   }
 
-  update(id: number, updatePermisoDto: UpdatePermisoDto) {
-    return `This action updates a #${id} permiso`;
+  async update(id: string, updatePermisoDto: UpdatePermisoDto) {
+    const permiso = await this.permisosRepository.preload({id, ...updatePermisoDto });
+    
+    if ( !permiso ) throw new NotFoundException(`Permiso con el id: ${id} no existe`);
+    if(permiso.registroActivo===false) throw new NotFoundException(`Permiso con el id: ${id} fue dado de baja`);
+    try {
+      await this.permisosRepository.save(permiso);
+      return permiso;
+    } catch (error) {
+      this.handleDBExpeptions(error);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} permiso`;
+  async remove(id: string) {
+    const permiso = await this.findOne(id);
+    permiso.registroActivo=false;
+    await this.permisosRepository.save(permiso)
+    return { message:"Eliminado correctamente." };
+  }
+
+  private handleDBExpeptions(error: any) {
+    if(error.code === '23505')
+    throw new BadRequestException(error.detail);
+
+    this.logger.error(error)     
+    throw new InternalServerErrorException('Unexpected error, check server logs')
   }
 }

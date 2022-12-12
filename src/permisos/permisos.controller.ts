@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseUUIDPipe } from '@nestjs/common';
 import { PermisosService } from './permisos.service';
 import { CreatePermisoDto } from './dto/create-permiso.dto';
 import { UpdatePermisoDto } from './dto/update-permiso.dto';
+import { PaginationDto } from 'src/common/dtos/pagination.dto';
 
 @Controller('permisos')
 export class PermisosController {
@@ -13,22 +14,22 @@ export class PermisosController {
   }
 
   @Get()
-  findAll() {
-    return this.permisosService.findAll();
+  findAll(@Query() paginationDto :PaginationDto) {
+    return this.permisosService.findAll(paginationDto);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.permisosService.findOne(+id);
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
+    return this.permisosService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePermisoDto: UpdatePermisoDto) {
-    return this.permisosService.update(+id, updatePermisoDto);
+  update(@Param('id', ParseUUIDPipe) id: string, @Body() updatePermisoDto: UpdatePermisoDto) {
+    return this.permisosService.update(id, updatePermisoDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.permisosService.remove(+id);
+  remove(@Param('id',ParseUUIDPipe) id: string) {
+    return this.permisosService.remove(id);
   }
 }
