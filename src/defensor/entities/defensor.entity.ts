@@ -1,6 +1,7 @@
 import { Asignacion } from "src/asignacion/entities/asignacion.entity";
+import { Materia } from "src/materia/entities/materia.entity";
 import { Persona } from "src/persona/entities/persona.entity";
-import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Defensor {
@@ -52,4 +53,9 @@ export class Defensor {
 
     @OneToMany(() => Asignacion, (asignacion) => asignacion.defensor)
     asignaciones: Asignacion[]
+
+    @ManyToOne(() => Materia, (materia)=> materia.defensores, 
+                        {cascade:true,eager:true}
+            )
+    materia: Materia  
 }

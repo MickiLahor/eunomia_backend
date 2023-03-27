@@ -1,5 +1,5 @@
 import { Asignacion } from "src/asignacion/entities/asignacion.entity";
-import { TipoProceso } from "src/tipoproceso/entities/tipoproceso.entity";
+import { Materia } from "src/materia/entities/materia.entity";
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
@@ -31,10 +31,10 @@ export class Proceso {
     @Column('boolean')
     registroActivo: boolean;
 
-    @ManyToOne(() => TipoProceso, (tipoProceso)=> tipoProceso.procesos, 
+    @ManyToOne(() => Materia, (materia)=> materia.procesos, 
                         {cascade:true,eager:true}
             )
-    tipoProceso: TipoProceso  
+    materia: Materia  
 
     @OneToMany(() => Asignacion, (asignacion) => asignacion.proceso,{eager:true})
     asignaciones: Asignacion[]

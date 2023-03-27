@@ -2,6 +2,7 @@ import { BadRequestException, Injectable, InternalServerErrorException, Logger, 
 import { InjectRepository } from '@nestjs/typeorm';
 import { IPaginationOptions, paginate, Pagination } from 'nestjs-typeorm-paginate';
 import { SearchDefendorDto, SearchDto } from 'src/common/dtos/search.dto';
+import { MateriaService } from 'src/materia/materia.service';
 import { PersonaService } from 'src/persona/persona.service';
 import { ILike, Repository } from 'typeorm';
 import { CreateDefensorDto } from './dto/create-defensor.dto';
@@ -16,7 +17,8 @@ export class DefensorService {
   constructor(
     @InjectRepository(Defensor)
     private readonly defensorRepository: Repository<Defensor>,
-    private readonly personaService: PersonaService
+    private readonly personaService: PersonaService,
+    private readonly materiaService: MateriaService,
   ){}
 
  async create(createDefensorDto: CreateDefensorDto) {
@@ -26,6 +28,7 @@ export class DefensorService {
         persona : await this.personaService.findOne(createDefensorDto.idPersona),
         habilitado:true,
         sorteado:false,
+        materia : await this.materiaService.findOne(createDefensorDto.idMateria),
         fechaRegistro:new Date(),
         registroActivo: true
       });
@@ -72,18 +75,25 @@ export class DefensorService {
     return this.paginate(options)
   }
 
-  async sorteo(idCiudad: number): Promise<Defensor> {
+  async sorteo(idCiudad: number, idMateria: string): Promise<Defensor> {
     let defensores = await this.defensorRepository.find({
-      where:{registroActivo:true,sorteado:false,habilitado:true,/*idCiudad:idCiudad*/}
+      where:
+      {
+        registroActivo:true,
+        sorteado:false,
+        habilitado:true,
+        idCiudad:idCiudad,
+        materia: await this.materiaService.findOne(idMateria)
+      }
     });
 
     if(defensores.length===0) {
       await this.defensorRepository.update(
-        { registroActivo:true, habilitado:true,/*idCiudad:idCiudad*/ },
+        { registroActivo:true, habilitado:true,idCiudad:idCiudad,materia: await this.materiaService.findOne(idMateria) },
         { sorteado:false }
       )
       defensores = await this.defensorRepository.find({
-        where:{ registroActivo:true,sorteado:false,habilitado:true,/*idCiudad:idCiudad*/ }
+        where:{ registroActivo:true,sorteado:false,habilitado:true,idCiudad:idCiudad,materia: await this.materiaService.findOne(idMateria) }
       });
     }
     const ramdom = Math.floor(Math.random() * defensores.length)

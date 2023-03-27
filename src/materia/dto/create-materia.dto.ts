@@ -1,6 +1,6 @@
 import { IsString, MinLength } from "class-validator";
 
-export class CreateTipoProcesoDto {
+export class CreateMateriaDto {
     @IsString()
     @MinLength(1)
     descripcion: string;

@@ -24,7 +24,7 @@ export class CreateProcesoDto {
     @IsString()
     @IsUUID()
     @MinLength(1)
-    idTipoProceso: string;
+    idMateria: string;
 
     @IsString()
     @MinLength(1)
