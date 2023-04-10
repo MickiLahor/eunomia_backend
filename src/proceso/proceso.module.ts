@@ -15,6 +15,7 @@ import { AsignacionModule } from 'src/asignacion/asignacion.module';
   imports: [TypeOrmModule.forFeature([ Proceso,Materia,Asignacion ]),
             MateriaModule,
             DefensorModule,
-            AsignacionModule]
+            AsignacionModule],
+  exports: [ProcesoService]
 })
 export class ProcesoModule {}

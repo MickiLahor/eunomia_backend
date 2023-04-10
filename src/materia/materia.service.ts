@@ -53,6 +53,12 @@ export class MateriaService {
     return materia;
   }
 
+  async findBy(descripcion: string) {
+    const materia = await this.materiaRepository.findOne({where:{descripcion,registroActivo:true}});
+    if ( !materia ) throw new NotFoundException(`El tipo proceso con descripcion: ${descripcion} no existe.`);
+    return materia;
+  }
+
   async update(id: string, updateMateriaDto: UpdateMateriaDto) {
     const materia = await this.materiaRepository.preload({id, ...updateMateriaDto });
     
