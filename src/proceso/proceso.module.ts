@@ -12,8 +12,9 @@ import { AsignacionModule } from 'src/asignacion/asignacion.module';
 @Module({
   controllers: [ProcesoController],
   providers: [ProcesoService],
-  imports: [TypeOrmModule.forFeature([ Proceso,TipoProceso,Asignacion ]),
-            TipoProcesoModule,
-            DefensorModule, AsignacionModule]
+  imports: [TypeOrmModule.forFeature([ Proceso,Materia,Asignacion ]),
+            MateriaModule,
+            DefensorModule,
+            AsignacionModule]
 })
 export class ProcesoModule {}
