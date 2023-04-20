@@ -1,8 +1,9 @@
+import { Defensor } from "src/defensor/entities/defensor.entity";
 import { Proceso } from "src/proceso/entities/proceso.entity";
 import { Column, Entity, PrimaryGeneratedColumn,OneToMany } from "typeorm";
 
 @Entity()
-export class TipoProceso {
+export class Materia {
     @PrimaryGeneratedColumn('uuid')
     id: string;
     @Column('text',{unique:true})
@@ -16,6 +17,9 @@ export class TipoProceso {
     @Column('boolean')
     registroActivo: boolean;
 
-    @OneToMany(() => Proceso, (proceso) => proceso.tipoProceso)
+    @OneToMany(() => Proceso, (proceso) => proceso.materia)
     procesos: Proceso[]
+
+    @OneToMany(() => Defensor, (defensor) => defensor.materia)
+    defensores: Defensor[]
 }

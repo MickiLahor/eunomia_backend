@@ -5,7 +5,7 @@ import { AsignacionService } from 'src/asignacion/asignacion.service';
 import { CreateAsignacionDto } from 'src/asignacion/dto/create-asignacion.dto';
 import { SearchProcesoDto } from 'src/common/dtos/search.dto';
 import { DefensorService } from 'src/defensor/defensor.service';
-import { TipoProcesoService } from 'src/tipoproceso/tipoproceso.service';
+import { MateriaService } from 'src/materia/materia.service';
 import { ILike, Repository } from 'typeorm';
 import { CreateProcesoDto } from './dto/create-proceso.dto';
 import { UpdateProcesoDto } from './dto/update-proceso.dto';
@@ -19,7 +19,7 @@ export class ProcesoService {
   constructor(
     @InjectRepository(Proceso)
     private readonly procesoRepository: Repository<Proceso>,
-    private readonly tipoProcesoService: TipoProcesoService,
+    private readonly materiaService: MateriaService,
     private readonly defensorService: DefensorService,  
     private readonly asignacionService: AsignacionService,  
       
@@ -29,13 +29,13 @@ export class ProcesoService {
     try {
       const proceso = this.procesoRepository.create({
         ...createProcesoDto,
-        tipoProceso : await this.tipoProcesoService.findOne(createProcesoDto.idTipoProceso),
+        materia : await this.materiaService.findOne(createProcesoDto.idMateria),
         fechaRegistro:new Date(),
         registroActivo: true
       });
 
       await this.procesoRepository.save(proceso);
-      const defensor = await this.defensorService.sorteo(proceso.idCiudad);
+      const defensor = await this.defensorService.sorteo(proceso.idCiudad, proceso.materia.id);
       const createAsignacionDto: CreateAsignacionDto = {defensor:defensor,proceso:proceso,fecha:new Date()}
       return this.asignacionService.create(createAsignacionDto)
     }

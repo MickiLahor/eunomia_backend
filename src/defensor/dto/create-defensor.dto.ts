@@ -36,6 +36,12 @@ export class CreateDefensorDto {
     idPersona: string;
 
     @IsString()
+    @IsUUID()
+    @MinLength(1)
+    idMateria: string;
+
+
+    @IsString()
     @MinLength(1)
     usuarioRegistro: string;
 }

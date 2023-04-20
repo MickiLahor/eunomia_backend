@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { TipoProceso } from 'src/tipoproceso/entities/tipoproceso.entity';
 import { Repository } from 'typeorm';
 import { CreateTipoExcusaDto } from './dto/create-tipo-excusa.dto';
 import { UpdateTipoExcusaDto } from './dto/update-tipo-excusa.dto';
@@ -8,7 +7,7 @@ import { TipoExcusa } from './entities/tipo-excusa.entity';
 
 @Injectable()
 export class TipoExcusaService {
-  private readonly logger = new Logger('TipoProcesoService');
+  private readonly logger = new Logger('TipoExcusaService');
 
   constructor(
     @InjectRepository(TipoExcusa)

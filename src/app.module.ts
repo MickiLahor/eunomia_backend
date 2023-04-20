@@ -8,11 +8,12 @@ import { RolesModule } from './roles/roles.module';
 import { PermisosModule } from './permisos/permisos.module';
 import { PersonaModule } from './persona/persona.module';
 import { DefensorModule } from './defensor/defensor.module';
-import { TipoProcesoModule } from './tipoproceso/tipoproceso.module';
+import { MateriaModule } from './materia/materia.module';
 import { ProcesoModule } from './proceso/proceso.module';
 import { AsignacionModule } from './asignacion/asignacion.module';
 import { TipoExcusaModule } from './tipo-excusa/tipo-excusa.module';
 import { ExcusaModule } from './excusa/excusa.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [ ConfigModule.forRoot(),
@@ -33,10 +34,11 @@ import { ExcusaModule } from './excusa/excusa.module';
               PermisosModule,
               PersonaModule,
               DefensorModule,
-              TipoProcesoModule,
+              MateriaModule,
               ProcesoModule,
               AsignacionModule,
               TipoExcusaModule,
-              ExcusaModule,]
+              ExcusaModule,
+              AuthModule,]
 })
 export class AppModule {}
