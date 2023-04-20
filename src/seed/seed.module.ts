@@ -5,10 +5,9 @@ import { MateriaModule } from 'src/materia/materia.module';
 import { ProcesoModule } from 'src/proceso/proceso.module';
 import { PersonaModule } from 'src/persona/persona.module';
 import { DefensorModule } from 'src/defensor/defensor.module';
-
 @Module({
   controllers: [SeedController],
-  providers: [SeedService],
+  providers: [SeedService],  
   imports:[MateriaModule, ProcesoModule, PersonaModule, DefensorModule]
 })
 export class SeedModule {}
