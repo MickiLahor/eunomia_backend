@@ -68,6 +68,13 @@ export class PersonaService {
   return this.paginate(options)
   }
 
+  async findAllSeed() {
+    const personas = await this.personaRepository.find({
+      where:{registroActivo:true}
+  });
+    return personas;
+    }
+
   async listarNoDefensor(options: IPaginationOptions) {
     return this.paginateNoDefensor(options)
     }
