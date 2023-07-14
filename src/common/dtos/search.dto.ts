@@ -29,6 +29,34 @@ export class SearchDto {
     page?: number;
 }
 
+export class SearchUsuarioDto {
+    
+    @IsOptional()
+    @Type(() => String )
+    ci?: string;
+
+    @IsOptional()
+    @Type(() => String )
+    usuario?: string;
+
+    @IsOptional()
+    @Type(() => String )
+    nombres?: string;
+
+    @IsOptional()
+    @Type(() => String )
+    rol?: string;
+
+    @IsOptional()
+    @Type(() => Number )
+    limit?: number;
+
+    @IsOptional()
+    @Min(0)
+    @Type(() => Number )
+    page?: number;
+}
+
 export class SearchProcesoDto {
     
     @IsOptional()

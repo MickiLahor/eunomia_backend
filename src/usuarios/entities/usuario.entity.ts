@@ -23,7 +23,7 @@ export class Usuario {
     @OneToOne(() => Persona,{cascade:true,eager:true})
     @JoinColumn()
     persona: Persona  
-    @ManyToMany(() => Rol) 
+    @ManyToMany(() => Rol, {eager:true}) 
     @JoinTable({name:"usuario_rol"})
     roles: Rol[]
 }

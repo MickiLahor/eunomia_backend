@@ -1,31 +1,43 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Query, ParseUUIDPipe, } from '@nestjs/common';
 import { UsuariosService } from './usuarios.service';
-import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
-import { LoginUsuarioDto } from './dto/login-usuario.dto';
+import { UpdateRolUsuarioDto } from './dto/update-rol-usuario.dto';
+import { PaginationDto } from 'src/common/dtos/pagination.dto';
+import { SearchUsuarioDto } from 'src/common/dtos/search.dto';
 
 @Controller('usuarios')
 export class UsuariosController {
   constructor(private readonly usuariosService: UsuariosService) {}
 
-  @Post()
-  create(@Body() createUsuarioDto: CreateUsuarioDto) {
-    return this.usuariosService.create(createUsuarioDto);
-  }
-
-  @Post("auth")
-  login(@Body() loginUsuarioDto: LoginUsuarioDto) {
-    return this.usuariosService.login(loginUsuarioDto);
-  }
-
   @Get()
-  findAll() {
-    return this.usuariosService.findAll();
+  findAll(@Query() paginationDto :PaginationDto) {
+    const {limit = 10,page= 1} = paginationDto
+    return this.usuariosService.findAll
+    (
+      {
+        limit:limit,
+        page:page,
+        route: "http://192.168.6.137:3000/api/v1/usuarios"
+      });
+  }
+
+  @Get("search")
+  search(@Query() searchDto :SearchUsuarioDto) {
+    const {limit = 5,page= 1} = searchDto
+    return this.usuariosService.search
+    (
+      {
+        limit:limit,
+        page:page,
+        route: "http://192.168.6.137:3000/api/v1/usuarios"
+      }
+      ,searchDto
+    )
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usuariosService.findOne(+id);
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
+    return this.usuariosService.findOne(id);
   }
 
   @Patch(':id')
@@ -33,8 +45,16 @@ export class UsuariosController {
     return this.usuariosService.update(+id, updateUsuarioDto);
   }
 
+  @Patch('asignar-rol/:id')
+  asignarRoles(@Param('id') id: string, @Body() updateRolUsuarioDto: UpdateRolUsuarioDto) {
+    return this.usuariosService.asignarRoles(id, updateRolUsuarioDto);
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usuariosService.remove(+id);
   }
+
+ 
+
 }

@@ -22,7 +22,7 @@ export class ProcesoController {
     return this.procesoService.findAll({
       limit:limit,
       page:page,
-      route: "http://192.168.5.35:3000/api/v1/proceso"
+      route: "http://192.168.6.137:3000/api/v1/proceso"
     });
   }
 
@@ -40,7 +40,7 @@ export class ProcesoController {
       {
         limit:limit,
         page:page,
-        route: "http://192.168.5.35:3000/api/v1/proceso"
+        route: "http://192.168.6.137:3000/api/v1/proceso"
       }
       ,searchDto
     )
@@ -57,7 +57,7 @@ export class ProcesoController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.procesoService.remove(+id);
+  remove(@Param('id', ParseUUIDPipe) id: string) {
+    return this.procesoService.remove(id);
   }
 }

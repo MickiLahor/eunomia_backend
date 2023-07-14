@@ -1,68 +1,85 @@
 import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PersonaService } from 'src/persona/persona.service';
-import { Repository } from 'typeorm';
-import { CreateUsuarioDto } from './dto/create-usuario.dto';
-import { LoginUsuarioDto } from './dto/login-usuario.dto';
+import { ILike, In, Repository } from 'typeorm';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { Usuario } from './entities/usuario.entity';
+import { UpdateRolUsuarioDto } from './dto/update-rol-usuario.dto';
+import { RolesService } from 'src/roles/roles.service';
+import { IPaginationOptions, Pagination, paginate } from 'nestjs-typeorm-paginate';
+import { SearchUsuarioDto } from 'src/common/dtos/search.dto';
 
 @Injectable()
 export class UsuariosService {
   
-  private readonly logger = new Logger('PersonaService')
+  private readonly logger = new Logger('UsuarioService')
   
   constructor(
     @InjectRepository(Usuario)
     private readonly usuarioRepository: Repository<Usuario>,
-    private readonly personaService: PersonaService,
+    private readonly rolService: RolesService,
   ){}
 
 
-  async create(createUsuarioDto: CreateUsuarioDto) {
+  async asignarRoles(id: string, updateRolUsuarioDto: UpdateRolUsuarioDto) {
+    const { roles = [] } = updateRolUsuarioDto
+    
+    const user = await this.usuarioRepository.preload({ id });
+    
+    if ( !user ) throw new NotFoundException(`Usuario con el id: ${id} no existe`);
+    if(user.registroActivo===false) throw new NotFoundException(`Usuario con el id: ${id} fue dado de baja`);
     try {
-      const usuario = this.usuarioRepository.create({
-        ...createUsuarioDto,
-        persona : await this.personaService.findOne(createUsuarioDto.idPersona),
-        fechaRegistro:new Date(),
-        registroActivo: true
-      });
 
-      await this.usuarioRepository.save(usuario);
-      
-      return usuario;
-    }
-    catch(error) {
+      user.roles= await this.rolService.findBy({ id: In(roles) })
+      await this.usuarioRepository.save(user);
+      return user;
+
+    } catch (error) {
       console.log(error);
       
       this.handleDBExpeptions(error);
     }
   }
 
-  async findAll() {
-    const usuarios = await this.usuarioRepository.find({
-     where:{registroActivo:true}
- });
- return usuarios;
+
+  async findAll(options: IPaginationOptions) {
+    return this.paginate(options)
  }
 
-async login(loginUsuarioDto: LoginUsuarioDto) {
-  const usuarios = await this.usuarioRepository.findOne(
-    {
-      where:
-      {
-        registroActivo:true,
-        usuario:loginUsuarioDto.usuario,
-        clave:loginUsuarioDto.clave
-      }
-    }
-  );
-if(usuarios) return usuarios;
-else throw new UnauthorizedException(`Acceso no autorizado a: ${loginUsuarioDto.usuario}`);
+ async paginate(options: IPaginationOptions): Promise<Pagination<Usuario>> {
+  return paginate<Usuario>(this.usuarioRepository, options, {
+    where:{registroActivo:true,
+      roles:[
+        {registroActivo:true}
+      ]
+    },
+    order: {fechaRegistro: 'DESC'}
+  });
 }
 
-  findOne(id: number) {
-    return `This action returns a #${id} usuario`;
+  async findOne(id: string) {
+    const usuario = await this.usuarioRepository.findOne({where:{id,registroActivo:true}});
+    if ( !usuario ) throw new NotFoundException(`El usuario con id: ${id} no existe.`);
+    return usuario;
+  }
+
+  async search(options: IPaginationOptions, searchDto: SearchUsuarioDto) {
+    const {ci = "",nombres= "", usuario="", rol=""} = searchDto
+    return paginate<Usuario>(this.usuarioRepository, options, {
+      where:    
+      [
+        { usuario: ILike(`%${usuario}%`),registroActivo:true},
+        {
+          persona: [
+          { ci: ILike(`%${ci}%`),registroActivo:true},
+          { nombreCompleto: ILike(`%${nombres}%`),registroActivo:true},
+        ]},
+        {
+          roles: [
+          { descripcion: ILike(`%${rol}%`),registroActivo:true},
+          ]},
+      ],
+      order: {fechaRegistro: 'DESC'}
+    });
   }
 
   update(id: number, updateUsuarioDto: UpdateUsuarioDto) {

@@ -1,9 +1,10 @@
-import { IsNumber, IsPositive, IsString, IsUUID, MinLength } from "class-validator";
+import { IsNumber, IsOptional, IsPositive, IsString, IsUUID, MinLength } from "class-validator";
 
 export class CreateExcusaDto {
     @IsString()
     @MinLength(1)
-    archivo: string;
+    @IsOptional()
+    archivo?: string;
 
     @IsString()
     @MinLength(1)

@@ -14,6 +14,18 @@ export class AsignacionService {
     @InjectRepository(Asignacion)
     private readonly asignacionRepository: Repository<Asignacion>,
   ){}
+
+  async findAll() {
+    const excusa = await this.asignacionRepository.find({
+      where:{registroActivo:true},
+      relations:{
+        defensor:true,
+        excusa:true
+      }
+      
+  });
+    return excusa;
+  }
   
   async create(createAsignacionDto: CreateAsignacionDto) {
     try {
@@ -32,10 +44,6 @@ export class AsignacionService {
       console.log(error); 
       this.handleDBExpeptions(error);
     }
-  }
-
-  findAll() {
-    return `This action returns all asignacion`;
   }
 
   async findOne(id: string) {

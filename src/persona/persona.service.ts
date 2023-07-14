@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { createQueryBuilder, DataSource, ILike, In, IsNull, Not, QueryBuilder, Repository } from 'typeorm';
+import { DataSource, ILike, In, IsNull, Not, QueryBuilder, Repository } from 'typeorm';
 import { CreatePersonaDto } from './dto/create-persona.dto';
 import { UpdatePersonaDto } from './dto/update-persona.dto';
 import { Persona } from './entities/persona.entity';
@@ -91,7 +91,7 @@ export class PersonaService {
       ],
       order: {fechaRegistro: 'DESC'}
     });
-}
+  }
 
   async findOne(id: string) {
     const persona = await this.personaRepository.findOne({where:{id,registroActivo:true}});
@@ -101,7 +101,7 @@ export class PersonaService {
 
   async findOneCi(id: string) {
     const persona = await this.personaRepository.findOne({where:{ ci:id,registroActivo:true}});
-    if ( !persona ) throw new NotFoundException(`La Persona con id: ${id} no existe.`);
+    if ( !persona ) return  {message:`La Persona con id: ${id} no existe.`, error:true}
 
     const defensor = await this.defensorRepository.findOne(
       {
@@ -113,7 +113,7 @@ export class PersonaService {
           }
         }
       });      
-      if ( defensor ) throw new NotFoundException(`La Persona con ci ${persona.ci} ya es un defensor.`);
+      if ( defensor )  return  {message:`La Persona con ci ${persona.ci} ya es un defensor.`, error:true};
       return persona;
   }
 

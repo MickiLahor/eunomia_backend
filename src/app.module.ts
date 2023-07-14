@@ -14,6 +14,9 @@ import { AsignacionModule } from './asignacion/asignacion.module';
 import { TipoExcusaModule } from './tipo-excusa/tipo-excusa.module';
 import { ExcusaModule } from './excusa/excusa.module';
 import { AuthModule } from './auth/auth.module';
+import { FilesModule } from './files/files.module';
+import { InformeModule } from './informe/informe.module';
+import { TipoInformeModule } from './tipo_informe/tipo_informe.module';
 
 @Module({
   imports: [ ConfigModule.forRoot(),
@@ -39,6 +42,9 @@ import { AuthModule } from './auth/auth.module';
               AsignacionModule,
               TipoExcusaModule,
               ExcusaModule,
-              AuthModule,]
+              AuthModule,
+              FilesModule,
+              InformeModule,
+              TipoInformeModule,]
 })
 export class AppModule {}

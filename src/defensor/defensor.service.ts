@@ -46,8 +46,8 @@ export class DefensorService {
 
   async paginate(options: IPaginationOptions): Promise<Pagination<Defensor>> {
     return paginate<Defensor>(this.defensorRepository, options, {
-      where:{registroActivo:true},
-      order: {fechaRegistro: 'DESC'}
+      where: { registroActivo:true },
+      order: { fechaRegistro: 'DESC' }
     });
   }
 
@@ -57,7 +57,8 @@ export class DefensorService {
       where:    
       [
         { matricula: ILike(`%${matricula}%`),registroActivo:true},
-        { persona: { nombreCompleto: ILike(`%${nombreCompleto}%`),registroActivo:true } }
+        { persona: { nombreCompleto: ILike(`%${nombreCompleto}%`),registroActivo:true } },
+        {registroActivo:true}
       ],
       order: {fechaRegistro: 'DESC'}
     });

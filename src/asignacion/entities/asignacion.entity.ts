@@ -1,5 +1,6 @@
 import { Defensor } from "src/defensor/entities/defensor.entity";
 import { Excusa } from "src/excusa/entities/excusa.entity";
+import { Informe } from "src/informe/entities/informe.entity";
 import { Proceso } from "src/proceso/entities/proceso.entity";
 import { Column, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
@@ -30,4 +31,7 @@ export class Asignacion {
 
     @OneToOne(() => Excusa, (excusa) => excusa.asignacion)
     excusa: Excusa  
+
+    @OneToOne(() => Informe, (informe) => informe.asignacion)
+    informe: Informe 
 }

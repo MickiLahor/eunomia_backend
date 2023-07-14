@@ -5,8 +5,10 @@ import { Excusa } from 'src/excusa/entities/excusa.entity';
 import { Proceso } from 'src/proceso/entities/proceso.entity';
 import { AsignacionService } from './asignacion.service';
 import { Asignacion } from './entities/asignacion.entity';
+import { AsignacionController } from './asignacion.controller';
 
 @Module({
+  controllers:[AsignacionController],
   providers: [AsignacionService],
   imports: [TypeOrmModule.forFeature([Asignacion, Proceso, Defensor,Excusa])],
   exports: [AsignacionService]

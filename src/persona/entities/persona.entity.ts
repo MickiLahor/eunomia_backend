@@ -5,7 +5,7 @@ import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 export class Persona {
     @PrimaryGeneratedColumn('uuid')
     id: string;
-    @Column('text',/*{unique:true}*/)
+    @Column('text',{unique:true})
     ci: string;
     @Column('text')
     nombre: string;

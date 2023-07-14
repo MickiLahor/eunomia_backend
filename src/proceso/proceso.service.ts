@@ -10,6 +10,9 @@ import { ILike, Repository } from 'typeorm';
 import { CreateProcesoDto } from './dto/create-proceso.dto';
 import { UpdateProcesoDto } from './dto/update-proceso.dto';
 import { Proceso } from './entities/proceso.entity';
+import { ZeusResponseDto } from 'src/auth/dto/zeus-response.dto';
+import { ConfigService } from '@nestjs/config';
+import { AxiosAdapter } from 'src/common/adapters/axios.adapter';
 
 @Injectable()
 export class ProcesoService {
@@ -22,7 +25,8 @@ export class ProcesoService {
     private readonly materiaService: MateriaService,
     private readonly defensorService: DefensorService,  
     private readonly asignacionService: AsignacionService,  
-      
+    private readonly http: AxiosAdapter,
+    private readonly configService: ConfigService,      
   ){}
 
   async create(createProcesoDto: CreateProcesoDto) {
@@ -89,8 +93,19 @@ export class ProcesoService {
         }
       }
     );
-    if ( !proceso ) throw new NotFoundException(`El permiso con id: ${id} no existe.`);
-    return proceso;
+    if ( !proceso ) throw new NotFoundException(`El proceso con id: ${id} no existe.`);
+    const zeus = await this.getOficinaZeusPro(proceso.idOficina);
+    return {
+              id:proceso.id,
+              nurej:proceso.nurej,
+              demandante: proceso.demandante,
+              demandado: proceso.demandado,
+              oficina: zeus.descripcion,
+              idOficina: proceso.idOficina,
+              ciudad: zeus.municipio,
+              idCiudad:proceso.idCiudad,
+              ...proceso
+   };
   }
 
   async update(id: string, updateProcesoDto: UpdateProcesoDto) {
@@ -106,8 +121,17 @@ export class ProcesoService {
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} proceso`;
+  private async getOficinaZeusPro(idOficina: number) : Promise<ZeusResponseDto>
+  {
+    const data = await this.http.get<ZeusResponseDto>(`${this.configService.get('URL_ZEUS')}/api/oficina/getOficina/${idOficina}`);
+    return data;
+  }
+
+  async remove(id: string) {
+    const proceso = await this.findOne(id);
+    proceso.registroActivo=false;
+    await this.procesoRepository.save(proceso)
+    return { message:"Eliminado correctamente." };
   }
 
   private handleDBExpeptions(error: any) {

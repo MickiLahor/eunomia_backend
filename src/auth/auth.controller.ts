@@ -1,34 +1,48 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body,HttpCode } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateAuthDto } from './dto/create-auth.dto';
+import { CreateAuthDto, ResetPasswordUserDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
+import { LoginDto } from './dto/login.dto';
+import { Auth, GetUser } from './decorators';
+import { ValidRoles } from './interfaces';
+import { Usuario } from 'src/usuarios/entities/usuario.entity';
+import { CreatePersonaUsuarioDto } from './dto/create-persona-usuario.dto';
+import { HttpStatusCode } from 'axios';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
-
+  
   @Post()
-  create(@Body() createAuthDto: CreateAuthDto) {
-    return this.authService.create(createAuthDto);
+  create(@Body() createUsuarioDto: CreateAuthDto) {
+    return this.authService.create(createUsuarioDto);
   }
 
-  @Get()
-  findAll() {
-    return this.authService.findAll();
+  @Post("create")
+  createAll(@Body() createPersonaUsuarioDto: CreatePersonaUsuarioDto) {
+    return this.authService.createAll(createPersonaUsuarioDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
+  @Post("reset")
+  resetPassword(@Body() resetPasswordUserDto: ResetPasswordUserDto) {
+    return this.authService.resetPassword(resetPasswordUserDto);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
-    return this.authService.update(+id, updateAuthDto);
+
+  @Post("login")
+  @HttpCode(HttpStatusCode.Ok)
+  login(@Body() loginUsuarioDto: LoginDto) {
+    return this.authService.login(loginUsuarioDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id);
-  }
+  @Get("private3")
+  @Auth(ValidRoles.administrador)
+  privateRoute3(
+      @GetUser() user: Usuario,
+    ) {
+      return {
+        ok:true,
+        user
+      };
+    }
 }

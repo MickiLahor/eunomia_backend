@@ -14,5 +14,6 @@ import { AsignacionModule } from 'src/asignacion/asignacion.module';
   imports: [TypeOrmModule.forFeature([ Excusa, TipoExcusa, Asignacion]),
             TipoExcusaModule,
             AsignacionModule],
+  exports:[ExcusaService]
 })
 export class ExcusaModule {}

@@ -27,7 +27,7 @@ export class DefensorController {
       {
         limit:limit,
         page:page,
-        route: "http://192.168.5.35:3000/api/v1/defensor"
+        route: "http://192.168.6.137:3000/api/v1/defensor"
       });
   }
 
@@ -39,7 +39,7 @@ export class DefensorController {
       {
         limit:limit,
         page:page,
-        route: "http://192.168.5.35:3000/api/v1/persona"
+        route: "http://192.168.6.137:3000/api/v1/persona"
       }
       ,searchDto
     )

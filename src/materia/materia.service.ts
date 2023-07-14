@@ -49,14 +49,14 @@ export class MateriaService {
 
   async findOne(id: string) {
     const materia = await this.materiaRepository.findOne({where:{id,registroActivo:true}});
-    if ( !materia ) throw new NotFoundException(`El tipo proceso con id: ${id} no existe.`);
+    if ( !materia ) throw new NotFoundException(`La materia con el id: ${id} no existe.`);
     return materia;
   }
 
   async update(id: string, updateMateriaDto: UpdateMateriaDto) {
     const materia = await this.materiaRepository.preload({id, ...updateMateriaDto });
     
-    if ( !materia ) throw new NotFoundException(`Tipo Proceso con el id: ${id} no existe`);
+    if ( !materia ) throw new NotFoundException(`La materia con el id: ${id} no existe`);
     if(materia.registroActivo===false) throw new NotFoundException(`Tipo Proceso con el id: ${id} fue dado de baja`);
     try {
       await this.materiaRepository.save(materia);

@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Permiso } from 'src/permisos/entities/permiso.entity';
-import { In, Repository } from 'typeorm';
+import { FindOperator, FindOptionsWhere, In, Repository } from 'typeorm';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { Rol } from './entities/rol.entity';
@@ -49,6 +49,12 @@ export class RolesService {
 
   async findOne(id: string) {
     const rol = await this.rolRepository.findOne({where:{id,registroActivo:true}});
+    if ( !rol ) throw new NotFoundException(`El rol con id: ${id} no existe.`);
+    return rol;
+  }
+
+  async findBy(id: FindOptionsWhere<Rol> | FindOptionsWhere<Rol>[]) {
+    const rol = await this.rolRepository.findBy(id);
     if ( !rol ) throw new NotFoundException(`El rol con id: ${id} no existe.`);
     return rol;
   }

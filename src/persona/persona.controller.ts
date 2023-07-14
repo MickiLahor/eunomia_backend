@@ -4,6 +4,8 @@ import { CreatePersonaDto } from './dto/create-persona.dto';
 import { UpdatePersonaDto } from './dto/update-persona.dto';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { SearchDto } from 'src/common/dtos/search.dto';
+import { ValidRoles } from 'src/auth/interfaces';
+import { Auth } from 'src/auth/decorators';
 
 @Controller('persona')
 export class PersonaController {
@@ -15,6 +17,7 @@ export class PersonaController {
   }
 
   @Get()
+  @Auth(ValidRoles.administrador)
   findAll(@Query() paginationDto :PaginationDto) {
     const {limit = 10,page= 1} = paginationDto
     return this.personaService.findAll
@@ -22,7 +25,7 @@ export class PersonaController {
       {
         limit:limit,
         page:page,
-        route: "http://192.168.5.35:3000/api/v1/persona"
+        route: "http://192.168.6.137:3000/api/v1/persona"
       });
   }
 
@@ -34,7 +37,7 @@ export class PersonaController {
       {
         limit:limit,
         page:page,
-        route: "http://192.168.5.35:3000/api/v1/persona"
+        route: "http://192.168.6.137:3000/api/v1/persona"
       });
   }
 
@@ -46,7 +49,7 @@ export class PersonaController {
       {
         limit:limit,
         page:page,
-        route: "http://192.168.5.35:3000/api/v1/persona"
+        route: "http://192.168.6.137:3000/api/v1/persona"
       }
       ,searchDto
     )
