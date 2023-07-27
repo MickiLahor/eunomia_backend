@@ -22,11 +22,11 @@ export class InformeService {
     try {
       const informe = this.informeRepository.create({
         ...createInformeDto,
-        asignacion : await this.asignacionService.findOne(createInformeDto.idAsignacion),
-        tipo_informe : await this.tipoInformeService.findOne(createInformeDto.idTipoInforme),
+        asignacion : await this.asignacionService.findOne(createInformeDto.id_asignacion),
+        tipo_informe : await this.tipoInformeService.findOne(createInformeDto.id_tipo_informe),
         url: createInformeDto.archivo,
-        fechaRegistro:new Date(),
-        registroActivo: true
+        fecha_registro:new Date(),
+        registro_activo: true
       });
 
       await this.informeRepository.save(informe);
@@ -41,7 +41,7 @@ export class InformeService {
 
   async findAll() {
     const informe = await this.informeRepository.find({
-      where:{registroActivo:true},
+      where:{registro_activo:true},
       relations:{
         asignacion: {
           proceso:true
@@ -52,8 +52,42 @@ export class InformeService {
     return informe;
   }
 
+  async findForAsignacion(id_asignacion: string) {
+    const informe = await this.informeRepository.find({
+      where:{
+        registro_activo:true,
+        asignacion:[{registro_activo:true,id:id_asignacion}]
+      },
+      relations:{
+        asignacion: {
+          proceso:true
+        }
+      }
+      
+  });
+    return informe;
+  }
+
+  async findForProceso(id_proceso: string) {
+    const informe = await this.informeRepository.find({
+      where:{
+        registro_activo:true,
+        asignacion:[{
+          registro_activo:true,
+          proceso:[{id:id_proceso, registro_activo:true}]
+        }]
+      },
+      relations:{
+        asignacion: {
+          proceso:true
+        }
+      }
+  });
+    return informe;
+  }
+
   async findOne(id: string) {
-    const informe = await this.informeRepository.findOne({where:{id,registroActivo:true}});
+    const informe = await this.informeRepository.findOne({where:{id,registro_activo:true}});
     if ( !informe ) throw new NotFoundException(`El informe con id: ${id} no existe.`);
     return informe;
   }
@@ -62,10 +96,10 @@ export class InformeService {
     const informe = await this.informeRepository.preload({id, ...updateInformeDto });
     
     if ( !informe ) throw new NotFoundException(`Informe con el id: ${id} no existe`);
-    if(informe.registroActivo===false) throw new NotFoundException(`El informe con el id: ${id} fue dado de baja`);
+    if(informe.registro_activo===false) throw new NotFoundException(`El informe con el id: ${id} fue dado de baja`);
     try {
-      informe.asignacion = await this.asignacionService.findOne(updateInformeDto.idAsignacion);
-      //excusa.tipoExcusa = await this.tipoExcusaService.findOne(updateExcusaDto.idTipoExcusa);
+      informe.asignacion = await this.asignacionService.findOne(updateInformeDto.id_asignacion);
+      informe.tipo_informe = await this.tipoInformeService.findOne(updateInformeDto.id_tipo_informe);
       await this.informeRepository.save(informe);
       return informe;
     } catch (error) {
@@ -75,7 +109,7 @@ export class InformeService {
 
   async remove(id: string) {
     const informe = await this.findOne(id);
-    informe.registroActivo=false;
+    informe.registro_activo=false;
     await this.informeRepository.save(informe)
     return { message:"Eliminado correctamente." };
   }

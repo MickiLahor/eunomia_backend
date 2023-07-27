@@ -81,6 +81,39 @@ export class SearchProcesoDto {
     page?: number;
 }
 
+export class SearchAsignacionDto {
+    
+    @IsOptional()
+    @Type(() => String )
+    nurej?: string;
+
+    @IsOptional()
+    @Type(() => String )
+    materia?: string;
+    
+    @IsOptional()
+    @Type(() => String )
+    defensor?: string;
+
+    @IsOptional()
+    @Type(() => String )
+    demandante?: string;
+
+    @IsOptional()
+    @Type(() => String )
+    demandado?: string;
+
+    @IsOptional()
+    @Type(() => Number )
+    limit?: number;
+
+    @IsOptional()
+    @Min(0)
+    @Type(() => Number )
+    page?: number;
+}
+
+
 export class SearchDefendorDto {
     
     @IsOptional()
@@ -89,7 +122,7 @@ export class SearchDefendorDto {
 
     @IsOptional()
     @Type(() => String )
-    nombreCompleto?: string;
+    nombre_completo?: string;
 
     @IsOptional()
     @Type(() => Number )

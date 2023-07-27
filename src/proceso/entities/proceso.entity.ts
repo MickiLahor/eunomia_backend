@@ -1,6 +1,6 @@
 import { Asignacion } from "src/asignacion/entities/asignacion.entity";
 import { Materia } from "src/materia/entities/materia.entity";
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Proceso {
@@ -17,23 +17,24 @@ export class Proceso {
     demandado: string; 
 
     @Column('integer')
-    idOficina: number;
+    id_oficina: number;
     
     @Column('integer')
-    idCiudad: number;
+    id_ciudad: number;
 
     @Column('text')
-    usuarioRegistro: string;
+    usuario_registro: string;
 
     @Column('timestamp')
-    fechaRegistro: Date;
+    fecha_registro: Date;
 
     @Column('boolean')
-    registroActivo: boolean;
+    registro_activo: boolean;
 
     @ManyToOne(() => Materia, (materia)=> materia.procesos, 
                         {cascade:true,eager:true}
             )
+    @JoinColumn({name: "id_materia"})
     materia: Materia  
 
     @OneToMany(() => Asignacion, (asignacion) => asignacion.proceso,{eager:true})

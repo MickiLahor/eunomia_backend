@@ -14,18 +14,19 @@ export class Informe {
     descripcion: string; 
 
     @Column('text')
-    usuarioRegistro: string;
+    usuario_registro: string;
 
     @Column('timestamp')
-    fechaRegistro: Date;
+    fecha_registro: Date;
 
     @Column('boolean')
-    registroActivo: boolean;
+    registro_activo: boolean;
 
     @ManyToOne(() => TipoInforme, (tipo_informe)=> tipo_informe.informes, {cascade:true,eager:true})
+    @JoinColumn({ name: "id_tipo_informe" })
     tipo_informe: TipoInforme
 
-    @OneToOne(() => Asignacion, (asignacion) => asignacion.informe, {eager:true,cascade:true})
-    @JoinColumn()
+    @ManyToOne(() => Asignacion, (asignacion) => asignacion.informe, {eager:true,cascade:true})
+    @JoinColumn({name: "id_asignacion"})
     asignacion: Asignacion
 }

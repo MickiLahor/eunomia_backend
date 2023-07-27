@@ -28,5 +28,5 @@ export class CreatePersonaDto {
 
     @IsString()
     @MinLength(1)
-    usuarioRegistro: string;
+    usuario_registro: string;
 }

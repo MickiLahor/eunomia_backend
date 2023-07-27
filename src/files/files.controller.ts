@@ -10,6 +10,9 @@ import { ExcusaService } from 'src/excusa/excusa.service';
 import { InformeService } from 'src/informe/informe.service';
 import { CreateInformeDto } from 'src/informe/dto/create-informe.dto';
 
+
+const MAX_PROFILE_PICTURE_SIZE_IN_BYTES = 10000000;
+
 @Controller('files')
 export class FilesController {
   constructor(
@@ -54,7 +57,7 @@ export class FilesController {
       fileType: 'pdf',
     })
     .addMaxSizeValidator({
-      maxSize: 2000000,
+      maxSize: MAX_PROFILE_PICTURE_SIZE_IN_BYTES,
     })
     .build({
       //errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY
@@ -87,7 +90,7 @@ export class FilesController {
       fileType: 'pdf',
     })
     .addMaxSizeValidator({
-      maxSize: 2000000,
+      maxSize: MAX_PROFILE_PICTURE_SIZE_IN_BYTES,
     })
     .build({
       //errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY

@@ -29,9 +29,9 @@ export class PersonaService {
     try {
       const persona = this.personaRepository.create({
         ...createPersonaDto,
-        nombreCompleto: `${createPersonaDto.paterno} ${createPersonaDto.materno} ${createPersonaDto.nombre}`,
-        fechaRegistro:new Date(),
-        registroActivo: true
+        nombre_completo: `${createPersonaDto.paterno} ${createPersonaDto.materno} ${createPersonaDto.nombre}`,
+        fecha_registro:new Date(),
+        registro_activo: true
       });
 
       await this.personaRepository.save(persona);
@@ -47,20 +47,20 @@ export class PersonaService {
 
   async paginate(options: IPaginationOptions): Promise<Pagination<Persona>> {
     return paginate<Persona>(this.personaRepository, options, {
-      where:{registroActivo:true},
-      order: {fechaRegistro: 'DESC'}
+      where:{registro_activo:true},
+      order: {fecha_registro: 'DESC'}
       
     });
   }
 
   async paginateNoDefensor(options: IPaginationOptions): Promise<Pagination<Persona>> {
-    const defensor = await this.defensorRepository.find({where:{registroActivo:true,}})
+    const defensor = await this.defensorRepository.find({where:{registro_activo:true,}})
 
     const ids : string[] = defensor.map(x=>x.persona.id)
     const queryBuilder = await this.personaRepository
     .createQueryBuilder("persona")
     .where("persona.id NOT IN (:...ids)",{ids: ids})
-    .andWhere("persona.registroActivo = true")
+    .andWhere("persona.registro_activo = true")
     return paginate<Persona>(queryBuilder, options);
   }
 
@@ -70,7 +70,7 @@ export class PersonaService {
 
   async findAllSeed() {
     const personas = await this.personaRepository.find({
-      where:{registroActivo:true}
+      where:{registro_activo:true}
   });
     return personas;
     }
@@ -84,31 +84,31 @@ export class PersonaService {
     return paginate<Persona>(this.personaRepository, options, {
       where:    
       [
-        { ci: ILike(`%${ci}%`),registroActivo:true},
-        { nombre: ILike(`%${nombre}%`),registroActivo:true},
-        { paterno: ILike(`%${paterno}%`),registroActivo:true},
-        { materno: ILike(`%${materno}%`),registroActivo:true}
+        { ci: ILike(`%${ci}%`),registro_activo:true},
+        { nombre: ILike(`%${nombre}%`),registro_activo:true},
+        { paterno: ILike(`%${paterno}%`),registro_activo:true},
+        { materno: ILike(`%${materno}%`),registro_activo:true}
       ],
-      order: {fechaRegistro: 'DESC'}
+      order: {fecha_registro: 'DESC'}
     });
   }
 
   async findOne(id: string) {
-    const persona = await this.personaRepository.findOne({where:{id,registroActivo:true}});
+    const persona = await this.personaRepository.findOne({where:{id,registro_activo:true}});
     if ( !persona ) throw new NotFoundException(`La Persona con id: ${id} no existe.`);
     return persona;
   }
 
   async findOneCi(id: string) {
-    const persona = await this.personaRepository.findOne({where:{ ci:id,registroActivo:true}});
+    const persona = await this.personaRepository.findOne({where:{ ci:id,registro_activo:true}});
     if ( !persona ) return  {message:`La Persona con id: ${id} no existe.`, error:true}
 
     const defensor = await this.defensorRepository.findOne(
       {
         where:{
-          registroActivo:true,
+          registro_activo:true,
           persona: {
-            registroActivo:true,
+            registro_activo:true,
             id:persona.id
           }
         }
@@ -121,9 +121,9 @@ export class PersonaService {
     const persona = await this.personaRepository.preload({id, ...updatePersonaDto });
     
     if ( !persona ) throw new NotFoundException(`Persona con el id: ${id} no existe`);
-    if(persona.registroActivo===false) throw new NotFoundException(`Persona con el id: ${id} fue dado de baja`);
+    if(persona.registro_activo===false) throw new NotFoundException(`Persona con el id: ${id} fue dado de baja`);
     try {
-      persona.nombreCompleto = `${updatePersonaDto.paterno} ${updatePersonaDto.materno} ${updatePersonaDto.nombre}`;
+      persona.nombre_completo = `${updatePersonaDto.paterno} ${updatePersonaDto.materno} ${updatePersonaDto.nombre}`;
       await this.personaRepository.save(persona);
       return persona;
     } catch (error) {
@@ -133,7 +133,7 @@ export class PersonaService {
 
   async remove(id: string) {
     const persona = await this.findOne(id);
-    persona.registroActivo=false;
+    persona.registro_activo=false;
     await this.personaRepository.save(persona)
     return { message:"Eliminado correctamente." };
   }

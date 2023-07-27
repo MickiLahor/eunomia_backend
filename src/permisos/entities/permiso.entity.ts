@@ -1,5 +1,5 @@
 import { Rol } from "src/roles/entities/rol.entity";
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Permiso {
@@ -11,11 +11,11 @@ export class Permiso {
     descripcion: string;
 
     @Column('text')
-    usuarioRegistro: string;
+    usuario_registro: string;
     @Column('timestamp')
-    fechaRegistro: Date;
+    fecha_registro: Date;
     @Column('boolean')
-    registroActivo: boolean;
+    registro_activo: boolean;
 
     @ManyToMany(() => Rol, (rol) => rol.permisos)
     roles: Rol[]

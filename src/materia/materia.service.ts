@@ -18,8 +18,8 @@ export class MateriaService {
     try {
       const materia = this.materiaRepository.create({
         ...createMateriaDto,
-        fechaRegistro:new Date(),
-        registroActivo: true
+        fecha_registro:new Date(),
+        registro_activo: true
       });
 
       await this.materiaRepository.save(materia);
@@ -34,7 +34,7 @@ export class MateriaService {
 
  async findAllSelect() {
    const materia = await this.materiaRepository.find({
-      where:{registroActivo:true},
+      where:{registro_activo:true},
       select:{id:true,descripcion:true}
   });
     return materia;
@@ -42,13 +42,13 @@ export class MateriaService {
 
   async findAll() {
     const materia = await this.materiaRepository.find({
-       where:{registroActivo:true}
+       where:{registro_activo:true}
    });
      return materia;
    }
 
   async findOne(id: string) {
-    const materia = await this.materiaRepository.findOne({where:{id,registroActivo:true}});
+    const materia = await this.materiaRepository.findOne({where:{id,registro_activo:true}});
     if ( !materia ) throw new NotFoundException(`La materia con el id: ${id} no existe.`);
     return materia;
   }
@@ -57,7 +57,7 @@ export class MateriaService {
     const materia = await this.materiaRepository.preload({id, ...updateMateriaDto });
     
     if ( !materia ) throw new NotFoundException(`La materia con el id: ${id} no existe`);
-    if(materia.registroActivo===false) throw new NotFoundException(`Tipo Proceso con el id: ${id} fue dado de baja`);
+    if(materia.registro_activo===false) throw new NotFoundException(`Tipo Proceso con el id: ${id} fue dado de baja`);
     try {
       await this.materiaRepository.save(materia);
       return materia;
@@ -68,7 +68,7 @@ export class MateriaService {
 
   async remove(id: string) {
     const materia = await this.findOne(id);
-    materia.registroActivo=false;
+    materia.registro_activo=false;
     await this.materiaRepository.save(materia)
     return { message:"Eliminado correctamente." };
   }

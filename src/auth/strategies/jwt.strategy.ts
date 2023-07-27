@@ -17,7 +17,7 @@ export class JwtStrategy extends PassportStrategy( Strategy ) {
         configService: ConfigService
     ) {
         super( {
-            secretOrKey: configService.get('JWT_SECRET'),
+            secretOrKey: configService.get('JWT_SECRET'),            
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
         } );
     }
@@ -30,7 +30,7 @@ export class JwtStrategy extends PassportStrategy( Strategy ) {
 
         if(!usuario) 
          throw new UnauthorizedException('Token no valido.')
-        if(!usuario.registroActivo)
+        if(!usuario.registro_activo)
         throw new UnauthorizedException('Usuario inhabilitado.')
 
         return usuario;

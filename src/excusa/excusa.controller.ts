@@ -22,6 +22,16 @@ export class ExcusaController {
     return this.excusaService.findOne(id);
   }
 
+  @Get('asignacion/:id')
+  findForAsignacion(@Param('id',ParseUUIDPipe) id: string) {
+    return this.excusaService.findForAsignacion(id);
+  }
+
+  @Get('proceso/:id')
+  findForProceso(@Param('id',ParseUUIDPipe) id: string) {
+    return this.excusaService.findForProceso(id);
+  }
+
   @Patch(':id')
   update(@Param('id',ParseUUIDPipe) id: string, @Body() updateExcusaDto: UpdateExcusaDto) {
     return this.excusaService.update(id, updateExcusaDto);

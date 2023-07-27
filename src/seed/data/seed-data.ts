@@ -1,16 +1,16 @@
 interface SeedMateria {
     descripcion: string;
-    usuarioRegistro: string;
+    usuario_registro: string;
 }
 
 interface SeedProceso {
     nurej: string;
     demandante: string;
     demandado: string;
-    idOficina: number;
-    idCiudad: number;
-    idMateria: string;
-    usuarioRegistro: string;
+    id_oficina: number;
+    id_ciudad: number;
+    id_materia: string;
+    usuario_registro: string;
 }
 
 interface SeedPersona {
@@ -20,21 +20,31 @@ interface SeedPersona {
     materno: string;
     fotografia: string;
     sexo: string;
-    usuarioRegistro: string;
+    usuario_registro: string;
 }
 
 interface SeedDefensor {
-    direccionOficina: string;
-    telefonoOficina: string;
+    direccion_oficina: string;
+    telefono_oficina: string;
     celular: string;
     correo: string;
     matricula: string;
-    idOficina: number;
-    idCiudad: number;
-    fechaPosesion: Date;
-    idPersona: string;
-    idMateria: string;
-    usuarioRegistro: string;
+    id_oficina: number;
+    id_ciudad: number;
+    fecha_posesion: Date;
+    id_persona: string;
+    id_materia: string;
+    usuario_registro: string;
+}
+
+interface SeedTipoExcusa {
+    descripcion: string;
+    usuario_registro: string;
+}
+
+interface SeedTipoInforme {
+    descripcion: string;
+    usuario_registro: string;
 }
 
 interface SeedData {
@@ -42,6 +52,8 @@ interface SeedData {
     procesos: SeedProceso[];
     personas: SeedPersona[];
     defensor: SeedDefensor[];
+    tipo_excusa: SeedTipoExcusa[];
+    tipo_informe: SeedTipoInforme[];
 }
 
 
@@ -49,19 +61,19 @@ export const initialData: SeedData = {
     materias: [
         {
             descripcion: "Penal",
-            usuarioRegistro: "siqui"
+            usuario_registro: "siqui"
         },
         {
             descripcion: "Civil y Comercial",
-            usuarioRegistro: "siqui"
+            usuario_registro: "siqui"
         },
         {
             descripcion: "Laboral",
-            usuarioRegistro: "siqui"
+            usuario_registro: "siqui"
         },
         {
             descripcion: "Familiar",
-            usuarioRegistro: "siqui"
+            usuario_registro: "siqui"
         },
     ],
     procesos: [
@@ -69,37 +81,37 @@ export const initialData: SeedData = {
             nurej: "123",
             demandante: "Carlos",
             demandado: "Hugo",
-            idOficina: 1,
-            idCiudad: 1,
-            idMateria: "",
-            usuarioRegistro: "siqui"
+            id_oficina: 1,
+            id_ciudad: 1,
+            id_materia: "",
+            usuario_registro: "siqui"
         },
         {
             nurej: "321",
             demandante: "Marcos",
             demandado: "Walter",
-            idOficina: 1,
-            idCiudad: 1,
-            idMateria: "",
-            usuarioRegistro: "siqui"
+            id_oficina: 1,
+            id_ciudad: 1,
+            id_materia: "",
+            usuario_registro: "siqui"
         },
         {
             nurej: "987",
             demandante: "Juan de Dios",
             demandado: "Doña Martita",
-            idOficina: 1,
-            idCiudad: 1,
-            idMateria: "",
-            usuarioRegistro: "siqui"
+            id_oficina: 1,
+            id_ciudad: 1,
+            id_materia: "",
+            usuario_registro: "siqui"
         },
         {
             nurej: "55336",
             demandante: "Maria",
             demandado: "Juan Pablo",
-            idOficina: 1,
-            idCiudad: 1,
-            idMateria: "",
-            usuarioRegistro: "siqui"
+            id_oficina: 1,
+            id_ciudad: 1,
+            id_materia: "",
+            usuario_registro: "siqui"
         },
     ],
     personas: [
@@ -110,7 +122,7 @@ export const initialData: SeedData = {
             materno: "Davila",
             fotografia: "macho de micky",
             sexo: "M",
-            usuarioRegistro: "siqui"
+            usuario_registro: "siqui"
         },
         {
             ci: "1234567",
@@ -119,7 +131,7 @@ export const initialData: SeedData = {
             materno: "Sucha",
             fotografia: "no tiene",
             sexo: "F",
-            usuarioRegistro: "siqui"
+            usuario_registro: "siqui"
         },
         {
             ci: "3244731",
@@ -128,7 +140,7 @@ export const initialData: SeedData = {
             materno: "Metro Sexual",
             fotografia: "wakala",
             sexo: "M",
-            usuarioRegistro: "siqui"
+            usuario_registro: "siqui"
         },
         {
             ci: "5657543",
@@ -137,61 +149,93 @@ export const initialData: SeedData = {
             materno: "Guerra",
             fotografia: "barbas",
             sexo: "I",
-            usuarioRegistro: "siqui"
+            usuario_registro: "siqui"
         }
     ],
     defensor:[
         {
-            direccionOficina:"santa rita n° 21",
-            telefonoOficina:"6460345",
+            direccion_oficina:"santa rita n° 21",
+            telefono_oficina:"6460345",
             celular:"70337067",
             correo:"windsor@organojudicial.gob.bo",
             matricula:"das3232-5464",
-            idOficina:1,
-            idCiudad:1,
-            fechaPosesion: new Date("2022-10-24"),    
-            idPersona:"",
-            idMateria: "",
-            usuarioRegistro:"tu macho"
+            id_oficina:1,
+            id_ciudad:1,
+            fecha_posesion: new Date("2022-10-24"),    
+            id_persona:"",
+            id_materia: "",
+            usuario_registro:"tu macho"
         },
         {
-            direccionOficina:"nose 2",
-            telefonoOficina:"4564646",
+            direccion_oficina:"nose 2",
+            telefono_oficina:"4564646",
             celular:"65498764",
             correo:"cherbas@organojudicial.gob.bo",
             matricula:"5445465",
-            idOficina:1,
-            idCiudad:1,
-            fechaPosesion:new Date("2023-10-24"),    
-            idPersona:"",
-            idMateria: "",
-            usuarioRegistro:"tu macho"
+            id_oficina:1,
+            id_ciudad:1,
+            fecha_posesion:new Date("2023-10-24"),    
+            id_persona:"",
+            id_materia: "",
+            usuario_registro:"tu macho"
         },
         {
-            direccionOficina:"nose 3",
-            telefonoOficina:"342352",
+            direccion_oficina:"nose 3",
+            telefono_oficina:"342352",
             celular:"65498764",
             correo:"michi@organojudicial.gob.bo",
             matricula:"41424",
-            idOficina:1,
-            idCiudad:1,
-            fechaPosesion:new Date("2024-10-24"),    
-            idPersona:"",
-            idMateria: "",
-            usuarioRegistro:"tu macho"
+            id_oficina:1,
+            id_ciudad:1,
+            fecha_posesion:new Date("2024-10-24"),    
+            id_persona:"",
+            id_materia: "",
+            usuario_registro:"tu macho"
         },
         {
-            direccionOficina:"nose 4",
-            telefonoOficina:"1474231",
+            direccion_oficina:"nose 4",
+            telefono_oficina:"1474231",
             celular:"37743461",
             correo:"mateo@organojudicial.gob.bo",
             matricula:"656455",
-            idOficina:1,
-            idCiudad:1,
-            fechaPosesion:new Date("2021-10-24"),    
-            idPersona:"",
-            idMateria: "",
-            usuarioRegistro:"tu macho"
+            id_oficina:1,
+            id_ciudad:1,
+            fecha_posesion:new Date("2021-10-24"),    
+            id_persona:"",
+            id_materia: "",
+            usuario_registro:"tu macho"
+        }
+    ],
+    tipo_excusa:[
+        {
+            descripcion:"Incompatibilidad",
+            usuario_registro:"tu macho"
+        },
+        {
+            descripcion:"Salud",
+            usuario_registro:"tu macho"
+        },
+        {
+            descripcion:"Designación",
+            usuario_registro:"tu macho"
+        },
+    ],
+    tipo_informe: [
+        {
+            descripcion:"Parcial",
+            usuario_registro:"tu macho"
+        },
+        {
+            descripcion:"Final",
+            usuario_registro:"tu macho"
+        },
+        {
+            descripcion:"Tecnico Legal",
+            usuario_registro:"tu macho"
+        },
+        {
+            descripcion:"De Avance",
+            usuario_registro:"tu macho"
         }
     ]
 }

@@ -26,7 +26,7 @@ export class UsuariosService {
     const user = await this.usuarioRepository.preload({ id });
     
     if ( !user ) throw new NotFoundException(`Usuario con el id: ${id} no existe`);
-    if(user.registroActivo===false) throw new NotFoundException(`Usuario con el id: ${id} fue dado de baja`);
+    if(user.registro_activo===false) throw new NotFoundException(`Usuario con el id: ${id} fue dado de baja`);
     try {
 
       user.roles= await this.rolService.findBy({ id: In(roles) })
@@ -47,17 +47,17 @@ export class UsuariosService {
 
  async paginate(options: IPaginationOptions): Promise<Pagination<Usuario>> {
   return paginate<Usuario>(this.usuarioRepository, options, {
-    where:{registroActivo:true,
+    where:{registro_activo:true,
       roles:[
-        {registroActivo:true}
+        {registro_activo:true}
       ]
     },
-    order: {fechaRegistro: 'DESC'}
+    order: {fecha_registro: 'DESC'}
   });
 }
 
   async findOne(id: string) {
-    const usuario = await this.usuarioRepository.findOne({where:{id,registroActivo:true}});
+    const usuario = await this.usuarioRepository.findOne({where:{id,registro_activo:true}});
     if ( !usuario ) throw new NotFoundException(`El usuario con id: ${id} no existe.`);
     return usuario;
   }
@@ -67,18 +67,18 @@ export class UsuariosService {
     return paginate<Usuario>(this.usuarioRepository, options, {
       where:    
       [
-        { usuario: ILike(`%${usuario}%`),registroActivo:true},
+        { usuario: ILike(`%${usuario}%`),registro_activo:true},
         {
           persona: [
-          { ci: ILike(`%${ci}%`),registroActivo:true},
-          { nombreCompleto: ILike(`%${nombres}%`),registroActivo:true},
+          { ci: ILike(`%${ci}%`),registro_activo:true},
+          { nombre_completo: ILike(`%${nombres}%`),registro_activo:true},
         ]},
         {
           roles: [
-          { descripcion: ILike(`%${rol}%`),registroActivo:true},
+          { descripcion: ILike(`%${rol}%`),registro_activo:true},
           ]},
       ],
-      order: {fechaRegistro: 'DESC'}
+      order: {fecha_registro: 'DESC'}
     });
   }
 

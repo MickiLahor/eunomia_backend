@@ -7,7 +7,7 @@ export class CreateRoleDto {
 
     @IsString()
     @MinLength(1)
-    usuarioRegistro: string;
+    usuario_registro: string;
     
     @IsString({each:true})
     @IsArray()

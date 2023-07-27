@@ -3,11 +3,11 @@ import { IsDate, IsDateString, IsEmail, IsNumber, IsString, IsUUID, MinLength } 
 export class CreateDefensorDto {
     @IsString()
     @MinLength(1)
-    direccionOficina: string;
+    direccion_oficina: string;
 
     @IsString()
     @MinLength(1)
-    telefonoOficina: string;
+    telefono_oficina: string;
 
     @IsString()
     @MinLength(1)
@@ -23,25 +23,22 @@ export class CreateDefensorDto {
     matricula: string;
 
     @IsNumber()
-    idOficina: number;
-
-    @IsNumber()
-    idCiudad: number;
+    id_ciudad: number;
 
     @IsDateString()
-    fechaPosesion: Date;
+    fecha_posesion: Date;
 
     @IsString()
     @IsUUID()
-    idPersona: string;
+    id_persona: string;
 
     @IsString()
     @IsUUID()
     @MinLength(1)
-    idMateria: string;
+    id_materia: string;
 
 
     @IsString()
     @MinLength(1)
-    usuarioRegistro: string;
+    usuario_registro: string;
 }

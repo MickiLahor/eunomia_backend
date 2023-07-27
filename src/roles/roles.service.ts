@@ -26,8 +26,8 @@ export class RolesService {
      const rol = this.rolRepository.create(
         {
           ...rolDetails,
-          fechaRegistro: new Date(),
-          registroActivo: true,
+          fecha_registro: new Date(),
+          registro_activo: true,
           permisos: await this.permisoRepository.findBy( {id: In(permisos) })
         }
       );
@@ -42,13 +42,13 @@ export class RolesService {
 
   async findAll() {
     const roles = await this.rolRepository.find({
-     where:{registroActivo:true}
+     where:{registro_activo:true}
       });
     return roles;
   }
 
   async findOne(id: string) {
-    const rol = await this.rolRepository.findOne({where:{id,registroActivo:true}});
+    const rol = await this.rolRepository.findOne({where:{id,registro_activo:true}});
     if ( !rol ) throw new NotFoundException(`El rol con id: ${id} no existe.`);
     return rol;
   }
@@ -65,7 +65,7 @@ export class RolesService {
     const rol = await this.rolRepository.preload({id, ...toUpdate });
     
     if ( !rol ) throw new NotFoundException(`Rol con el id: ${id} no existe`);
-    if(rol.registroActivo===false) throw new NotFoundException(`Rol con el id: ${id} fue dado de baja`);
+    if(rol.registro_activo===false) throw new NotFoundException(`Rol con el id: ${id} fue dado de baja`);
     try {
 
       rol.permisos= await this.permisoRepository.findBy( {id: In(permisos) })
@@ -81,7 +81,7 @@ export class RolesService {
 
   async remove(id: string) {
     const rol = await this.findOne(id);
-    rol.registroActivo=false;
+    rol.registro_activo=false;
     await this.rolRepository.save(rol)
     return { menssage:"Eliminado correctamente." };
   }

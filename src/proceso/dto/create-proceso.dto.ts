@@ -15,18 +15,18 @@ export class CreateProcesoDto {
 
     @IsNumber()
     @IsPositive()
-    idOficina: number;
+    id_oficina: number;
 
     @IsNumber()
     @IsPositive()
-    idCiudad: number;
+    id_ciudad: number;
 
     @IsString()
     @IsUUID()
     @MinLength(1)
-    idMateria: string;
+    id_materia: string;
 
     @IsString()
     @MinLength(1)
-    usuarioRegistro: string;
+    usuario_registro: string;
 }

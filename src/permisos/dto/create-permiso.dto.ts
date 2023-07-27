@@ -7,5 +7,5 @@ export class CreatePermisoDto {
 
     @IsString()
     @MinLength(1)
-    usuarioRegistro: string;
+    usuario_registro: string;
 }

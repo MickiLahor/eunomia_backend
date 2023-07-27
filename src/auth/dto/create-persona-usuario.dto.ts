@@ -28,10 +28,10 @@ export class CreatePersonaUsuarioDto {
     fotografia: string;
 
     @IsNumber()
-    idOficina: number;
+    id_oficina: number;
 
     @IsNumber()
-    idCiudad: number;
+    id_ciudad: number;
 
     @IsString({each:true})
     @IsArray()
@@ -39,5 +39,5 @@ export class CreatePersonaUsuarioDto {
 
     @IsString()
     @MinLength(1)
-    usuarioRegistro: string;
+    usuario_registro: string;
 }

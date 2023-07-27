@@ -10,26 +10,26 @@ export class CreateAuthDto {
     clave: string;
 
     @IsNumber()
-    idOficina: number;
+    id_oficina: number;
 
     @IsNumber()
-    idCiudad: number;
+    id_ciudad: number;
 
     @IsString()
     @IsUUID()
-    idPersona: string;
+    id_persona: string;
 
     @IsString()
     @MinLength(1)
-    usuarioRegistro: string;
+    usuario_registro: string;
 }
 
 export class ResetPasswordUserDto {
     @IsString()
     @IsUUID()
-    idUsuario: string;
+    id_usuario: string;
 
     @IsString()
     @MinLength(1)
-    usuarioRegistro: string;
+    usuario_registro: string;
 }

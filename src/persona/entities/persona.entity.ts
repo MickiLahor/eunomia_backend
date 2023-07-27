@@ -17,7 +17,7 @@ export class Persona {
     materno: string;
 
     @Column('text')
-    nombreCompleto: string;
+    nombre_completo: string;
 
     @Column('text')
     fotografia: string;
@@ -26,13 +26,13 @@ export class Persona {
     sexo: string;
 
     @Column('text')
-    usuarioRegistro: string;
+    usuario_registro: string;
     
     @Column('timestamp')
-    fechaRegistro: Date;
+    fecha_registro: Date;
     
     @Column('boolean')
-    registroActivo: boolean;
+    registro_activo: boolean;
 
     @OneToOne(() => Defensor, (defensor) => defensor.persona)
     defensor: Defensor  

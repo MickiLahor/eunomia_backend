@@ -11,13 +11,20 @@ import { AsignacionModule } from 'src/asignacion/asignacion.module';
 import { AxiosAdapter } from 'src/common/adapters/axios.adapter';
 import { CommonModule } from 'src/common/common.module';
 import { ConfigModule } from '@nestjs/config';
+import { AsignacionEstadoModule } from 'src/asignacion_estado/asignacion_estado.module';
+import { EstadoModule } from 'src/estado/estado.module';
 
 @Module({
   controllers: [ProcesoController],
   providers: [ProcesoService],
   imports: [TypeOrmModule.forFeature([ Proceso,Materia,Asignacion ]),
             MateriaModule,
-            DefensorModule, AsignacionModule, CommonModule, ConfigModule],
+            DefensorModule, 
+            AsignacionModule, 
+            CommonModule, 
+            ConfigModule,
+            AsignacionEstadoModule,
+            EstadoModule],
   exports:[ProcesoService]
 })
 export class ProcesoModule {}

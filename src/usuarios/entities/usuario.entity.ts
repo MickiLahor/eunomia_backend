@@ -11,19 +11,19 @@ export class Usuario {
     @Column('text')
     clave: string;
     @Column('integer')
-    idOficina: number; 
+    id_oficina: number; 
     @Column('integer')
-    idCiudad: number; 
+    id_ciudad: number; 
     @Column('text')
-    usuarioRegistro: string;
+    usuario_registro: string;
     @Column('timestamp')
-    fechaRegistro: Date;
+    fecha_registro: Date;
     @Column('boolean')
-    registroActivo: boolean;
+    registro_activo: boolean;
     @OneToOne(() => Persona,{cascade:true,eager:true})
     @JoinColumn()
     persona: Persona  
     @ManyToMany(() => Rol, {eager:true}) 
-    @JoinTable({name:"usuario_rol"})
+    @JoinTable({name:"usuario_rol",joinColumn:{name:"id_usuario"},inverseJoinColumn:{name:"id_rol"}})
     roles: Rol[]
 }

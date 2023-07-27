@@ -25,12 +25,12 @@ export class DefensorService {
     try {
       const defensor = this.defensorRepository.create({
         ...createDefensorDto,
-        persona : await this.personaService.findOne(createDefensorDto.idPersona),
+        persona : await this.personaService.findOne(createDefensorDto.id_persona),
         habilitado:true,
         sorteado:false,
-        materia : await this.materiaService.findOne(createDefensorDto.idMateria),
-        fechaRegistro:new Date(),
-        registroActivo: true
+        materia : await this.materiaService.findOne(createDefensorDto.id_materia),
+        fecha_registro:new Date(),
+        registro_activo: true
       });
 
       await this.defensorRepository.save(defensor);
@@ -46,27 +46,27 @@ export class DefensorService {
 
   async paginate(options: IPaginationOptions): Promise<Pagination<Defensor>> {
     return paginate<Defensor>(this.defensorRepository, options, {
-      where: { registroActivo:true },
-      order: { fechaRegistro: 'DESC' }
+      where: { registro_activo:true },
+      order: { fecha_registro: 'DESC' }
     });
   }
 
   async search(options: IPaginationOptions, searchDto: SearchDefendorDto) {
-    const {matricula = "",nombreCompleto=""} = searchDto
+    const {matricula = "",nombre_completo=""} = searchDto
     return paginate<Defensor>(this.defensorRepository, options, {
       where:    
       [
-        { matricula: ILike(`%${matricula}%`),registroActivo:true},
-        { persona: { nombreCompleto: ILike(`%${nombreCompleto}%`),registroActivo:true } },
-        {registroActivo:true}
+        { matricula: ILike(`%${matricula}%`),registro_activo:true},
+        { persona: { nombre_completo: ILike(`%${nombre_completo}%`),registro_activo:true } },
+        {registro_activo:true}
       ],
-      order: {fechaRegistro: 'DESC'}
+      order: {fecha_registro: 'DESC'}
     });
   }
 
   async findAllServicios() {
     const defensores = await this.defensorRepository.find({
-      where:{registroActivo:true},
+      where:{registro_activo:true},
       relations:{asignaciones:true}
   });
     return defensores;
@@ -76,25 +76,25 @@ export class DefensorService {
     return this.paginate(options)
   }
 
-  async sorteo(idCiudad: number, idMateria: string): Promise<Defensor> {
+  async sorteo(idCiudad: number, idMateria: string): Promise<Defensor> {//aumentar condicion de proceso que un defensor no sea sorteado si presento su excusa
     let defensores = await this.defensorRepository.find({
       where:
       {
-        registroActivo:true,
+        registro_activo:true,
         sorteado:false,
         habilitado:true,
-        idCiudad:idCiudad,
+        id_ciudad:idCiudad,
         materia: await this.materiaService.findOne(idMateria)
       }
     });
 
     if(defensores.length===0) {
       await this.defensorRepository.update(
-        { registroActivo:true, habilitado:true,idCiudad:idCiudad,materia: await this.materiaService.findOne(idMateria) },
+        { registro_activo:true, habilitado:true,id_ciudad:idCiudad,materia: await this.materiaService.findOne(idMateria) },
         { sorteado:false }
       )
       defensores = await this.defensorRepository.find({
-        where:{ registroActivo:true,sorteado:false,habilitado:true,idCiudad:idCiudad,materia: await this.materiaService.findOne(idMateria) }
+        where:{ registro_activo:true,sorteado:false,habilitado:true,id_ciudad:idCiudad,materia: await this.materiaService.findOne(idMateria) }
       });
     }
     const ramdom = Math.floor(Math.random() * defensores.length)
@@ -105,7 +105,7 @@ export class DefensorService {
   }
 
   async findOne(id: string) {
-    const defendor = await this.defensorRepository.findOne({where:{id,registroActivo:true}});
+    const defendor = await this.defensorRepository.findOne({where:{id,registro_activo:true}});
     if ( !defendor ) throw new NotFoundException(`El defensoor con id: ${id} no existe.`);
     return defendor;
   }
@@ -114,7 +114,7 @@ export class DefensorService {
     const defensor = await this.defensorRepository.preload({id, ...updateDefensorDto });
     
     if ( !defensor ) throw new NotFoundException(`El Defensor con el id: ${id} no existe`);
-    if(defensor.registroActivo===false) throw new NotFoundException(`El Defensor con el id: ${id} fue dado de baja`);
+    if(defensor.registro_activo===false) throw new NotFoundException(`El Defensor con el id: ${id} fue dado de baja`);
     try {
       await this.defensorRepository.save(defensor);
       return defensor;
@@ -125,7 +125,7 @@ export class DefensorService {
 
   async remove(id: string) {
     const defensor = await this.findOne(id);
-    defensor.registroActivo=false;
+    defensor.registro_activo=false;
     await this.defensorRepository.save(defensor)
     return { menssage:"Eliminado correctamente." };
   }

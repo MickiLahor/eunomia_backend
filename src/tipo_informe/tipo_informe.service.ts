@@ -19,8 +19,8 @@ export class TipoInformeService {
     try {
       const tipoInforme = this.tipoInformeRepository.create({
         ...createTipoInformeDto,
-        fechaRegistro:new Date(),
-        registroActivo: true
+        fecha_registro:new Date(),
+        registro_activo: true
       });
 
       await this.tipoInformeRepository.save(tipoInforme);
@@ -35,21 +35,21 @@ export class TipoInformeService {
 
   async findAll() {
     const tipoInforme = await this.tipoInformeRepository.find({
-      where:{registroActivo:true}
+      where:{registro_activo:true}
   });
     return tipoInforme;
   }
 
   async findAllSelect() {
     const tipoInforme = await this.tipoInformeRepository.find({
-       where:{registroActivo:true},
+       where:{registro_activo:true},
        select:{id:true,descripcion:true}
    });
      return tipoInforme;
    }
 
   async findOne(id: string) {
-    const tipoInforme = await this.tipoInformeRepository.findOne({where:{id,registroActivo:true}});
+    const tipoInforme = await this.tipoInformeRepository.findOne({where:{id,registro_activo:true}});
     if ( !tipoInforme) throw new NotFoundException(`El tipo informe con id: ${id} no existe.`);
     return tipoInforme;
   }
@@ -58,7 +58,7 @@ export class TipoInformeService {
     const tipoInforme = await this.tipoInformeRepository.preload({id, ...updateTipoInformeDto });
     
     if ( !tipoInforme ) throw new NotFoundException(`Tipo Informe con el id: ${id} no existe`);
-    if(tipoInforme.registroActivo===false) throw new NotFoundException(`Tipo Excusa con el id: ${id} fue dado de baja`);
+    if(tipoInforme.registro_activo===false) throw new NotFoundException(`Tipo Excusa con el id: ${id} fue dado de baja`);
     try {
       await this.tipoInformeRepository.save(tipoInforme);
       return tipoInforme;
@@ -69,7 +69,7 @@ export class TipoInformeService {
 
   async remove(id: string) {
     const tipoIInforme = await this.findOne(id);
-    tipoIInforme.registroActivo=false;
+    tipoIInforme.registro_activo=false;
     await this.tipoInformeRepository.save(tipoIInforme)
     return { message:"Eliminado correctamente." };
   }

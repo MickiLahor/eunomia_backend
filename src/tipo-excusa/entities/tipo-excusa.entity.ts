@@ -8,14 +8,14 @@ export class TipoExcusa {
     @Column('text',{unique:true})
     descripcion: string;
     @Column('text')
-    usuarioRegistro: string;
+    usuario_registro: string;
     
     @Column('timestamp')
-    fechaRegistro: Date;
+    fecha_registro: Date;
     
     @Column('boolean')
-    registroActivo: boolean;
+    registro_activo: boolean;
 
-    @OneToMany(() => Excusa, (excusa) => excusa.tipoExcusa)
+    @OneToMany(() => Excusa, (excusa) => excusa.tipo_excusa)
     excusas: Excusa[]
 }

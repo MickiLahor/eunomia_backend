@@ -27,8 +27,10 @@ import { RolesModule } from 'src/roles/roles.module';
             useFactory: ( configService: ConfigService ) => {
               return {
                 secret: configService.get('JWT_SECRET'),
+                global:true,
                      signOptions: {
-                      expiresIn:'365d'
+                      expiresIn:'365d',
+                      algorithm:'HS256',
                     }
               }
             }

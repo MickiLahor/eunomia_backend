@@ -17,18 +17,19 @@ export class Excusa {
     motivo: string; 
 
     @Column('text')
-    usuarioRegistro: string;
+    usuario_registro: string;
 
     @Column('timestamp')
-    fechaRegistro: Date;
+    fecha_registro: Date;
 
     @Column('boolean')
-    registroActivo: boolean;
+    registro_activo: boolean;
 
     @ManyToOne(() => TipoExcusa, (tipoExcusa)=> tipoExcusa.excusas, {cascade:true,eager:true})
-    tipoExcusa: TipoExcusa
+    @JoinColumn({name: "id_tipo_excusa"})
+    tipo_excusa: TipoExcusa
 
     @OneToOne(() => Asignacion, (asignacion) => asignacion.excusa, {eager:true,cascade:true})
-    @JoinColumn()
+    @JoinColumn({name: "id_asignacion"})
     asignacion: Asignacion
 }

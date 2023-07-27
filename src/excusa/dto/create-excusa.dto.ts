@@ -13,14 +13,14 @@ export class CreateExcusaDto {
     @IsString()
     @IsUUID()
     @MinLength(1)
-    idTipoExcusa: string;
+    id_tipo_excusa: string;
 
     @IsString()
     @IsUUID()
     @MinLength(1)
-    idAsignacion: string;
+    id_asignacion: string;
 
     @IsString()
     @MinLength(1)
-    usuarioRegistro: string;
+    usuario_registro: string;
 }

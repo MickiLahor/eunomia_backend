@@ -9,7 +9,7 @@ import { In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PersonaService } from 'src/persona/persona.service';
 import { LoginDto } from './dto/login.dto';
-import { ZeusResponseDto } from './dto/zeus-response.dto';
+import { ZeusDto, ZeusResponseDto } from './dto/zeus-response.dto';
 import { AxiosAdapter } from 'src/common/adapters/axios.adapter';
 import { ConfigService } from '@nestjs/config';
 import { CreatePersonaUsuarioDto } from './dto/create-persona-usuario.dto';
@@ -37,9 +37,9 @@ export class AuthService {
       const usuario = this.usuarioRepository.create({
         ...userData,
         clave : bcrypt.hashSync(clave,10),
-        persona : await this.personaService.findOne(userData.idPersona),
-        fechaRegistro:new Date(),
-        registroActivo: true
+        persona : await this.personaService.findOne(userData.id_persona),
+        fecha_registro:new Date(),
+        registro_activo: true
       });
 
       await this.usuarioRepository.save(usuario);
@@ -47,7 +47,7 @@ export class AuthService {
       delete usuario.clave
 
       return {  ...usuario,
-        token: this.getJwtToken( { user: usuario })
+        token: this.getJwtToken( { user: usuario, zeus:null })
      };
       //TODO: Retornar el JWT de acceso
     }
@@ -65,15 +65,15 @@ export class AuthService {
      
       const {...userData} = createAuthDto
       const usuario = this.usuarioRepository.create({
-        idCiudad : userData.idCiudad,
-        idOficina: userData.idOficina,
+        id_ciudad : userData.id_ciudad,
+        id_oficina: userData.id_oficina,
         usuario: userData.ci,
-        usuarioRegistro: userData.usuarioRegistro,
+        usuario_registro: userData.usuario_registro,
         roles:  await this.rolService.findBy({ id: In(userData.roles) }),
         clave : bcrypt.hashSync(userData.ci,10),
         persona : persona,
-        fechaRegistro:new Date(),
-        registroActivo: true
+        fecha_registro:new Date(),
+        registro_activo: true
       });
 
       await this.usuarioRepository.save(usuario);
@@ -81,7 +81,7 @@ export class AuthService {
       delete usuario.clave
 
       return {  ...usuario,
-        token: this.getJwtToken( { user: usuario })
+        token: this.getJwtToken( { user: usuario, zeus:null })
      };
       //TODO: Retornar el JWT de acceso
     }
@@ -94,9 +94,9 @@ export class AuthService {
 
   async resetPassword(resetPasswordUserDto: ResetPasswordUserDto) {
     try {
-      const user = await this.usuarioRepository.findOne({where:{id:resetPasswordUserDto.idUsuario,registroActivo:true}});
+      const user = await this.usuarioRepository.findOne({where:{id:resetPasswordUserDto.id_usuario,registro_activo:true}});
       user.clave = bcrypt.hashSync(user.persona.ci,10),
-      user.usuarioRegistro = resetPasswordUserDto.usuarioRegistro;
+      user.usuario_registro = resetPasswordUserDto.usuario_registro;
       await this.usuarioRepository.save(user)
       return { message:"Clave reestablecida correctamente." };
     }
@@ -115,7 +115,7 @@ export class AuthService {
       {
         where:
         {
-          registroActivo:true,
+          registro_activo:true,
           usuario:usuario,
         }
       }
@@ -129,12 +129,12 @@ export class AuthService {
     return { message: `Credenciales no validas para: ${usuario}`, error: "Unauthorized"  };
     //throw new UnauthorizedException(`Credenciales no validas para: ${usuario}`);
   
-    const zeus = await this.getOficinaZeusPro(user.idOficina);
+    const zeus = await this.getOficinaZeusPro(user.id_oficina);
 
     delete user.clave
 
     return {  ...user,
-              token: this.getJwtToken({user: user}),
+              token: await this.getJwtToken({user: user,zeus:zeus}),
               zeus
            };
   
@@ -143,13 +143,22 @@ export class AuthService {
 
   private async getOficinaZeusPro(idOficina: number) : Promise<ZeusResponseDto>
   {
-    const data = await this.http.get<ZeusResponseDto>(`${this.configService.get('URL_ZEUS')}/api/oficina/getOficina/${idOficina}`);
-    return data;
+    const data = await this.http.get<ZeusDto>(`${this.configService.get('URL_ZEUS')}/api/oficina/getOficina/${idOficina}`);
+    return {
+      id_oficina: data.idOficina,
+      descripcion: data.descripcion,
+      id_ente: data.idEnte,
+      ente: data.ente,
+      id_departamento: data.idDepartamento,
+      departamento: data.departamento,
+      id_municipio: data.idMunicipio,
+      municipio: data.municipio
+    };
   }
 
-  private getJwtToken(payload: JwtPayload ) {
-
-    const token = this.jwtService.sign( payload );
+  private async getJwtToken(payload: JwtPayload ) {
+    const token = await this.jwtService.signAsync( payload );
+    
     return token;
 
   }

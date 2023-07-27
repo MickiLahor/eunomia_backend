@@ -9,10 +9,10 @@ export class Defensor {
     id: string;
 
     @Column('text')
-    direccionOficina: string;
+    direccion_oficina: string;
 
     @Column('text')
-    telefonoOficina: string;
+    telefono_oficina: string;
 
     @Column('text')
     celular: string;
@@ -24,13 +24,10 @@ export class Defensor {
     matricula: string;
 
     @Column('integer')
-    idOficina: number;
-
-    @Column('integer')
-    idCiudad: number;
+    id_ciudad: number;
 
     @Column('date')
-    fechaPosesion: Date;
+    fecha_posesion: Date;
 
     @Column('boolean')
     habilitado: boolean;
@@ -39,16 +36,16 @@ export class Defensor {
     sorteado: boolean;
 
     @Column('text')
-    usuarioRegistro: string;
+    usuario_registro: string;
 
     @Column('timestamp')
-    fechaRegistro: Date;
+    fecha_registro: Date;
 
     @Column('boolean')
-    registroActivo: boolean;
+    registro_activo: boolean;
 
     @OneToOne(() => Persona, (persona) => persona.defensor, {eager:true,cascade:true})
-    @JoinColumn()
+    @JoinColumn({name:"id_persona"})
     persona: Persona
 
     @OneToMany(() => Asignacion, (asignacion) => asignacion.defensor)
@@ -57,5 +54,6 @@ export class Defensor {
     @ManyToOne(() => Materia, (materia)=> materia.defensores, 
                         {cascade:true,eager:true}
             )
+    @JoinColumn({name: "id_materia"})
     materia: Materia  
 }

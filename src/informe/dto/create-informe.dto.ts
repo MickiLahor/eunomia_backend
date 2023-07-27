@@ -13,15 +13,15 @@ export class CreateInformeDto {
     @IsString()
     @IsUUID()
     @MinLength(1)
-    idAsignacion: string;
+    id_asignacion: string;
 
     @IsString()
     @IsUUID()
     @MinLength(1)
-    idTipoInforme: string;
+    id_tipo_informe: string;
 
 
     @IsString()
     @MinLength(1)
-    usuarioRegistro: string;
+    usuario_registro: string;
 }

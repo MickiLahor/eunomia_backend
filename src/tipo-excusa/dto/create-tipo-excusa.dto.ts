@@ -7,5 +7,5 @@ export class CreateTipoExcusaDto {
 
     @IsString()
     @MinLength(1)
-    usuarioRegistro: string;
+    usuario_registro: string;
 }

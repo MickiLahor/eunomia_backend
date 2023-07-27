@@ -10,16 +10,16 @@ export class CreateUsuarioDto {
     clave: string;
 
     @IsNumber()
-    idOficina: number;
+    id_oficina: number;
 
     @IsNumber()
-    idCiudad: number;
+    id_ciudad: number;
 
     @IsString()
     @IsUUID()
-    idPersona: string;
+    id_persona: string;
 
     @IsString()
     @MinLength(1)
-    usuarioRegistro: string;
+    usuario_registro: string;
 }

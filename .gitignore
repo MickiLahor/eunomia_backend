@@ -4,7 +4,7 @@
 postgres/
 
 .env
-
+static
 # Logs
 logs
 *.log

@@ -22,6 +22,16 @@ export class InformeController {
     return this.informeService.findOne(id);
   }
 
+  @Get('asignacion/:id')
+  findForAsignacion(@Param('id',ParseUUIDPipe) id: string) {
+    return this.informeService.findForAsignacion(id);
+  }
+
+  @Get('proceso/:id')
+  findForProceso(@Param('id',ParseUUIDPipe) id: string) {
+    return this.informeService.findForProceso(id);
+  }
+
   @Patch(':id')
   update(@Param('id',ParseUUIDPipe) id: string, @Body() updateInformeDto: UpdateInformeDto) {
     return this.informeService.update(id, updateInformeDto);

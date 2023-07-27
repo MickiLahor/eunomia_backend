@@ -17,6 +17,8 @@ import { AuthModule } from './auth/auth.module';
 import { FilesModule } from './files/files.module';
 import { InformeModule } from './informe/informe.module';
 import { TipoInformeModule } from './tipo_informe/tipo_informe.module';
+import { EstadoModule } from './estado/estado.module';
+import { AsignacionEstadoModule } from './asignacion_estado/asignacion_estado.module';
 
 @Module({
   imports: [ ConfigModule.forRoot(),
@@ -29,6 +31,7 @@ import { TipoInformeModule } from './tipo_informe/tipo_informe.module';
                 password: process.env.DB_PASSWORD,
                 autoLoadEntities: true,
                 synchronize: true,
+                
               }),
               CommonModule,
               SeedModule,
@@ -45,6 +48,8 @@ import { TipoInformeModule } from './tipo_informe/tipo_informe.module';
               AuthModule,
               FilesModule,
               InformeModule,
-              TipoInformeModule,]
+              TipoInformeModule,
+              EstadoModule,
+              AsignacionEstadoModule,]
 })
 export class AppModule {}
