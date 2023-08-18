@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { ProcesoService } from './proceso.service';
 import { ProcesoController } from './proceso.controller';
 import { Materia } from 'src/materia/entities/materia.entity';
@@ -8,11 +8,11 @@ import { MateriaModule } from 'src/materia/materia.module';
 import { Asignacion } from 'src/asignacion/entities/asignacion.entity';
 import { DefensorModule } from 'src/defensor/defensor.module';
 import { AsignacionModule } from 'src/asignacion/asignacion.module';
-import { AxiosAdapter } from 'src/common/adapters/axios.adapter';
 import { CommonModule } from 'src/common/common.module';
 import { ConfigModule } from '@nestjs/config';
 import { AsignacionEstadoModule } from 'src/asignacion_estado/asignacion_estado.module';
 import { EstadoModule } from 'src/estado/estado.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   controllers: [ProcesoController],
@@ -24,7 +24,8 @@ import { EstadoModule } from 'src/estado/estado.module';
             CommonModule, 
             ConfigModule,
             AsignacionEstadoModule,
-            EstadoModule],
+            EstadoModule
+            ],
   exports:[ProcesoService]
 })
 export class ProcesoModule {}

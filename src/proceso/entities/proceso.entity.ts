@@ -1,9 +1,13 @@
+import { Exclude } from "class-transformer";
 import { Asignacion } from "src/asignacion/entities/asignacion.entity";
+import { ZeusResponseDto } from "src/auth/dto/zeus-response.dto";
+import { CommonService } from "src/common/common.service";
 import { Materia } from "src/materia/entities/materia.entity";
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, ViewColumn } from "typeorm";
 
 @Entity()
 export class Proceso {
+
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
@@ -19,6 +23,8 @@ export class Proceso {
     @Column('integer')
     id_oficina: number;
     
+    zeus: ZeusResponseDto
+    
     @Column('integer')
     id_ciudad: number;
 
@@ -32,11 +38,11 @@ export class Proceso {
     registro_activo: boolean;
 
     @ManyToOne(() => Materia, (materia)=> materia.procesos, 
-                        {cascade:true,eager:true}
+                        {cascade:true}
             )
     @JoinColumn({name: "id_materia"})
     materia: Materia  
 
-    @OneToMany(() => Asignacion, (asignacion) => asignacion.proceso,{eager:true})
+    @OneToMany(() => Asignacion, (asignacion) => asignacion.proceso)
     asignaciones: Asignacion[]
 }

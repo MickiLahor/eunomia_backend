@@ -31,7 +31,7 @@ export class ProcesoService {
     private readonly http: AxiosAdapter,
     private readonly configService: ConfigService,  
     private readonly asignacionEstadoService: AsignacionEstadoService,
-    private readonly estadoService: EstadoService
+    private readonly estadoService: EstadoService,
   ){}
 
   async create(createProcesoDto: CreateProcesoDto) {
@@ -51,8 +51,9 @@ export class ProcesoService {
         {
           fecha:new Date(),
           id_asignacion:asignacion.id,
+          vigente:true,
           usuario_registro:createProcesoDto.usuario_registro,
-          id_estado: (await this.estadoService.findOneDescripcion(Estado.Reasignado)).id
+          id_estado: (await this.estadoService.findOneDescripcion(Estado.Asignado)).id
         })
         return asignacion;
     }
@@ -66,23 +67,48 @@ export class ProcesoService {
   async paginate(options: IPaginationOptions): Promise<Pagination<Proceso>> {
     return paginate<Proceso>(this.procesoRepository, options, {
       where:{registro_activo:true},
-      relations:{asignaciones:{asignaciones_estados:{estado:true}}},
-      order: {fecha_registro: 'DESC'}
+      relations:{
+        materia:true,
+        asignaciones:{
+            asignaciones_estados:{
+                            estado:true
+                          },
+                          defensor:{
+                            persona:true
+                          }
+                     }
+                },
+        order: {fecha_registro: 'DESC',asignaciones:{fecha_registro:'desc',asignaciones_estados:{fecha_registro:'desc'}}}
     });
   }
 
   async search(options: IPaginationOptions, searchDto: SearchProcesoDto) {
     const {nurej = "",demandado= "",demandante=""} = searchDto
-    return paginate<Proceso>(this.procesoRepository, options, {
+    let data = await paginate<Proceso>(this.procesoRepository, options, {
       where:    
       [
         { nurej: ILike(`%${nurej}%`),registro_activo:true },
         { demandado: ILike(`%${demandado}%`),registro_activo:true },
         { demandante: ILike(`%${demandante}%`),registro_activo:true },
       ],
-      relations:{asignaciones:{asignaciones_estados:{estado:true,asignacion:false}}},
-      order: {fecha_registro: 'DESC'}
+      relations:{
+        materia:true,
+        asignaciones:{
+          asignaciones_estados:{
+            estado:true
+          },
+          defensor:{
+            persona:true
+          }
+        }
+      },
+      order: {fecha_registro: 'DESC',asignaciones:{fecha_registro:'desc',asignaciones_estados:{fecha_registro:'desc'}}}
     });
+
+    for(let i=0;i<data.items.length;i++) {
+      data.items[i].zeus = await this.getOficinaZeusPro(data.items[i].id_oficina)
+    }
+    return data;
   }
 
   async all() {
@@ -94,8 +120,12 @@ export class ProcesoService {
   }
 
 
-  findAll(options: IPaginationOptions) {
-    return this.paginate(options)
+  async findAll(options: IPaginationOptions) {
+    let data = await this.paginate(options);
+    for(let i=0;i<data.items.length;i++) {
+      data.items[i].zeus = await this.getOficinaZeusPro(data.items[i].id_oficina)
+    }
+    return data;
   }
 
   async findOne(id: string) {
@@ -105,21 +135,23 @@ export class ProcesoService {
           id,
           registro_activo:true
         }
+        ,relations:{
+          materia:true,
+          asignaciones:{
+            asignaciones_estados:{
+              estado:true
+            },
+            defensor:{
+              persona:true
+            }
+          }
+        },
       }
     );
     if ( !proceso ) throw new NotFoundException(`El proceso con id: ${id} no existe.`);
     const zeus = await this.getOficinaZeusPro(proceso.id_oficina);
-    return {
-              id:proceso.id,
-              nurej:proceso.nurej,
-              demandante: proceso.demandante,
-              demandado: proceso.demandado,
-              oficina: zeus.descripcion,
-              id_oficina: proceso.id_oficina,
-              ciudad: zeus.municipio,
-              id_ciudad:proceso.id_ciudad,
-              ...proceso
-   };
+    proceso.zeus=zeus;
+    return proceso;
   }
 
   async update(id: string, updateProcesoDto: UpdateProcesoDto) {

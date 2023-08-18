@@ -31,7 +31,7 @@ export class Asignacion {
     @JoinColumn({name: "id_proceso"})
     proceso: Proceso  
 
-    @ManyToOne(() => Defensor, (defensor)=> defensor.asignaciones,{cascade:true,eager:true}
+    @ManyToOne(() => Defensor, (defensor)=> defensor.asignaciones,{cascade:true}
             )
     @JoinColumn({name: "id_defensor"})
     defensor: Defensor 

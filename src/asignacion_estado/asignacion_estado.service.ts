@@ -3,7 +3,7 @@ import { CreateAsignacionEstadoDto } from './dto/create-asignacion_estado.dto';
 import { UpdateAsignacionEstadoDto } from './dto/update-asignacion_estado.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AsignacionEstado } from './entities/asignacion_estado.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { EstadoService } from 'src/estado/estado.service';
 import { AsignacionService } from 'src/asignacion/asignacion.service';
 
@@ -51,6 +51,19 @@ export class AsignacionEstadoService {
 
   remove(id: number) {
     return `This action removes a #${id} asignacionEstado`;
+  }
+
+  async noVigentes(id_asignacion: string)
+  {
+    try {
+      await this.asignacionEstadoRepository.createQueryBuilder()
+      .update(AsignacionEstado)
+      .set({vigente:false})
+      .where("id_asignacion = :id_asignacion", { id_asignacion: id_asignacion })
+      .execute()
+    } catch (error) {
+      this.handleDBExpeptions(error);
+    }
   }
 
   private handleDBExpeptions(error: any) {

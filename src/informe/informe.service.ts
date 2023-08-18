@@ -43,7 +43,9 @@ export class InformeService {
     const informe = await this.informeRepository.find({
       where:{registro_activo:true},
       relations:{
+        tipo_informe:true,
         asignacion: {
+          defensor:{persona:true},
           proceso:true
         }
       }
@@ -59,7 +61,9 @@ export class InformeService {
         asignacion:[{registro_activo:true,id:id_asignacion}]
       },
       relations:{
+        tipo_informe:true,
         asignacion: {
+          defensor:{persona:true},
           proceso:true
         }
       }
@@ -78,7 +82,9 @@ export class InformeService {
         }]
       },
       relations:{
+        tipo_informe:true,
         asignacion: {
+          defensor:{persona:true},
           proceso:true
         }
       }

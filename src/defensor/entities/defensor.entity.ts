@@ -44,7 +44,7 @@ export class Defensor {
     @Column('boolean')
     registro_activo: boolean;
 
-    @OneToOne(() => Persona, (persona) => persona.defensor, {eager:true,cascade:true})
+    @OneToOne(() => Persona, (persona) => persona.defensor, {cascade:true})
     @JoinColumn({name:"id_persona"})
     persona: Persona
 
@@ -52,7 +52,7 @@ export class Defensor {
     asignaciones: Asignacion[]
 
     @ManyToOne(() => Materia, (materia)=> materia.defensores, 
-                        {cascade:true,eager:true}
+                        {cascade:true}
             )
     @JoinColumn({name: "id_materia"})
     materia: Materia  

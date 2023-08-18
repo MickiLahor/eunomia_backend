@@ -9,6 +9,7 @@ import { CreateExcusaDto } from 'src/excusa/dto/create-excusa.dto';
 import { ExcusaService } from 'src/excusa/excusa.service';
 import { InformeService } from 'src/informe/informe.service';
 import { CreateInformeDto } from 'src/informe/dto/create-informe.dto';
+import { mkdirSync } from 'fs';
 
 
 const MAX_PROFILE_PICTURE_SIZE_IN_BYTES = 10000000;
@@ -46,7 +47,7 @@ export class FilesController {
   @UseInterceptors( FileInterceptor('archivo', {
     fileFilter:fileFilter, 
     storage: diskStorage({
-      destination: './static/excusa',
+      destination: `./static/excusa`,
       filename: fileNamer
     })  
   } 
@@ -64,7 +65,6 @@ export class FilesController {
     }),
   ) archivo: Express.Multer.File, @Body() body: CreateExcusaDto)
   {
-
     if( !archivo ){
       throw new BadRequestException('El archivo no es un pdf')
     }

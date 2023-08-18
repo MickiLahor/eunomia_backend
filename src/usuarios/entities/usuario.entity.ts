@@ -20,10 +20,10 @@ export class Usuario {
     fecha_registro: Date;
     @Column('boolean')
     registro_activo: boolean;
-    @OneToOne(() => Persona,{cascade:true,eager:true})
+    @OneToOne(() => Persona,{cascade:true})
     @JoinColumn()
     persona: Persona  
-    @ManyToMany(() => Rol, {eager:true}) 
+    @ManyToMany(() => Rol) 
     @JoinTable({name:"usuario_rol",joinColumn:{name:"id_usuario"},inverseJoinColumn:{name:"id_rol"}})
     roles: Rol[]
 }

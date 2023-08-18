@@ -10,6 +10,9 @@ export class AsignacionEstado {
     @Column('date')
     fecha: Date;
 
+    @Column('boolean')
+    vigente: boolean;
+
     @Column('text')
     usuario_registro: string;
 
@@ -19,12 +22,12 @@ export class AsignacionEstado {
     @Column('boolean')
     registro_activo: boolean;
 
-    @ManyToOne(() => Estado, (estado)=> estado.asignaciones_estados,{cascade:true,eager:true}
+    @ManyToOne(() => Estado, (estado)=> estado.asignaciones_estados,{cascade:true}
     )
     @JoinColumn({name: "id_estado"})
     estado: Estado
     
-    @ManyToOne(() => Asignacion, (asignacion)=> asignacion.asignaciones_estados,{cascade:true,eager:true}
+    @ManyToOne(() => Asignacion, (asignacion)=> asignacion.asignaciones_estados,{cascade:true}
     )
     @JoinColumn({name: "id_asignacion"})
     asignacion: Asignacion

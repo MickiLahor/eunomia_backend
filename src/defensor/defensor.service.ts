@@ -4,10 +4,11 @@ import { IPaginationOptions, paginate, Pagination } from 'nestjs-typeorm-paginat
 import { SearchDefendorDto, SearchDto } from 'src/common/dtos/search.dto';
 import { MateriaService } from 'src/materia/materia.service';
 import { PersonaService } from 'src/persona/persona.service';
-import { ILike, Repository } from 'typeorm';
+import { ILike, In, Not, Repository } from 'typeorm';
 import { CreateDefensorDto } from './dto/create-defensor.dto';
 import { UpdateDefensorDto } from './dto/update-defensor.dto';
 import { Defensor } from './entities/defensor.entity';
+import { Asignacion } from 'src/asignacion/entities/asignacion.entity';
 
 @Injectable()
 export class DefensorService {
@@ -47,6 +48,7 @@ export class DefensorService {
   async paginate(options: IPaginationOptions): Promise<Pagination<Defensor>> {
     return paginate<Defensor>(this.defensorRepository, options, {
       where: { registro_activo:true },
+      relations:{persona:true},
       order: { fecha_registro: 'DESC' }
     });
   }
@@ -60,6 +62,7 @@ export class DefensorService {
         { persona: { nombre_completo: ILike(`%${nombre_completo}%`),registro_activo:true } },
         {registro_activo:true}
       ],
+      relations:{persona:true},
       order: {fecha_registro: 'DESC'}
     });
   }
@@ -67,7 +70,7 @@ export class DefensorService {
   async findAllServicios() {
     const defensores = await this.defensorRepository.find({
       where:{registro_activo:true},
-      relations:{asignaciones:true}
+      relations:{asignaciones:true,persona:true}
   });
     return defensores;
   }
@@ -84,7 +87,7 @@ export class DefensorService {
         sorteado:false,
         habilitado:true,
         id_ciudad:idCiudad,
-        materia: await this.materiaService.findOne(idMateria)
+        materia: await this.materiaService.findOne(idMateria),
       }
     });
 
@@ -104,8 +107,45 @@ export class DefensorService {
     return defensores[ramdom];
   }
 
+  async sorteoExcusa(asignacion: Asignacion): Promise<Defensor> {//aumentar condicion de proceso que un defensor no sea sorteado si presento su excusa
+    const ids : string[] = asignacion.proceso.asignaciones.map(x=>x.defensor.id)
+    let defensores = await this.defensorRepository
+    .createQueryBuilder("defensor")
+    .where("defensor.id NOT IN (:...ids)",{ids: ids})
+    .andWhere("defensor.registro_activo = true")
+    .andWhere("defensor.sorteado = false")
+    .andWhere("defensor.habilitado = true")
+    .andWhere("defensor.id_ciudad = :id_ciudad",{id_ciudad:asignacion.proceso.id_ciudad})
+    .andWhere("defensor.id_materia = :id_materia",{id_materia:asignacion.proceso.materia.id}).getMany();
+    if(defensores.length===0) {
+      await this.defensorRepository.update(
+        { registro_activo:true, habilitado:true,
+          id_ciudad: asignacion.proceso.id_ciudad,materia: await this.materiaService.findOne(asignacion.proceso.materia.id)},
+        { sorteado:false }
+      )
+      defensores = await this.defensorRepository
+      .createQueryBuilder("defensor")
+      .where("defensor.id NOT IN (:...ids)",{ids: ids})
+      .andWhere("defensor.registro_activo = true")
+      .andWhere("defensor.sorteado = false")
+      .andWhere("defensor.habilitado = true")
+      .andWhere("defensor.id_ciudad = :id_ciudad",{id_ciudad:asignacion.proceso.id_ciudad})
+      .andWhere("defensor.id_materia = :id_materia",{id_materia:asignacion.proceso.materia.id}).getMany();
+      if(defensores.length===0) return null;
+    }
+    const ramdom = Math.floor(Math.random() * defensores.length)
+    let defensor: Defensor = defensores[ramdom]
+    defensor.sorteado=true;
+    await this.defensorRepository.save(defensor);
+    return defensores[ramdom];
+  }
+
   async findOne(id: string) {
-    const defendor = await this.defensorRepository.findOne({where:{id,registro_activo:true}});
+    const defendor = await this.defensorRepository.findOne(
+      {
+        where:{id,registro_activo:true},
+        relations:{persona:true}
+      });
     if ( !defendor ) throw new NotFoundException(`El defensoor con id: ${id} no existe.`);
     return defendor;
   }

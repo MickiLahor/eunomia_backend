@@ -35,7 +35,7 @@ export class TipoInformeService {
 
   async findAll() {
     const tipoInforme = await this.tipoInformeRepository.find({
-      where:{registro_activo:true}
+      where:{registro_activo:true},
   });
     return tipoInforme;
   }

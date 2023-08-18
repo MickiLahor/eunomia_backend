@@ -1,6 +1,6 @@
-import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, InternalServerErrorException, Logger, NotFoundException, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, ILike, In, IsNull, Not, QueryBuilder, Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { CreatePersonaDto } from './dto/create-persona.dto';
 import { UpdatePersonaDto } from './dto/update-persona.dto';
 import { Persona } from './entities/persona.entity';
@@ -11,6 +11,7 @@ import {
 } from 'nestjs-typeorm-paginate';
 import { SearchDto } from 'src/common/dtos/search.dto';
 import { Defensor } from 'src/defensor/entities/defensor.entity';
+import { UsuariosService } from 'src/usuarios/usuarios.service';
 
 @Injectable()
 export class PersonaService {
@@ -22,6 +23,8 @@ export class PersonaService {
     private readonly personaRepository: Repository<Persona>,
     @InjectRepository(Defensor)
     private readonly defensorRepository: Repository<Defensor>,
+    @Inject(forwardRef(() => UsuariosService))
+    private readonly usuarioService: UsuariosService
   ){}
 
 
@@ -99,22 +102,14 @@ export class PersonaService {
     return persona;
   }
 
+
+
   async findOneCi(id: string) {
     const persona = await this.personaRepository.findOne({where:{ ci:id,registro_activo:true}});
-    if ( !persona ) return  {message:`La Persona con id: ${id} no existe.`, error:true}
+    if ( !persona ) return  {message:`La Persona con CI: ${id} no existe.`, error:true}
 
-    const defensor = await this.defensorRepository.findOne(
-      {
-        where:{
-          registro_activo:true,
-          persona: {
-            registro_activo:true,
-            id:persona.id
-          }
-        }
-      });      
-      if ( defensor )  return  {message:`La Persona con ci ${persona.ci} ya es un defensor.`, error:true};
-      return persona;
+    const usuario = await this.usuarioService.findOneByPersona(persona.ci);
+      return {persona,usuario};
   }
 
   async update(id: string, updatePersonaDto: UpdatePersonaDto) {

@@ -5,6 +5,7 @@ import { CreateAsignacionDto } from './dto/create-asignacion.dto';
 import { Asignacion } from './entities/asignacion.entity';
 import { IPaginationOptions, Pagination, paginate } from 'nestjs-typeorm-paginate';
 import { SearchAsignacionDto } from 'src/common/dtos/search.dto';
+import { CommonService } from 'src/common/common.service';
 
 @Injectable()
 export class AsignacionService {
@@ -15,27 +16,33 @@ export class AsignacionService {
   constructor(
     @InjectRepository(Asignacion)
     private readonly asignacionRepository: Repository<Asignacion>,
+    private readonly commonService: CommonService
   ){}
 
   async findAll(options: IPaginationOptions) {
-    return this.paginate(options)
+    let data = await this.paginate(options)
+    for(let i=0;i<data.items.length;i++) {
+      data.items[i].proceso.zeus = await this.commonService.getOficinaZeusPro(data.items[i].proceso.id_oficina)
+    }
+    return data;
   }
 
   async paginate(options: IPaginationOptions): Promise<Pagination<Asignacion>> {
     return paginate<Asignacion>(this.asignacionRepository, options, {
-      where:{registro_activo:true},
+      where:{registro_activo:true,asignaciones_estados:{vigente:true}},
       relations:{
-        defensor:true,
-        proceso:true,
-        excusa:true
+        defensor:{persona:true},
+        proceso:{materia:true},
+        excusa:true,
+        asignaciones_estados:{estado:true}
       },
-      order: {fecha_registro: 'DESC'}
+      order: {fecha_registro: 'DESC',asignaciones_estados:{fecha_registro:'DESC'}}
     });
   }
   
   async search(options: IPaginationOptions, searchDto: SearchAsignacionDto) {
     const {nurej = "",demandado= "",demandante="", defensor="",materia=""} = searchDto
-    return paginate<Asignacion>(this.asignacionRepository, options, {
+    let data = await paginate<Asignacion>(this.asignacionRepository, options, {
       where:    
       [
         {
@@ -45,8 +52,7 @@ export class AsignacionService {
           { demandante: ILike(`%${demandante}%`),registro_activo:true },
           {materia:[
             {descripcion: ILike(`%${materia}%`),registro_activo:true}
-          ]}
-          
+          ]} 
           ],
         },
         {
@@ -55,11 +61,24 @@ export class AsignacionService {
               persona:
                 {nombre_completo: ILike(`%${defensor}%`),registro_activo:true}
             }
-        }      
+        },
+        {
+          asignaciones_estados:{vigente:true}
+        }        
       ],
-      relations:{asignaciones_estados:{estado:true},defensor:true,proceso:{materia:true}},
-      order: {fecha_registro: 'DESC'}
+      relations:{
+        asignaciones_estados:{estado:true},
+        defensor:{persona:true},
+        proceso:{materia:true}
+      },
+      order: {fecha_registro: 'DESC',asignaciones_estados:{fecha_registro:'DESC'}}
     });
+
+    for(let i=0;i<data.items.length;i++) {
+      data.items[i].proceso.zeus = await this.commonService.getOficinaZeusPro(data.items[i].proceso.id_oficina)
+    }
+    
+    return data; 
   }
 
   async create(createAsignacionDto: CreateAsignacionDto) {
@@ -90,11 +109,13 @@ export class AsignacionService {
         },
         relations:
         {
-          proceso:true,
-          asignaciones_estados:true
+          proceso:{materia:true,asignaciones:{defensor:true}},
+          asignaciones_estados:{estado:true},
+          defensor:{persona:true}
         }
       });
     if ( !asignacion ) throw new NotFoundException(`La asignación con id: ${id} no existe.`);
+    asignacion.proceso.zeus = await this.commonService.getOficinaZeusPro(asignacion.proceso.id_oficina)
     return asignacion;
   }
 

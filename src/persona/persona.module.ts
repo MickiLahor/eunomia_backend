@@ -1,11 +1,11 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { PersonaService } from './persona.service';
 import { PersonaController } from './persona.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Persona } from './entities/persona.entity';
 import { Defensor } from 'src/defensor/entities/defensor.entity';
-import { UsuariosModule } from 'src/usuarios/usuarios.module';
 import { AuthModule } from 'src/auth/auth.module';
+import { UsuariosModule } from 'src/usuarios/usuarios.module';
 
 
 @Module({
@@ -14,6 +14,7 @@ import { AuthModule } from 'src/auth/auth.module';
   imports:[ 
               AuthModule,
               TypeOrmModule.forFeature([ Persona, Defensor ]),
+              forwardRef(() => UsuariosModule)
           ],
   exports: [PersonaService]
 })

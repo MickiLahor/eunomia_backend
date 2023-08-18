@@ -50,7 +50,10 @@ export class UsuariosService {
     where:{registro_activo:true,
       roles:[
         {registro_activo:true}
-      ]
+      ],
+    },
+    relations:{
+      persona:true
     },
     order: {fecha_registro: 'DESC'}
   });
@@ -59,6 +62,21 @@ export class UsuariosService {
   async findOne(id: string) {
     const usuario = await this.usuarioRepository.findOne({where:{id,registro_activo:true}});
     if ( !usuario ) throw new NotFoundException(`El usuario con id: ${id} no existe.`);
+    return usuario;
+  }
+
+  async findOneByPersona(ci: string) {
+    const usuario = await this.usuarioRepository.findOne(
+      {
+        where:
+        {
+          persona:{ci},
+          registro_activo:true
+        },
+        relations:{ roles:true },
+      });
+    if ( !usuario ) return {error:true,message:`El usuario con CI: ${ci} no existe.`};
+    delete usuario.clave
     return usuario;
   }
 
@@ -78,6 +96,9 @@ export class UsuariosService {
           { descripcion: ILike(`%${rol}%`),registro_activo:true},
           ]},
       ],
+      relations:{
+        persona:true,
+      },
       order: {fecha_registro: 'DESC'}
     });
   }

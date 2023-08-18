@@ -28,7 +28,6 @@ export class ExcusaService {
   async create(createExcusaDto: CreateExcusaDto) {
     try {
       const asignacion = await this.asignacionService.findOne(createExcusaDto.id_asignacion)
-      console.log(asignacion);
       const excusa = await this.excusaRepository.create({
         ...createExcusaDto,
         tipo_excusa: await this.tipoExcusaService.findOne(createExcusaDto.id_tipo_excusa),
@@ -38,29 +37,32 @@ export class ExcusaService {
         registro_activo: true
       });
       await this.excusaRepository.save(excusa);
-
-      console.log(asignacion.proceso.id_ciudad);
-      console.log(asignacion.proceso.materia.id);
+      await this.asignacionEstadoService.noVigentes(createExcusaDto.id_asignacion)
       await this.asignacionEstadoService.create(
         {
           id_asignacion:asignacion.id,
           fecha:new Date(),
+          vigente:true,
           usuario_registro:excusa.usuario_registro,
           id_estado: (await this.estadoService.findOneDescripcion(Estado.Excusado)).id
         })
       
-      const defensor = await this.defensorService.sorteo(asignacion.proceso.id_ciudad, asignacion.proceso.materia.id);
+      const defensor = await this.defensorService.sorteoExcusa(asignacion);
+
+      if(!defensor) return {message:"Todos los defensores se excusaron."} 
+
       const createAsignacionDto: CreateAsignacionDto = {defensor:defensor,proceso:asignacion.proceso,fecha:new Date()}
       const nuevaAsignacion = await this.asignacionService.create(createAsignacionDto)
       this.asignacionEstadoService.create(
         {
           id_asignacion: nuevaAsignacion.id,
           fecha:new Date(),
+          vigente:true,
           usuario_registro:excusa.usuario_registro,
           id_estado:(await this.estadoService.findOneDescripcion(Estado.Reasignado)).id
         })
       
-      return nuevaAsignacion;
+      return {...nuevaAsignacion, message:"La excusa fue registrada correctamente."} ;
    }
     catch(error) {
       console.log(error);
@@ -73,6 +75,7 @@ export class ExcusaService {
     const excusa = await this.excusaRepository.find({
       where:{registro_activo:true},
       relations:{
+        tipo_excusa:true,
         asignacion: {
           proceso:true
         }
@@ -89,8 +92,10 @@ export class ExcusaService {
         asignacion:[{registro_activo:true,id:id_asignacion}]
       },
       relations:{
+        tipo_excusa:true,
         asignacion: {  
-          proceso:true
+          proceso:true,
+          defensor:{persona:true}
         }
       }
   });
@@ -100,6 +105,7 @@ export class ExcusaService {
   async findForProceso(id_proceso: string) {  
     const excusa = await this.excusaRepository.find({
       where:{
+        tipo_excusa:true,
         registro_activo:true,
         asignacion:[{
                     registro_activo:true,

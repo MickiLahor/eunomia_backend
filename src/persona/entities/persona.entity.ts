@@ -1,5 +1,6 @@
 import { Defensor } from "src/defensor/entities/defensor.entity";
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Usuario } from "src/usuarios/entities/usuario.entity";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Persona {

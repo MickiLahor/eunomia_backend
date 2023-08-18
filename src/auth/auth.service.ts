@@ -1,6 +1,5 @@
-import { BadRequestException, HttpStatus, Injectable, InternalServerErrorException, Logger, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { CreateAuthDto, ResetPasswordUserDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './interfaces';
 import * as bcrypt from 'bcrypt'
@@ -118,6 +117,7 @@ export class AuthService {
           registro_activo:true,
           usuario:usuario,
         }
+        ,relations:{persona:true,roles:true}
       }
     );
   
@@ -131,17 +131,13 @@ export class AuthService {
   
     const zeus = await this.getOficinaZeusPro(user.id_oficina);
 
-    delete user.clave
 
-    return {  ...user,
-              token: await this.getJwtToken({user: user,zeus:zeus}),
-              zeus
-           };
+    return { token: await this.getJwtToken({user: user,zeus:zeus}) };
   
     //TODO: retornar el JWT
   }
 
-  private async getOficinaZeusPro(idOficina: number) : Promise<ZeusResponseDto>
+  public async getOficinaZeusPro(idOficina: number) : Promise<ZeusResponseDto>
   {
     const data = await this.http.get<ZeusDto>(`${this.configService.get('URL_ZEUS')}/api/oficina/getOficina/${idOficina}`);
     return {

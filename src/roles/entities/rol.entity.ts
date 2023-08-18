@@ -16,7 +16,7 @@ export class Rol {
     @Column('boolean')
     registro_activo: boolean;
 
-    @ManyToMany(() => Permiso, (permiso) => permiso.roles,{ eager:true,cascade:true }) 
+    @ManyToMany(() => Permiso, (permiso) => permiso.roles,{ cascade:true }) 
     @JoinTable({name:"rol_permiso",joinColumn:{name:"id_rol"},inverseJoinColumn:{name:"id_permiso"}})
     permisos: Permiso[]
 }

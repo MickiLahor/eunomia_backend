@@ -22,11 +22,11 @@ export class Informe {
     @Column('boolean')
     registro_activo: boolean;
 
-    @ManyToOne(() => TipoInforme, (tipo_informe)=> tipo_informe.informes, {cascade:true,eager:true})
+    @ManyToOne(() => TipoInforme, (tipo_informe)=> tipo_informe.informes, {cascade:true})
     @JoinColumn({ name: "id_tipo_informe" })
     tipo_informe: TipoInforme
 
-    @ManyToOne(() => Asignacion, (asignacion) => asignacion.informe, {eager:true,cascade:true})
+    @ManyToOne(() => Asignacion, (asignacion) => asignacion.informe, {cascade:true})
     @JoinColumn({name: "id_asignacion"})
     asignacion: Asignacion
 }

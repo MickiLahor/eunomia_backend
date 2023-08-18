@@ -25,11 +25,11 @@ export class Excusa {
     @Column('boolean')
     registro_activo: boolean;
 
-    @ManyToOne(() => TipoExcusa, (tipoExcusa)=> tipoExcusa.excusas, {cascade:true,eager:true})
+    @ManyToOne(() => TipoExcusa, (tipoExcusa)=> tipoExcusa.excusas, {cascade:true})
     @JoinColumn({name: "id_tipo_excusa"})
     tipo_excusa: TipoExcusa
 
-    @OneToOne(() => Asignacion, (asignacion) => asignacion.excusa, {eager:true,cascade:true})
+    @OneToOne(() => Asignacion, (asignacion) => asignacion.excusa, {cascade:true})
     @JoinColumn({name: "id_asignacion"})
     asignacion: Asignacion
 }
