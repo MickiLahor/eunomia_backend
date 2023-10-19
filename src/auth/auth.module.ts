@@ -10,6 +10,7 @@ import { Usuario } from 'src/usuarios/entities/usuario.entity';
 import { PersonaModule } from 'src/persona/persona.module';
 import { CommonModule } from 'src/common/common.module';
 import { RolesModule } from 'src/roles/roles.module';
+import { DefensorModule } from 'src/defensor/defensor.module';
 
 @Module({
   controllers: [AuthController],
@@ -36,6 +37,7 @@ import { RolesModule } from 'src/roles/roles.module';
             }
           }),
           forwardRef(() => PersonaModule),
+          forwardRef(() => DefensorModule)
         ],
         exports: [ TypeOrmModule, JwtStrategy, PassportModule, JwtModule ]
 })

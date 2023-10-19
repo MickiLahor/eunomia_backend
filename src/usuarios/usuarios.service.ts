@@ -75,7 +75,7 @@ export class UsuariosService {
         },
         relations:{ roles:true },
       });
-    if ( !usuario ) return {error:true,message:`El usuario con CI: ${ci} no existe.`};
+    if ( !usuario ) return {estado:1,message:`El usuario con CI: ${ci} no existe.`};
     delete usuario.clave
     return usuario;
   }

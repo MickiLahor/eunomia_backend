@@ -1,4 +1,4 @@
-import { IsArray, IsNumber, IsOptional, IsString, IsUUID, MaxLength, MinLength } from "class-validator";
+import { IsArray, IsDateString, IsNumber, IsOptional, IsString, IsUUID, MaxLength, MinLength } from "class-validator";
 
 export class CreatePersonaUsuarioDto {
     
@@ -28,6 +28,7 @@ export class CreatePersonaUsuarioDto {
     fotografia: string;
 
     @IsNumber()
+    @IsOptional()
     id_oficina: number;
 
     @IsNumber()
@@ -36,6 +37,34 @@ export class CreatePersonaUsuarioDto {
     @IsString({each:true})
     @IsArray()
     roles: string[];
+
+    @IsString()
+    @IsOptional()
+    id_materia: string;
+
+    @IsString()
+    @IsOptional()
+    direccion_oficina: string;
+
+    @IsString()
+    @IsOptional()
+    telefono_oficina: string;
+
+    @IsString()
+    @IsOptional()
+    celular: string;
+
+    @IsString()
+    @IsOptional()
+    correo: string;
+
+    @IsString()
+    @IsOptional()
+    matricula: string;
+
+    @IsDateString()
+    @IsOptional()
+    fecha_posesion: Date;
 
     @IsString()
     @MinLength(1)

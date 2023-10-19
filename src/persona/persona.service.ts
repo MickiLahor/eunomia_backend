@@ -12,6 +12,7 @@ import {
 import { SearchDto } from 'src/common/dtos/search.dto';
 import { Defensor } from 'src/defensor/entities/defensor.entity';
 import { UsuariosService } from 'src/usuarios/usuarios.service';
+import { Usuario } from 'src/usuarios/entities/usuario.entity';
 
 @Injectable()
 export class PersonaService {
@@ -106,10 +107,11 @@ export class PersonaService {
 
   async findOneCi(id: string) {
     const persona = await this.personaRepository.findOne({where:{ ci:id,registro_activo:true}});
-    if ( !persona ) return  {message:`La Persona con CI: ${id} no existe.`, error:true}
+    if ( !persona ) return  {estado:2,message:`La Persona con CI: ${id} no existe.`}
 
-    const usuario = await this.usuarioService.findOneByPersona(persona.ci);
-      return {persona,usuario};
+    const usuario : any = await this.usuarioService.findOneByPersona(persona.ci);
+    if(!usuario.estado) return {persona,usuario,estado:3};
+      else return {persona,usuario,estado:usuario.estado};
   }
 
   async update(id: string, updatePersonaDto: UpdatePersonaDto) {

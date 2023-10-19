@@ -53,7 +53,7 @@ public async getOficinaZeusPro(idOficina: number) : Promise<ZeusResponseDto>
 
   public async getOficinaZeusProPorMunicipio(id: number) : Promise<Array<OficinaDto>>
   {
-    const consulta = await this.http.get<Array<ZeusProOficinaDto>>(`${this.configService.get('URL_ZEUS')}/api/oficina/por_municipio?idMunicipio=${id}`);
+    const consulta = await this.http.get<Array<ZeusProOficinaDto>>(`${this.configService.get('URL_ZEUS')}/api/oficina/por_municipio_all?idMunicipio=${id}`);
     const data : Array<OficinaDto> = consulta.map(x=>{
       return {
         id_oficina:x.idOficina,

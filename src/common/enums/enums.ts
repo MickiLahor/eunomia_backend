@@ -4,3 +4,7 @@ export enum Estado {
     Reasignado = "Reasignado",
     Concluido = "Concluido",
   }
+
+  export enum Roles {
+    Defensor = "Defensor",
+  }

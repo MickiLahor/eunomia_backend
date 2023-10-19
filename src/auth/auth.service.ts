@@ -13,6 +13,8 @@ import { AxiosAdapter } from 'src/common/adapters/axios.adapter';
 import { ConfigService } from '@nestjs/config';
 import { CreatePersonaUsuarioDto } from './dto/create-persona-usuario.dto';
 import { RolesService } from 'src/roles/roles.service';
+import { Roles } from 'src/common/enums/enums';
+import { DefensorService } from 'src/defensor/defensor.service';
 
 @Injectable()
 export class AuthService {
@@ -27,6 +29,7 @@ export class AuthService {
     private readonly http: AxiosAdapter,
     private readonly configService: ConfigService,
     private readonly rolService: RolesService,
+    private readonly defensorService: DefensorService
   ){}
 
   async create(createAuthDto: CreateAuthDto) {
@@ -76,6 +79,16 @@ export class AuthService {
       });
 
       await this.usuarioRepository.save(usuario);
+
+      const rol = await this.rolService.findOne(userData.roles[0]);
+      
+      if(rol.descripcion===Roles.Defensor)
+      {
+          await this.defensorService.create({
+            ...userData,
+            id_persona:persona.id,
+          })
+      }
 
       delete usuario.clave
 
