@@ -20,7 +20,7 @@ export class Persona {
     @Column('text')
     nombre_completo: string;
 
-    @Column('text')
+    @Column({type:'text', nullable: true})
     fotografia: string;
     
     @Column({ length: 1 })
@@ -36,5 +36,8 @@ export class Persona {
     registro_activo: boolean;
 
     @OneToOne(() => Defensor, (defensor) => defensor.persona)
-    defensor: Defensor  
+    defensor: Defensor
+
+    @OneToOne(() => Usuario, (usuario) => usuario.persona)
+    usuario: Usuario  
 }

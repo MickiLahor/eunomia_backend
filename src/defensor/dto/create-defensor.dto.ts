@@ -1,4 +1,4 @@
-import { IsDate, IsDateString, IsEmail, IsNumber, IsString, IsUUID, MinLength } from "class-validator";
+import { IsDate, IsDateString, IsEmail, IsNumber, IsOptional, IsString, IsUUID, MinLength } from "class-validator";
 
 export class CreateDefensorDto {
     @IsString()
@@ -23,6 +23,9 @@ export class CreateDefensorDto {
     matricula: string;
 
     @IsNumber()
+    id_departamento: number;
+    
+    @IsNumber()
     id_ciudad: number;
 
     @IsDateString()
@@ -34,11 +37,9 @@ export class CreateDefensorDto {
 
     @IsString()
     @IsUUID()
-    @MinLength(1)
     id_materia: string;
 
-
     @IsString()
-    @MinLength(1)
+    // @MinLength(1)
     usuario_registro: string;
 }

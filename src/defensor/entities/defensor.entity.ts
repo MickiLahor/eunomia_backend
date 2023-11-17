@@ -23,6 +23,9 @@ export class Defensor {
     @Column('text')
     matricula: string;
 
+    @Column({type: 'integer'})
+    id_departamento: number;
+
     @Column('integer')
     id_ciudad: number;
 
@@ -44,6 +47,9 @@ export class Defensor {
     @Column('boolean')
     registro_activo: boolean;
 
+    @Column('uuid')
+    id_materia: string;
+
     @OneToOne(() => Persona, (persona) => persona.defensor, {cascade:true})
     @JoinColumn({name:"id_persona"})
     persona: Persona
@@ -51,9 +57,7 @@ export class Defensor {
     @OneToMany(() => Asignacion, (asignacion) => asignacion.defensor)
     asignaciones: Asignacion[]
 
-    @ManyToOne(() => Materia, (materia)=> materia.defensores, 
-                        {cascade:true}
-            )
+    @ManyToOne(() => Materia, (materia)=> materia.defensores, {cascade:true})
     @JoinColumn({name: "id_materia"})
     materia: Materia  
 }

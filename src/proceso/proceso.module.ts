@@ -1,6 +1,6 @@
 import { Module, forwardRef } from '@nestjs/common';
-import { ProcesoService } from './proceso.service';
-import { ProcesoController } from './proceso.controller';
+import { ProcesoService } from './service/proceso.service';
+import { ProcesoController } from './controller/proceso.controller';
 import { Materia } from 'src/materia/entities/materia.entity';
 import { Proceso } from './entities/proceso.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { AsignacionEstadoService } from './asignacion_estado.service';
-import { AsignacionEstadoController } from './asignacion_estado.controller';
+import { AsignacionEstadoService } from './service/asignacion_estado.service';
+import { AsignacionEstadoController } from './controller/asignacion_estado.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AsignacionEstado } from './entities/asignacion_estado.entity';
 import { Asignacion } from 'src/asignacion/entities/asignacion.entity';

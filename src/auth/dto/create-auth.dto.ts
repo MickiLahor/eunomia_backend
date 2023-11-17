@@ -15,6 +15,9 @@ export class CreateAuthDto {
     @IsNumber()
     id_ciudad: number;
 
+    @IsNumber()
+    id_departamento: number;
+
     @IsString()
     @IsUUID()
     id_persona: string;

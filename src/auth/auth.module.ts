@@ -1,6 +1,6 @@
 import { Module, forwardRef } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { AuthController } from './auth.controller';
+import { AuthService } from './service/auth.service';
+import { AuthController } from './controller/auth.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport/dist';
@@ -11,6 +11,7 @@ import { PersonaModule } from 'src/persona/persona.module';
 import { CommonModule } from 'src/common/common.module';
 import { RolesModule } from 'src/roles/roles.module';
 import { DefensorModule } from 'src/defensor/defensor.module';
+import { UsuariosModule } from 'src/usuarios/usuarios.module';
 
 @Module({
   controllers: [AuthController],
@@ -29,7 +30,7 @@ import { DefensorModule } from 'src/defensor/defensor.module';
               return {
                 secret: configService.get('JWT_SECRET'),
                 global:true,
-                     signOptions: {
+                      signOptions: {
                       expiresIn:'365d',
                       algorithm:'HS256',
                     }
@@ -37,6 +38,7 @@ import { DefensorModule } from 'src/defensor/defensor.module';
             }
           }),
           forwardRef(() => PersonaModule),
+          forwardRef(() => UsuariosModule),
           forwardRef(() => DefensorModule)
         ],
         exports: [ TypeOrmModule, JwtStrategy, PassportModule, JwtModule ]

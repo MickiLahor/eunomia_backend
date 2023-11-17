@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { DefensorService } from 'src/defensor/defensor.service';
-import { MateriaService } from 'src/materia/materia.service';
-import { PersonaService } from 'src/persona/persona.service';
-import { ProcesoService } from 'src/proceso/proceso.service';
+import { DefensorService } from 'src/defensor/service/defensor.service';
+import { MateriaService } from 'src/materia/service/materia.service';
+import { PersonaService } from 'src/persona/service/persona.service';
+import { ProcesoService } from 'src/proceso/service/proceso.service';
 import { initialData } from './data/seed-data';
-import { TipoExcusaService } from 'src/tipo-excusa/tipo-excusa.service';
-import { TipoInformeService } from 'src/tipo_informe/tipo_informe.service';
+import { TipoExcusaService } from 'src/tipo-excusa/service/tipo-excusa.service';
+import { TipoInformeService } from 'src/tipo_informe/service/tipo_informe.service';
 
 @Injectable()
 export class SeedService {

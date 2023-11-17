@@ -30,6 +30,7 @@ interface SeedDefensor {
     correo: string;
     matricula: string;
     id_oficina: number;
+    id_departamento: number;
     id_ciudad: number;
     fecha_posesion: Date;
     id_persona: string;
@@ -160,6 +161,7 @@ export const initialData: SeedData = {
             correo:"windsor@organojudicial.gob.bo",
             matricula:"das3232-5464",
             id_oficina:1,
+            id_departamento:1,
             id_ciudad:1,
             fecha_posesion: new Date("2022-10-24"),    
             id_persona:"",
@@ -173,6 +175,7 @@ export const initialData: SeedData = {
             correo:"cherbas@organojudicial.gob.bo",
             matricula:"5445465",
             id_oficina:1,
+            id_departamento:1,
             id_ciudad:1,
             fecha_posesion:new Date("2023-10-24"),    
             id_persona:"",
@@ -186,6 +189,7 @@ export const initialData: SeedData = {
             correo:"michi@organojudicial.gob.bo",
             matricula:"41424",
             id_oficina:1,
+            id_departamento:1,
             id_ciudad:1,
             fecha_posesion:new Date("2024-10-24"),    
             id_persona:"",
@@ -199,6 +203,7 @@ export const initialData: SeedData = {
             correo:"mateo@organojudicial.gob.bo",
             matricula:"656455",
             id_oficina:1,
+            id_departamento:1,
             id_ciudad:1,
             fecha_posesion:new Date("2021-10-24"),    
             id_persona:"",

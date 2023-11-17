@@ -9,6 +9,10 @@ export class SearchDto {
 
     @IsOptional()
     @Type(() => String )
+    nombre_completo?: string;
+
+    @IsOptional()
+    @Type(() => String )
     nombre?: string;
 
     @IsOptional()

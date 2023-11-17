@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { InformeService } from './informe.service';
-import { InformeController } from './informe.controller';
+import { InformeService } from './service/informe.service';
+import { InformeController } from './controller/informe.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Informe } from './entities/informe.entity';
 import { Asignacion } from 'src/asignacion/entities/asignacion.entity';

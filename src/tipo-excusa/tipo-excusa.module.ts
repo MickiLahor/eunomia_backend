@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { TipoExcusaService } from './tipo-excusa.service';
-import { TipoExcusaController } from './tipo-excusa.controller';
+import { TipoExcusaService } from './service/tipo-excusa.service';
+import { TipoExcusaController } from './controller/tipo-excusa.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TipoExcusa } from './entities/tipo-excusa.entity';
 import { Excusa } from 'src/excusa/entities/excusa.entity';

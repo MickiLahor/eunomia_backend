@@ -34,6 +34,9 @@ export class CreatePersonaUsuarioDto {
     @IsNumber()
     id_ciudad: number;
 
+    @IsNumber()
+    id_departamento: number;
+
     @IsString({each:true})
     @IsArray()
     roles: string[];
