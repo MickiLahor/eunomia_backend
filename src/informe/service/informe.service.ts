@@ -30,7 +30,7 @@ export class InformeService {
       });
 
       await this.informeRepository.save(informe);
-      return informe;
+      return { ...informe, message: "Registro correcto.", error: false };
     }
     catch(error) {
       console.log(error);

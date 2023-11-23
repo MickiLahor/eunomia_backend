@@ -98,31 +98,52 @@ export class DefensorService {
   }
 
   async sorteo(idCiudad: number, idMateria: string): Promise<Defensor> {//aumentar condicion de proceso que un defensor no sea sorteado si presento su excusa
-    let defensores = await this.defensorRepository.find({
-      where:
-      {
-        registro_activo:true,
-        sorteado:false,
-        habilitado:true,
-        id_ciudad:idCiudad,
-        materia: await this.materiaService.findOne(idMateria),
-      }
-    });
-
-    if(defensores.length===0) {
-      await this.defensorRepository.update(
-        { registro_activo:true, habilitado:true,id_ciudad:idCiudad,materia: await this.materiaService.findOne(idMateria) },
-        { sorteado:false }
-      )
-      defensores = await this.defensorRepository.find({
-        where:{ registro_activo:true,sorteado:false,habilitado:true,id_ciudad:idCiudad,materia: await this.materiaService.findOne(idMateria) }
+    try {
+      let cantidadDefensores = await this.defensorRepository.find({
+        where:
+        {
+          registro_activo:true,
+          habilitado:true,
+          id_ciudad:idCiudad,
+          materia: await this.materiaService.findOne(idMateria),
+        }
       });
+      if (cantidadDefensores.length !== 0) {
+        let defensores = await this.defensorRepository.find({
+          where:
+          {
+            registro_activo:true,
+            sorteado:false,
+            habilitado:true,
+            id_ciudad:idCiudad,
+            materia: await this.materiaService.findOne(idMateria),
+          }
+        });
+    
+        if(defensores.length===0) {
+          await this.defensorRepository.update(
+            { registro_activo:true, habilitado:true,id_ciudad:idCiudad,materia: await this.materiaService.findOne(idMateria) },
+            { sorteado:false }
+          )
+          defensores = await this.defensorRepository.find({
+            where:{ registro_activo:true,sorteado:false,habilitado:true,id_ciudad:idCiudad,materia: await this.materiaService.findOne(idMateria) }
+          });
+        }
+        const ramdom = Math.floor(Math.random() * defensores.length)
+        let defensor: Defensor = defensores[ramdom]
+        defensor.sorteado=true;
+        await this.defensorRepository.save(defensor);
+        return defensores[ramdom];
+      } else {
+        return null
+      }
+    } catch (error) {
+      console.log(error);
+      this.handleDBExpeptions(error);
     }
-    const ramdom = Math.floor(Math.random() * defensores.length)
-    let defensor: Defensor = defensores[ramdom]
-    defensor.sorteado=true;
-    await this.defensorRepository.save(defensor);
-    return defensores[ramdom];
+    
+    
+    
   }
 
   async sorteoExcusa(asignacion: Asignacion): Promise<Defensor> {//aumentar condicion de proceso que un defensor no sea sorteado si presento su excusa

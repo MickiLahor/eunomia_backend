@@ -46,34 +46,32 @@ export class AsignacionService {
       where:    
       [
         {
-          proceso:[
-          { nurej: ILike(`%${nurej}%`),registro_activo:true },
-          { demandado: ILike(`%${demandado}%`),registro_activo:true },
-          { demandante: ILike(`%${demandante}%`),registro_activo:true },
-          {materia:[
-            {descripcion: ILike(`%${materia}%`),registro_activo:true}
-          ]} 
+          asignaciones_estados: {vigente: true},
+          proceso: [
+            { nurej: ILike(`%${nurej}%`),registro_activo:true },
+            { demandado: ILike(`%${demandado}%`),registro_activo:true },
+            { demandante: ILike(`%${demandante}%`),registro_activo:true },
+            {materia:[
+              {descripcion: ILike(`%${materia}%`),registro_activo:true }
+            ]} 
           ],
         },
         {
-            defensor:
-            {
-              persona:
-                {nombre_completo: ILike(`%${defensor}%`),registro_activo:true}
-            }
-        },
-        {
-          asignaciones_estados:{vigente:true}
-        }        
+          asignaciones_estados: {vigente: true},
+          defensor:
+          {
+            persona:
+              {nombre_completo: ILike(`%${defensor}%`),registro_activo:true}
+          }
+        },    
       ],
       relations:{
         asignaciones_estados:{estado:true},
         defensor:{persona:true},
         proceso:{materia:true}
       },
-      order: {fecha_registro: 'DESC',asignaciones_estados:{fecha_registro:'DESC'}}
+      order: {fecha_registro: 'DESC'}
     });
-
     for(let i=0;i<data.items.length;i++) {
       data.items[i].proceso.zeus = await this.commonService.getOficinaZeusPro(data.items[i].proceso.id_oficina)
     }

@@ -25,45 +25,51 @@ export class ExcusaService {
     private readonly asignacionEstadoService: AsignacionEstadoService,
     private readonly estadoService: EstadoService      
   ){}
+  
   async create(createExcusaDto: CreateExcusaDto) {
     try {
-      const asignacion = await this.asignacionService.findOne(createExcusaDto.id_asignacion)
-      const excusa = await this.excusaRepository.create({
-        ...createExcusaDto,
-        tipo_excusa: await this.tipoExcusaService.findOne(createExcusaDto.id_tipo_excusa),
-        asignacion : asignacion,
-        url: createExcusaDto.archivo,
-        fecha_registro:new Date(),
-        registro_activo: true
-      });
-      await this.excusaRepository.save(excusa);
-      await this.asignacionEstadoService.noVigentes(createExcusaDto.id_asignacion)
-      await this.asignacionEstadoService.create(
-        {
-          id_asignacion:asignacion.id,
-          fecha:new Date(),
-          vigente:true,
-          usuario_registro:excusa.usuario_registro,
-          id_estado: (await this.estadoService.findOneDescripcion(Estado.Excusado)).id
-        })
-      
-      const defensor = await this.defensorService.sorteoExcusa(asignacion);
+      const excusaAsignacion = await this.findForAsignacion(createExcusaDto.id_asignacion)
+      if (excusaAsignacion.length === 0) {
+        const asignacion = await this.asignacionService.findOne(createExcusaDto.id_asignacion)
+        console.log("🚀 ~ file: excusa.service.ts:31 ~ ExcusaService ~ create ~ asignacion:", asignacion)
+        const excusa = await this.excusaRepository.create({
+          ...createExcusaDto,
+          tipo_excusa: await this.tipoExcusaService.findOne(createExcusaDto.id_tipo_excusa),
+          asignacion : asignacion,
+          url: createExcusaDto.archivo,
+          fecha_registro:new Date(),
+          registro_activo: true
+        });
+        await this.excusaRepository.save(excusa);
+        await this.asignacionEstadoService.noVigentes(createExcusaDto.id_asignacion)
+        await this.asignacionEstadoService.create(
+          {
+            id_asignacion:asignacion.id,
+            fecha:new Date(),
+            vigente:true,
+            usuario_registro:excusa.usuario_registro,
+            id_estado: (await this.estadoService.findOneDescripcion(Estado.Excusado)).id
+          })
+        
+        const defensor = await this.defensorService.sorteoExcusa(asignacion);
 
-      if(!defensor) return {message:"Todos los defensores se excusaron."} 
+        if(!defensor) return {message:"Todos los defensores se excusaron.", error: true} 
 
-      const createAsignacionDto: CreateAsignacionDto = {defensor:defensor,proceso:asignacion.proceso,fecha:new Date()}
-      const nuevaAsignacion = await this.asignacionService.create(createAsignacionDto)
-      this.asignacionEstadoService.create(
-        {
-          id_asignacion: nuevaAsignacion.id,
-          fecha:new Date(),
-          vigente:true,
-          usuario_registro:excusa.usuario_registro,
-          id_estado:(await this.estadoService.findOneDescripcion(Estado.Reasignado)).id
-        })
-      
-      return {...nuevaAsignacion, message:"La excusa fue registrada correctamente."} ;
-   }
+        const createAsignacionDto: CreateAsignacionDto = {defensor:defensor,proceso:asignacion.proceso,fecha:new Date()}
+        const nuevaAsignacion = await this.asignacionService.create(createAsignacionDto)
+        this.asignacionEstadoService.create(
+          {
+            id_asignacion: nuevaAsignacion.id,
+            fecha:new Date(),
+            vigente:true,
+            usuario_registro:excusa.usuario_registro,
+            id_estado:(await this.estadoService.findOneDescripcion(Estado.Reasignado)).id
+          })
+        
+        return {...nuevaAsignacion, message:"Registro correcto.", error: false};
+      }
+      return {message:"Ya existe una excusa registrada por el defensor en el proceso.", error: true};
+    }
     catch(error) {
       console.log(error);
       
@@ -71,7 +77,7 @@ export class ExcusaService {
     }
   }
 
- async findAll() {
+  async findAll() {
     const excusa = await this.excusaRepository.find({
       where:{registro_activo:true},
       relations:{
@@ -126,7 +132,7 @@ export class ExcusaService {
     if ( !excusa ) throw new NotFoundException(`La excusa con id: ${id} no existe.`);
     return excusa;
   }
- 
+
   async update(id: string, updateExcusaDto: UpdateExcusaDto) {
     const excusa = await this.excusaRepository.preload({id, ...updateExcusaDto });
     

@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, InternalServerErrorException, Logger, NotFoundException, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IPaginationOptions, paginate, Pagination } from 'nestjs-typeorm-paginate';
 import { AsignacionService } from 'src/asignacion/service/asignacion.service';
@@ -16,6 +16,7 @@ import { AxiosAdapter } from 'src/common/adapters/axios.adapter';
 import { AsignacionEstadoService } from 'src/asignacion_estado/service/asignacion_estado.service';
 import { Estado } from 'src/common/enums/enums';
 import { EstadoService } from 'src/estado/service/estado.service';
+import { CommonService } from 'src/common/common.service';
 
 @Injectable()
 export class ProcesoService {
@@ -32,6 +33,8 @@ export class ProcesoService {
     private readonly configService: ConfigService,  
     private readonly asignacionEstadoService: AsignacionEstadoService,
     private readonly estadoService: EstadoService,
+    @Inject(forwardRef(() => CommonService))
+    private readonly commonService: CommonService
   ){}
 
   async create(createProcesoDto: CreateProcesoDto) {
@@ -42,10 +45,12 @@ export class ProcesoService {
         fecha_registro:new Date(),
         registro_activo: true
       });
-
-      await this.procesoRepository.save(proceso);
       const defensor = await this.defensorService.sorteo(proceso.id_ciudad, proceso.materia.id);
+      if (defensor === null) {
+        return { message: "No existen defensores en el municipio y materia del proceso", error: true }; 
+      }
       const createAsignacionDto: CreateAsignacionDto = {defensor:defensor,proceso:proceso,fecha:new Date()}
+      await this.procesoRepository.save(proceso);
       const asignacion = await this.asignacionService.create(createAsignacionDto)
       await this.asignacionEstadoService.create({
         fecha:new Date(),
@@ -54,7 +59,7 @@ export class ProcesoService {
         usuario_registro:createProcesoDto.usuario_registro,
         id_estado: (await this.estadoService.findOneDescripcion(Estado.Asignado)).id
       })
-      return asignacion;
+      return { ...asignacion, message: "Registro correcto.", error: false };
     }
     catch(error) {
       console.log(error);
@@ -68,15 +73,15 @@ export class ProcesoService {
       where:{registro_activo:true},
       relations:{
         materia:true,
-        asignaciones:{
-            asignaciones_estados:{
-                            estado:true
-                          },
-                          defensor:{
-                            persona:true
-                          }
-                     }
-                },
+        asignaciones: {
+          asignaciones_estados: {
+            estado:true
+          },
+          defensor:{
+            persona:true
+          }
+        }
+      },
         order: {fecha_registro: 'DESC',asignaciones:{fecha_registro:'desc',asignaciones_estados:{fecha_registro:'desc'}}}
     });
   }
@@ -84,11 +89,13 @@ export class ProcesoService {
   async search(options: IPaginationOptions, searchDto: SearchProcesoDto) {
     const {nurej = "",demandado= "",demandante=""} = searchDto
     let data = await paginate<Proceso>(this.procesoRepository, options, {
-      where:    
+      where:   
       [
-        { nurej: ILike(`%${nurej}%`),registro_activo:true },
-        { demandado: ILike(`%${demandado}%`),registro_activo:true },
-        { demandante: ILike(`%${demandante}%`),registro_activo:true },
+        
+        { nurej: ILike(`%${nurej}%`),registro_activo:true, asignaciones: {asignaciones_estados: {vigente: true}} },
+        { demandado: ILike(`%${demandado}%`),registro_activo:true, asignaciones: {asignaciones_estados: {vigente: true}} },
+        { demandante: ILike(`%${demandante}%`),registro_activo:true, asignaciones: {asignaciones_estados: {vigente: true}} },
+        
       ],
       relations:{
         materia:true,
@@ -101,11 +108,12 @@ export class ProcesoService {
           }
         }
       },
-      order: {fecha_registro: 'DESC',asignaciones:{fecha_registro:'desc',asignaciones_estados:{fecha_registro:'desc'}}}
+      // order: {fecha_registro: 'DESC',asignaciones:{fecha_registro:'desc',asignaciones_estados:{fecha_registro:'desc'}}}
+      order: {fecha_registro: 'DESC', asignaciones: {fecha_registro: 'DESC'}}
     });
 
     for(let i=0;i<data.items.length;i++) {
-      data.items[i].zeus = await this.getOficinaZeusPro(data.items[i].id_oficina)
+      data.items[i].zeus = await this.commonService.getOficinaZeusPro(data.items[i].id_oficina)
     }
     return data;
   }
@@ -122,7 +130,7 @@ export class ProcesoService {
   async findAll(options: IPaginationOptions) {
     let data = await this.paginate(options);
     for(let i=0;i<data.items.length;i++) {
-      data.items[i].zeus = await this.getOficinaZeusPro(data.items[i].id_oficina)
+      data.items[i].zeus = await this.commonService.getOficinaZeusPro(data.items[i].id_oficina)
     }
     return data;
   }
@@ -148,7 +156,7 @@ export class ProcesoService {
       }
     );
     if ( !proceso ) throw new NotFoundException(`El proceso con id: ${id} no existe.`);
-    const zeus = await this.getOficinaZeusPro(proceso.id_oficina);
+    const zeus = await this.commonService.getOficinaZeusPro(proceso.id_oficina);
     proceso.zeus=zeus;
     return proceso;
   }
@@ -166,17 +174,17 @@ export class ProcesoService {
     }
   }
 
-  private async getOficinaZeusPro(idOficina: number) : Promise<ZeusResponseDto>
-  {
-    const data = await this.http.get<ZeusDto>(`${this.configService.get('URL_ZEUS')}/api/oficina/getOficina/${idOficina}`);
-    return {
-      ...data,
-      id_oficina: data.idOficina,
-      id_ente: data.idEnte,
-      id_departamento: data.idDepartamento,
-      id_municipio: data.idMunicipio,
-    };
-  }
+  // private async getOficinaZeusPro(idOficina: number) : Promise<ZeusResponseDto>
+  // {
+  //   const data = await this.http.get<ZeusDto>(`${this.configService.get('URL_ZEUS')}/api/oficina/getOficina/${idOficina}`);
+  //   return {
+  //     ...data,
+  //     id_oficina: data.idOficina,
+  //     id_ente: data.idEnte,
+  //     id_departamento: data.idDepartamento,
+  //     id_municipio: data.idMunicipio,
+  //   };
+  // }
 
   async remove(id: string) {
     const proceso = await this.findOne(id);
