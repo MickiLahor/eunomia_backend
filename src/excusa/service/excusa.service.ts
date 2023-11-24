@@ -31,7 +31,6 @@ export class ExcusaService {
       const excusaAsignacion = await this.findForAsignacion(createExcusaDto.id_asignacion)
       if (excusaAsignacion.length === 0) {
         const asignacion = await this.asignacionService.findOne(createExcusaDto.id_asignacion)
-        console.log("🚀 ~ file: excusa.service.ts:31 ~ ExcusaService ~ create ~ asignacion:", asignacion)
         const excusa = await this.excusaRepository.create({
           ...createExcusaDto,
           tipo_excusa: await this.tipoExcusaService.findOne(createExcusaDto.id_tipo_excusa),

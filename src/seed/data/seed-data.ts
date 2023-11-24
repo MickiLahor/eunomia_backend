@@ -62,19 +62,19 @@ export const initialData: SeedData = {
     materias: [
         {
             descripcion: "Penal",
-            usuario_registro: "siqui"
+            usuario_registro: "wmlahor"
         },
         {
             descripcion: "Civil y Comercial",
-            usuario_registro: "siqui"
+            usuario_registro: "wmlahor"
         },
         {
             descripcion: "Laboral",
-            usuario_registro: "siqui"
+            usuario_registro: "wmlahor"
         },
         {
             descripcion: "Familiar",
-            usuario_registro: "siqui"
+            usuario_registro: "wmlahor"
         },
     ],
     procesos: [
@@ -85,7 +85,7 @@ export const initialData: SeedData = {
             id_oficina: 1,
             id_ciudad: 1,
             id_materia: "",
-            usuario_registro: "siqui"
+            usuario_registro: "wmlahor"
         },
         {
             nurej: "321",
@@ -94,7 +94,7 @@ export const initialData: SeedData = {
             id_oficina: 1,
             id_ciudad: 1,
             id_materia: "",
-            usuario_registro: "siqui"
+            usuario_registro: "wmlahor"
         },
         {
             nurej: "987",
@@ -103,7 +103,7 @@ export const initialData: SeedData = {
             id_oficina: 1,
             id_ciudad: 1,
             id_materia: "",
-            usuario_registro: "siqui"
+            usuario_registro: "wmlahor"
         },
         {
             nurej: "55336",
@@ -112,7 +112,7 @@ export const initialData: SeedData = {
             id_oficina: 1,
             id_ciudad: 1,
             id_materia: "",
-            usuario_registro: "siqui"
+            usuario_registro: "wmlahor"
         },
     ],
     personas: [
@@ -123,7 +123,7 @@ export const initialData: SeedData = {
             materno: "Davila",
             fotografia: "macho de micky",
             sexo: "M",
-            usuario_registro: "siqui"
+            usuario_registro: "wmlahor"
         },
         {
             ci: "1234567",
@@ -132,7 +132,7 @@ export const initialData: SeedData = {
             materno: "Sucha",
             fotografia: "no tiene",
             sexo: "F",
-            usuario_registro: "siqui"
+            usuario_registro: "wmlahor"
         },
         {
             ci: "3244731",
@@ -141,7 +141,7 @@ export const initialData: SeedData = {
             materno: "Metro Sexual",
             fotografia: "wakala",
             sexo: "M",
-            usuario_registro: "siqui"
+            usuario_registro: "wmlahor"
         },
         {
             ci: "5657543",
@@ -150,7 +150,7 @@ export const initialData: SeedData = {
             materno: "Guerra",
             fotografia: "barbas",
             sexo: "I",
-            usuario_registro: "siqui"
+            usuario_registro: "wmlahor"
         }
     ],
     defensor:[
@@ -166,7 +166,7 @@ export const initialData: SeedData = {
             fecha_posesion: new Date("2022-10-24"),    
             id_persona:"",
             id_materia: "",
-            usuario_registro:"tu macho"
+            usuario_registro:"wmlahor"
         },
         {
             direccion_oficina:"nose 2",
@@ -180,7 +180,7 @@ export const initialData: SeedData = {
             fecha_posesion:new Date("2023-10-24"),    
             id_persona:"",
             id_materia: "",
-            usuario_registro:"tu macho"
+            usuario_registro:"wmlahor"
         },
         {
             direccion_oficina:"nose 3",
@@ -194,7 +194,7 @@ export const initialData: SeedData = {
             fecha_posesion:new Date("2024-10-24"),    
             id_persona:"",
             id_materia: "",
-            usuario_registro:"tu macho"
+            usuario_registro:"wmlahor"
         },
         {
             direccion_oficina:"nose 4",
@@ -208,39 +208,39 @@ export const initialData: SeedData = {
             fecha_posesion:new Date("2021-10-24"),    
             id_persona:"",
             id_materia: "",
-            usuario_registro:"tu macho"
+            usuario_registro:"wmlahor"
         }
     ],
     tipo_excusa:[
         {
             descripcion:"Incompatibilidad",
-            usuario_registro:"tu macho"
+            usuario_registro:"wmlahor"
         },
         {
             descripcion:"Salud",
-            usuario_registro:"tu macho"
+            usuario_registro:"wmlahor"
         },
         {
             descripcion:"Designación",
-            usuario_registro:"tu macho"
+            usuario_registro:"wmlahor"
         },
     ],
     tipo_informe: [
         {
             descripcion:"Parcial",
-            usuario_registro:"tu macho"
+            usuario_registro:"wmlahor"
         },
         {
             descripcion:"Final",
-            usuario_registro:"tu macho"
+            usuario_registro:"wmlahor"
         },
         {
             descripcion:"Tecnico Legal",
-            usuario_registro:"tu macho"
+            usuario_registro:"wmlahor"
         },
         {
             descripcion:"De Avance",
-            usuario_registro:"tu macho"
+            usuario_registro:"wmlahor"
         }
     ]
 }

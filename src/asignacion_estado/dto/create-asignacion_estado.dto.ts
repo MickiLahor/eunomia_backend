@@ -1,4 +1,4 @@
-import { IsBoolean, IsDate, IsOptional, IsString, IsUUID, MinLength } from "class-validator";
+import { IsBoolean, IsDate, IsDateString, IsOptional, IsString, IsUUID, MinLength } from "class-validator";
 
 export class CreateAsignacionEstadoDto {
     @IsDate()
@@ -14,6 +14,20 @@ export class CreateAsignacionEstadoDto {
 
     @IsBoolean()
     vigente: boolean;
+
+    @IsString()
+    @MinLength(1)
+    usuario_registro: string;
+}
+
+export class CreateApersonamientoDefensor {
+    // @IsDate()
+    @IsDateString()
+    fecha: Date;
+
+    @IsString()
+    @IsUUID()
+    id_asignacion: string;
 
     @IsString()
     @MinLength(1)

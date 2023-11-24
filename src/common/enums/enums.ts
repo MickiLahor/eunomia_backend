@@ -3,6 +3,7 @@ export enum Estado {
     Excusado = "Excusado",
     Reasignado = "Reasignado",
     Concluido = "Concluido",
+    Apersonado = "Apersonado",
   }
 
   export enum Roles {

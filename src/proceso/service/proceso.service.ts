@@ -41,8 +41,8 @@ export class ProcesoService {
     try {
       const proceso = this.procesoRepository.create({
         ...createProcesoDto,
-        materia : await this.materiaService.findOne(createProcesoDto.id_materia),
-        fecha_registro:new Date(),
+        materia: await this.materiaService.findOne(createProcesoDto.id_materia),
+        fecha_registro: new Date(),
         registro_activo: true
       });
       const defensor = await this.defensorService.sorteo(proceso.id_ciudad, proceso.materia.id);
@@ -53,9 +53,9 @@ export class ProcesoService {
       await this.procesoRepository.save(proceso);
       const asignacion = await this.asignacionService.create(createAsignacionDto)
       await this.asignacionEstadoService.create({
-        fecha:new Date(),
-        id_asignacion:asignacion.id,
-        vigente:true,
+        fecha: new Date(),
+        id_asignacion: asignacion.id,
+        vigente: true,
         usuario_registro:createProcesoDto.usuario_registro,
         id_estado: (await this.estadoService.findOneDescripcion(Estado.Asignado)).id
       })
@@ -82,12 +82,12 @@ export class ProcesoService {
           }
         }
       },
-        order: {fecha_registro: 'DESC',asignaciones:{fecha_registro:'desc',asignaciones_estados:{fecha_registro:'desc'}}}
+        // order: {fecha_registro: 'DESC',asignaciones:{fecha_registro:'desc',asignaciones_estados:{fecha_registro:'desc'}}}
     });
   }
 
   async search(options: IPaginationOptions, searchDto: SearchProcesoDto) {
-    const {nurej = "",demandado= "",demandante=""} = searchDto
+    const {nurej = "", demandado = "", demandante = ""} = searchDto
     let data = await paginate<Proceso>(this.procesoRepository, options, {
       where:   
       [
@@ -108,8 +108,9 @@ export class ProcesoService {
           }
         }
       },
-      // order: {fecha_registro: 'DESC',asignaciones:{fecha_registro:'desc',asignaciones_estados:{fecha_registro:'desc'}}}
-      order: {fecha_registro: 'DESC', asignaciones: {fecha_registro: 'DESC'}}
+      // order: {fecha_registro: 'DESC',asignaciones:{fecha_registro:'DESC',asignaciones_estados:{fecha_registro:'DESC'}}},
+      // order: {asignaciones: {asignaciones_estados: {fecha_registro: 'DESC'}}},
+      order: {fecha_registro: 'DESC'}
     });
 
     for(let i=0;i<data.items.length;i++) {
@@ -118,6 +119,37 @@ export class ProcesoService {
     return data;
   }
 
+  // async search(
+  //   options: IPaginationOptions, searchDto: SearchProcesoDto
+  // ): Promise<Proceso[]> {
+  //   const {nurej = "", demandado = "", demandante = ""} = searchDto
+  //   const queryBuilder = this.procesoRepository.createQueryBuilder('proceso');
+  //   queryBuilder
+  //     .leftJoinAndSelect('proceso.materia', 'materia')
+  //     .leftJoinAndSelect('proceso.asignaciones', 'asignacion')
+  //     .leftJoinAndSelect('asignacion.asignaciones_estados', 'asignacion_estado')
+  //     .leftJoinAndSelect('asignacion.defensor', 'defensor')
+  //     .where('proceso.nurej ILIKE :nurej', { nurej: `%${nurej}%` })
+  //     .andWhere('proceso.demandado ILIKE :demandado', {
+  //       demandado: `%${demandado}%`,
+  //     })
+  //     .andWhere('proceso.demandante ILIKE :demandante', {
+  //       demandante: `%${demandante}%`,
+  //     })
+  //     .andWhere('proceso.registro_activo = :registro_activo', {
+  //       registro_activo: true,
+  //     })
+
+  //     .andWhere('asignacion_estado.vigente = :vigente', { vigente: true })
+
+  //     .orderBy('proceso.fecha_registro', 'DESC') 
+  //     .addOrderBy('asignacion.fecha_registro', 'DESC')
+  //     .addOrderBy('asignacion_estado.fecha_registro', 'DESC');
+    
+  //   // const data = await paginate<Proceso>(this.procesoRepository, options, {}
+  //   return await queryBuilder.getMany();
+  // }
+
   async all() {
     const proceso = await this.procesoRepository.find({
       where:{registro_activo:true},
@@ -125,7 +157,6 @@ export class ProcesoService {
   });
   return proceso;
   }
-
 
   async findAll(options: IPaginationOptions) {
     let data = await this.paginate(options);
@@ -173,18 +204,6 @@ export class ProcesoService {
       this.handleDBExpeptions(error);
     }
   }
-
-  // private async getOficinaZeusPro(idOficina: number) : Promise<ZeusResponseDto>
-  // {
-  //   const data = await this.http.get<ZeusDto>(`${this.configService.get('URL_ZEUS')}/api/oficina/getOficina/${idOficina}`);
-  //   return {
-  //     ...data,
-  //     id_oficina: data.idOficina,
-  //     id_ente: data.idEnte,
-  //     id_departamento: data.idDepartamento,
-  //     id_municipio: data.idMunicipio,
-  //   };
-  // }
 
   async remove(id: string) {
     const proceso = await this.findOne(id);

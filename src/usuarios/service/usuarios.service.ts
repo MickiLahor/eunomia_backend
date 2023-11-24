@@ -74,19 +74,19 @@ export class UsuariosService {
       throw new NotFoundException(`El usuario con id: ${id} no existe.`);
     } else {
       if (usuario.id_oficina !== null) {
-        const datosZeus = await this.commonService.getOficinaZeusPro(usuario.id_oficina)
-        usuario = Object.assign(usuario, {datosZeus});
+        const zeus = await this.commonService.getOficinaZeusPro(usuario.id_oficina)
+        usuario = Object.assign(usuario, {zeus});
       } else {
-        const datosZeus = {id_departamento: null, departamento: null, id_municipio: null, municipio: null}
+        const zeus = {id_departamento: null, departamento: null, id_municipio: null, municipio: null}
         const departamentos = await this.commonService.getDepartamentoZeusPro()
         const municipios = await this.commonService.getMunicipioZeusPro(usuario.id_departamento)
         const departamento = departamentos.find((dep) => dep.id_departamento === usuario.id_departamento)
         const municipio = municipios.find((mun) => mun.id_municipio === usuario.id_ciudad)
-        datosZeus.id_departamento = departamento.id_departamento
-        datosZeus.departamento = departamento.descripcion
-        datosZeus.id_municipio = municipio.id_municipio
-        datosZeus.municipio = municipio.descripcion
-        usuario = Object.assign(usuario, {datosZeus});
+        zeus.id_departamento = departamento.id_departamento
+        zeus.departamento = departamento.descripcion
+        zeus.id_municipio = municipio.id_municipio
+        zeus.municipio = municipio.descripcion
+        usuario = Object.assign(usuario, {zeus});
       }
     } 
     return usuario;

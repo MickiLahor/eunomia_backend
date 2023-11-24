@@ -70,16 +70,16 @@ export class DefensorService {
 
     if (defensor.items.length !== 0) {
       for (let i = 0; i < defensor.items.length; i++) {
-          const datosZeus = {id_departamento: null, departamento: null, id_municipio: null, municipio: null}
+          const zeus = {id_departamento: null, departamento: null, id_municipio: null, municipio: null}
           const departamentos = await this.commonService.getDepartamentoZeusPro()
           const municipios = await this.commonService.getMunicipioZeusPro(defensor.items[i].id_departamento)
           const departamento = departamentos.find((dep) => dep.id_departamento === defensor.items[i].id_departamento)
           const municipio = municipios.find((mun) => mun.id_municipio === defensor.items[i].id_ciudad)
-          datosZeus.id_departamento = departamento.id_departamento
-          datosZeus.departamento = departamento.descripcion
-          datosZeus.id_municipio = municipio.id_municipio
-          datosZeus.municipio = municipio.descripcion
-          defensor.items[i] = Object.assign(defensor.items[i], {datosZeus});
+          zeus.id_departamento = departamento.id_departamento
+          zeus.departamento = departamento.descripcion
+          zeus.id_municipio = municipio.id_municipio
+          zeus.municipio = municipio.descripcion
+          defensor.items[i] = Object.assign(defensor.items[i], {zeus});
       }
     }
     return defensor
@@ -190,16 +190,16 @@ export class DefensorService {
     if ( !defensor ) {
       throw new NotFoundException(`El Defensor con id: ${id} no existe.`);
     } else {
-      const datosZeus = {id_departamento: null, departamento: null, id_municipio: null, municipio: null}
+      const zeus = {id_departamento: null, departamento: null, id_municipio: null, municipio: null}
       const departamentos = await this.commonService.getDepartamentoZeusPro()
       const municipios = await this.commonService.getMunicipioZeusPro(defensor.id_departamento)
       const departamento = departamentos.find((dep) => dep.id_departamento === defensor.id_departamento)
       const municipio = municipios.find((mun) => mun.id_municipio === defensor.id_ciudad)
-      datosZeus.id_departamento = departamento.id_departamento
-      datosZeus.departamento = departamento.descripcion
-      datosZeus.id_municipio = municipio.id_municipio
-      datosZeus.municipio = municipio.descripcion
-      defensor = Object.assign(defensor, {datosZeus});
+      zeus.id_departamento = departamento.id_departamento
+      zeus.departamento = departamento.descripcion
+      zeus.id_municipio = municipio.id_municipio
+      zeus.municipio = municipio.descripcion
+      defensor = Object.assign(defensor, {zeus});
     } 
     return defensor;
   }

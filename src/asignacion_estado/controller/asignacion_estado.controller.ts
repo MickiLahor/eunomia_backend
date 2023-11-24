@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { AsignacionEstadoService } from '../service/asignacion_estado.service';
-import { CreateAsignacionEstadoDto } from '../dto/create-asignacion_estado.dto';
+import { CreateApersonamientoDefensor, CreateAsignacionEstadoDto } from '../dto/create-asignacion_estado.dto';
 import { UpdateAsignacionEstadoDto } from '../dto/update-asignacion_estado.dto';
 
 @Controller('asignacion-estado')
@@ -19,16 +19,21 @@ export class AsignacionEstadoController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.asignacionEstadoService.findOne(+id);
+    return this.asignacionEstadoService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateAsignacionEstadoDto: UpdateAsignacionEstadoDto) {
-    return this.asignacionEstadoService.update(+id, updateAsignacionEstadoDto);
+    return this.asignacionEstadoService.update(id, updateAsignacionEstadoDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.asignacionEstadoService.remove(+id);
+  }
+
+  @Post('apersonamiento')
+  apersonamientoDefensor(@Body() createApersonamientoDefensorDto: CreateApersonamientoDefensor) {
+    return this.asignacionEstadoService.apersonamientoDefensor(createApersonamientoDefensorDto);
   }
 }
