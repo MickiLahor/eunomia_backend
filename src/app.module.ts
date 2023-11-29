@@ -19,6 +19,7 @@ import { InformeModule } from './informe/informe.module';
 import { TipoInformeModule } from './tipo_informe/tipo_informe.module';
 import { EstadoModule } from './estado/estado.module';
 import { AsignacionEstadoModule } from './asignacion_estado/asignacion_estado.module';
+import { ActividadModule } from './actividad/actividad.module';
 
 @Module({
   imports: [ ConfigModule.forRoot(),
@@ -50,6 +51,7 @@ import { AsignacionEstadoModule } from './asignacion_estado/asignacion_estado.mo
               InformeModule,
               TipoInformeModule,
               EstadoModule,
-              AsignacionEstadoModule,]
+              AsignacionEstadoModule,
+              ActividadModule,]
 })
 export class AppModule {}

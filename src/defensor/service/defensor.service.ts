@@ -204,9 +204,7 @@ export class DefensorService {
     return defensor;
   }
 
-  async update(id: string, updateDefensorDto: UpdateDefensorDto) {
-    console.log(updateDefensorDto);
-    
+  async update(id: string, updateDefensorDto: UpdateDefensorDto) {    
     const defensor = await this.defensorRepository.preload({id, ...updateDefensorDto });
     
     if ( !defensor ) throw new NotFoundException(`El Defensor con el id: ${id} no existe`);

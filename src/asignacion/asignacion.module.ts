@@ -8,12 +8,13 @@ import { Asignacion } from './entities/asignacion.entity';
 import { AsignacionController } from './controller/asignacion.controller';
 import { AsignacionEstado } from 'src/asignacion_estado/entities/asignacion_estado.entity';
 import { CommonModule } from 'src/common/common.module';
+import { Actividad } from 'src/actividad/entities/actividad.entity';
 
 @Module({
   controllers:[AsignacionController],
   providers: [AsignacionService],
   imports: [
-    TypeOrmModule.forFeature([Asignacion, Proceso, Defensor, Excusa, AsignacionEstado]),
+    TypeOrmModule.forFeature([Asignacion, Proceso, Defensor, Excusa, AsignacionEstado, Actividad]),
     CommonModule
   ],
   exports: [AsignacionService]

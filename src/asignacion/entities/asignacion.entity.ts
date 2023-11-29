@@ -1,3 +1,4 @@
+import { Actividad } from 'src/actividad/entities/actividad.entity';
 import { AsignacionEstado } from 'src/asignacion_estado/entities/asignacion_estado.entity';
 import { Defensor } from 'src/defensor/entities/defensor.entity';
 import { Estado } from 'src/estado/entities/estado.entity';
@@ -55,8 +56,10 @@ export class Asignacion {
   informe: Informe;
 
   @OneToMany(
-    () => AsignacionEstado,
-    (asignaciones_estados) => asignaciones_estados.asignacion,
+    () => AsignacionEstado, (asignaciones_estados) => asignaciones_estados.asignacion,
   )
   asignaciones_estados: AsignacionEstado[];
+
+  @OneToMany(() => Actividad, (actividad) => actividad.asignacion)
+  actividades: Actividad[]
 }
