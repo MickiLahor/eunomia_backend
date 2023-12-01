@@ -40,7 +40,6 @@ export class ProcesoController {
       {
         limit:limit,
         page:page,
-        // route: "http://192.168.6.137:3000/api/v1/proceso"
       }
       ,searchDto
     )

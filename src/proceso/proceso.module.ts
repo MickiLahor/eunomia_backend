@@ -12,7 +12,6 @@ import { CommonModule } from 'src/common/common.module';
 import { ConfigModule } from '@nestjs/config';
 import { AsignacionEstadoModule } from 'src/asignacion_estado/asignacion_estado.module';
 import { EstadoModule } from 'src/estado/estado.module';
-import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   controllers: [ProcesoController],

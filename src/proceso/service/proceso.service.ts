@@ -10,9 +10,6 @@ import { ILike, Repository } from 'typeorm';
 import { CreateProcesoDto } from '../dto/create-proceso.dto';
 import { UpdateProcesoDto } from '../dto/update-proceso.dto';
 import { Proceso } from '../entities/proceso.entity';
-import { ZeusDto, ZeusResponseDto } from 'src/auth/dto/zeus-response.dto';
-import { ConfigService } from '@nestjs/config';
-import { AxiosAdapter } from 'src/common/adapters/axios.adapter';
 import { AsignacionEstadoService } from 'src/asignacion_estado/service/asignacion_estado.service';
 import { Estado } from 'src/common/enums/enums';
 import { EstadoService } from 'src/estado/service/estado.service';
@@ -29,8 +26,6 @@ export class ProcesoService {
     private readonly materiaService: MateriaService,
     private readonly defensorService: DefensorService,  
     private readonly asignacionService: AsignacionService,  
-    private readonly http: AxiosAdapter,
-    private readonly configService: ConfigService,  
     private readonly asignacionEstadoService: AsignacionEstadoService,
     private readonly estadoService: EstadoService,
     @Inject(forwardRef(() => CommonService))

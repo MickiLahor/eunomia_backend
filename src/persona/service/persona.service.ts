@@ -87,21 +87,14 @@ export class PersonaService {
     }
 
   async search(options: IPaginationOptions, searchDto: SearchDto) {
-    const {ci = "", nombre= "",materno= "",nombre_completo="",paterno=""} = searchDto
+    const {ci = "", nombre= "", materno= "", paterno=""} = searchDto
     let persona = await paginate<Persona>(this.personaRepository, options, {
       where: [
         { ci: ILike(`%${ci}%`)},
-        // { nombre_completo: ILike(`%${nombre_completo}%`)},
         { nombre: ILike(`%${nombre}%`)},
         { paterno: ILike(`%${paterno}%`)},
         { materno: ILike(`%${materno}%`)}
       ],
-      // [
-      //   { ci: ILike(`%${ci}%`),registro_activo:true},
-      //   { nombre: ILike(`%${nombre}%`),registro_activo:true},
-      //   { paterno: ILike(`%${paterno}%`),registro_activo:true},
-      //   { materno: ILike(`%${materno}%`),registro_activo:true}
-      // ],
       relations: {
         usuario: { roles: true },
         defensor: { materia: true }
