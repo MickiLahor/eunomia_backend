@@ -12,6 +12,7 @@ import { CommonModule } from 'src/common/common.module';
 import { ConfigModule } from '@nestjs/config';
 import { AsignacionEstadoModule } from 'src/asignacion_estado/asignacion_estado.module';
 import { EstadoModule } from 'src/estado/estado.module';
+import { MailModule } from 'src/mail/mail.module';
 
 @Module({
   controllers: [ProcesoController],
@@ -23,7 +24,8 @@ import { EstadoModule } from 'src/estado/estado.module';
             CommonModule, 
             ConfigModule,
             AsignacionEstadoModule,
-            EstadoModule
+            EstadoModule,
+            MailModule
             ],
   exports:[ProcesoService]
 })

@@ -1,21 +1,21 @@
 import { IsArray, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class SendMailDto {
-    @IsString()
-    @IsNotEmpty()
-    username: string;
+    // @IsString()
+    // @IsNotEmpty()
+    // username: string;
 
-    @IsString()
-    @IsNotEmpty()
-    password: string;
+    // @IsString()
+    // @IsNotEmpty()
+    // password: string;
 
-    @IsString()
-    @IsNotEmpty()
-    domain: string;
+    // @IsString()
+    // @IsNotEmpty()
+    // domain: string;
 
     @IsArray()
     @IsNotEmpty()
-    emails: [];
+    emails: string[];
 
     @IsString()
     @IsOptional()
@@ -25,9 +25,9 @@ export class SendMailDto {
     @IsOptional()
     subject: string;
 
-    @IsString()
-    @IsNotEmpty()
-    secret: string;
+    // @IsString()
+    // @IsNotEmpty()
+    // secret: string;
 
     @IsArray()
     @IsOptional()

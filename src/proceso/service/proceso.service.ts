@@ -14,6 +14,7 @@ import { AsignacionEstadoService } from 'src/asignacion_estado/service/asignacio
 import { Estado } from 'src/common/enums/enums';
 import { EstadoService } from 'src/estado/service/estado.service';
 import { CommonService } from 'src/common/common.service';
+import { MailService } from 'src/mail/service/mail.service';
 
 @Injectable()
 export class ProcesoService {
@@ -28,6 +29,7 @@ export class ProcesoService {
     private readonly asignacionService: AsignacionService,  
     private readonly asignacionEstadoService: AsignacionEstadoService,
     private readonly estadoService: EstadoService,
+    private readonly mailService: MailService,
     @Inject(forwardRef(() => CommonService))
     private readonly commonService: CommonService
   ){}
@@ -54,7 +56,32 @@ export class ProcesoService {
         usuario_registro:createProcesoDto.usuario_registro,
         id_estado: (await this.estadoService.findOneDescripcion(Estado.Asignado)).id
       })
-      return { ...asignacion, message: "Registro correcto.", error: false };
+      // const listEmails:Array<string> = []
+      // listEmails.push(defensor.correo)
+      // const asignacionRealizada = await this.asignacionService.findOne(asignacion.id);
+      
+      // const sendMail = await this.mailService.sendMail({
+      //   emails: listEmails,
+      //   subject: "Asignación de Proceso como Defensor de Oficio",
+      //   body:
+      //     `<p style="text-align: justify;">Sr(a).&nbsp;${defensor.persona.nombre} ${defensor.persona.paterno} ${defensor.persona.materno}:</p>
+      //     <p style="text-align: justify;">Le comunicamos que usted ha sido asignado a un proceso como <strong><span style="text-decoration: underline;">defensor de oficio</span></strong> mediante el <strong>sistema EUNOMIA</strong> de acuerdo al siguiente detalle:</p>
+      //     <ul style="text-align: justify;">
+      //     <li><strong>NUREJ: ${asignacionRealizada.proceso.nurej}</strong></li>
+      //     <li><strong>Materia: ${asignacionRealizada.proceso.materia.descripcion}</strong></li>
+      //     <li><strong>Juzgado: ${asignacionRealizada.proceso.zeus.descripcion}</strong></li>
+      //     </ul>
+      //     <p style="text-align: justify;">Es necesario que pueda apersonarse en oficinas del juzgado mencionado dentro de 72 horas a efecto de confirmar su asignaci&oacute;n y coordinar las actividades a realizar.</p>
+      //     <p style="text-align: justify;">Le recordamos&nbsp;que en caso de tener alg&uacute;n impedimento justificado para ejercer como defensor de oficio en el proceso asignado, usted puede excusarse mediante el sistema dentro de las 24 horas siguientes de recibido este mensaje.</p>
+      //     <p style="text-align: justify;">Puede ingresar al sitio web del<strong> sistema EUNOMIA</strong> de "Defensores de Oficio" mediante el enlace <a href="https://eunomia.organojudicial.gob.bo">https://eunomia.organojudicial.gob.bo</a> e iniciar sesi&oacute;n con sus&nbsp;credenciales de acceso, siendo el usuario y contrase&ntilde;a su n&uacute;mero de documento de&nbsp;identidad sin extensi&oacute;n y con complemento si corresponde. Ej. 1234567 (sin complemento) o 1234567-1Q (con complemento).</p>
+      //     <p>&nbsp;</p>
+      //     <div style="text-align: center;"><strong>Unidad Nacional de Administraci&oacute;n de Sistemas Inform&aacute;ticos y Comunicaciones</strong></div>
+      //     <div style="text-align: center;"><strong>Direcci&oacute;n Administrativa y Financiera</strong></div>
+      //     <div style="text-align: center;"><strong>&Oacute;rgano Judicial de Bolivia</strong></div>`,
+      //   attachments: []
+      // })
+      
+      return { ...asignacion, message: `Registro correcto. ${asignacion.messageMail}`, error: false };
     }
     catch(error) {
       console.log(error);

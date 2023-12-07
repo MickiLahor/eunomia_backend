@@ -56,14 +56,13 @@ export class ExcusaService {
 
         const createAsignacionDto: CreateAsignacionDto = {defensor:defensor,proceso:asignacion.proceso,fecha:new Date()}
         const nuevaAsignacion = await this.asignacionService.create(createAsignacionDto)
-        this.asignacionEstadoService.create(
-          {
-            id_asignacion: nuevaAsignacion.id,
-            fecha:new Date(),
-            vigente:true,
-            usuario_registro:excusa.usuario_registro,
-            id_estado:(await this.estadoService.findOneDescripcion(Estado.Reasignado)).id
-          })
+        await this.asignacionEstadoService.create({
+          id_asignacion: nuevaAsignacion.id,
+          fecha:new Date(),
+          vigente:true,
+          usuario_registro:excusa.usuario_registro,
+          id_estado:(await this.estadoService.findOneDescripcion(Estado.Reasignado)).id
+        })
         
         return {...nuevaAsignacion, message:"Registro correcto.", error: false};
       }

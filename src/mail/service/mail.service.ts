@@ -9,8 +9,14 @@ export class MailService {
 
   public async sendMail(sendMailDto: SendMailDto) {
     try {
-      const url = process.env.HOST_MAIL;
-      const data = sendMailDto
+      const url = process.env.MAIL_HOST;
+      const data = {
+        ...sendMailDto,
+        username: process.env.MAIL_USER,
+        password: process.env.MAIL_PASSWORD,
+        domain: process.env.MAIL_DOMAIN,
+        secret: process.env.MAIL_SECRET
+      }
       const headers = {
         'Content-Type': 'application/json'
       }

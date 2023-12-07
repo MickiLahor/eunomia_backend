@@ -9,13 +9,18 @@ import { AsignacionController } from './controller/asignacion.controller';
 import { AsignacionEstado } from 'src/asignacion_estado/entities/asignacion_estado.entity';
 import { CommonModule } from 'src/common/common.module';
 import { Actividad } from 'src/actividad/entities/actividad.entity';
+import { MailModule } from 'src/mail/mail.module';
+import { Notificacion } from 'src/notificacion/entities/notificacion.entity';
+import { NotificacionModule } from 'src/notificacion/notificacion.module';
 
 @Module({
   controllers:[AsignacionController],
   providers: [AsignacionService],
   imports: [
-    TypeOrmModule.forFeature([Asignacion, Proceso, Defensor, Excusa, AsignacionEstado, Actividad]),
-    CommonModule
+    TypeOrmModule.forFeature([Asignacion, Proceso, Defensor, Excusa, AsignacionEstado, Actividad, Notificacion]),
+    CommonModule,
+    MailModule,
+    NotificacionModule
   ],
   exports: [AsignacionService]
 })

@@ -133,7 +133,8 @@ export class DefensorService {
         let defensor: Defensor = defensores[ramdom]
         defensor.sorteado=true;
         await this.defensorRepository.save(defensor);
-        return defensores[ramdom];
+        const defensorAsignado = this.findOne(defensor.id)
+        return defensorAsignado;
       } else {
         return null
       }

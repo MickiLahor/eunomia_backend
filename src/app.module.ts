@@ -21,6 +21,7 @@ import { EstadoModule } from './estado/estado.module';
 import { AsignacionEstadoModule } from './asignacion_estado/asignacion_estado.module';
 import { ActividadModule } from './actividad/actividad.module';
 import { MailModule } from './mail/mail.module';
+import { NotificacionModule } from './notificacion/notificacion.module';
 
 @Module({
   imports: [ ConfigModule.forRoot(),
@@ -54,6 +55,7 @@ import { MailModule } from './mail/mail.module';
               EstadoModule,
               AsignacionEstadoModule,
               ActividadModule,
-              MailModule,]
+              MailModule,
+              NotificacionModule,]
 })
 export class AppModule {}

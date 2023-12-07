@@ -4,6 +4,7 @@ import { Defensor } from 'src/defensor/entities/defensor.entity';
 import { Estado } from 'src/estado/entities/estado.entity';
 import { Excusa } from 'src/excusa/entities/excusa.entity';
 import { Informe } from 'src/informe/entities/informe.entity';
+import { Notificacion } from 'src/notificacion/entities/notificacion.entity';
 import { Proceso } from 'src/proceso/entities/proceso.entity';
 import {
   Column,
@@ -55,11 +56,12 @@ export class Asignacion {
   @OneToMany(() => Informe, (informe) => informe.asignacion)
   informe: Informe;
 
-  @OneToMany(
-    () => AsignacionEstado, (asignaciones_estados) => asignaciones_estados.asignacion,
-  )
+  @OneToMany(() => AsignacionEstado, (asignaciones_estados) => asignaciones_estados.asignacion)
   asignaciones_estados: AsignacionEstado[];
 
   @OneToMany(() => Actividad, (actividad) => actividad.asignacion)
-  actividades: Actividad[]
+  actividades: Actividad[];
+
+  @OneToMany(() => Notificacion, (notificacion) => notificacion.asignacion)
+  notificaciones: Notificacion[];
 }
