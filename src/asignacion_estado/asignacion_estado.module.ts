@@ -7,13 +7,18 @@ import { Asignacion } from 'src/asignacion/entities/asignacion.entity';
 import { Estado } from 'src/estado/entities/estado.entity';
 import { EstadoModule } from 'src/estado/estado.module';
 import { AsignacionModule } from 'src/asignacion/asignacion.module';
+import { UsuariosModule } from 'src/usuarios/usuarios.module';
+import { AuthModule } from 'src/auth/auth.module';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   controllers: [AsignacionEstadoController],
   providers: [AsignacionEstadoService],
   imports: [TypeOrmModule.forFeature([AsignacionEstado, Asignacion, Estado]),
-  EstadoModule,
-  AsignacionModule],
+    EstadoModule,
+    AsignacionModule,
+    UsuariosModule
+  ],
   exports: [AsignacionEstadoService]
 })
 export class AsignacionEstadoModule {}

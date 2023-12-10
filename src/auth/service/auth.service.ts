@@ -201,6 +201,8 @@ export class AuthService {
         ,relations: { persona: true, roles: true }
       }
     );
+    console.log(user);
+    
     
     if(!user) 
     return { message: `Acceso no autorizado a: ${usuario}`, error: "Unauthorized"  };
@@ -208,13 +210,25 @@ export class AuthService {
   
     if(!bcrypt.compareSync(clave,user.clave)) 
     return { message: `Credenciales no validas para: ${usuario}`, error: "Unauthorized"  };
-    //throw new UnauthorizedException(`Credenciales no validas para: ${usuario}`);
-  
-    const zeus = await this.getOficinaZeusPro(user.id_oficina);
-
     delete user.clave
-    return { token: await this.getJwtToken({user: user,zeus:zeus}) };
-  
+    //throw new UnauthorizedException(`Credenciales no validas para: ${usuario}`);
+    
+    // OJO - FALTA CREAR SERVICIO EN ZEUS PARA RECUPERAR INFORMACION POR ID CIUDAD O DEPARTAMENTO
+    if(user.roles[0].descripcion === 'Defensor') {
+      return { token: await this.getJwtToken({user: user,zeus: {
+        id_oficina: 0,
+        descripcion: 'Defensor de Oficio',
+        id_ente: 0,
+        ente: 'Órgano Judicial',
+        id_departamento: '0',
+        departamento: 'Bolivia',
+        id_municipio: 'Defensor',
+        municipio: 'M'
+      }}), user: user };
+    }
+    const zeus = await this.getOficinaZeusPro(user.id_oficina);
+    
+    return { token: await this.getJwtToken({user: user, zeus: zeus}) };
     //TODO: retornar el JWT
   }
 

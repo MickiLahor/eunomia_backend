@@ -12,24 +12,23 @@ export class PersonaController {
   constructor(private readonly personaService: PersonaService) {}
 
   @Post()
+  @Auth(ValidRoles.administrador, ValidRoles.ssjj, ValidRoles.ssjjn)
   create(@Body() createPersonaDto: CreatePersonaDto) {
     return this.personaService.create(createPersonaDto);
   }
 
   @Get()
-  @Auth(ValidRoles.administrador)
+  @Auth(ValidRoles.administrador, ValidRoles.ssjj, ValidRoles.ssjjn)
   findAll(@Query() paginationDto :PaginationDto) {
     const {limit = 10,page= 1} = paginationDto
-    return this.personaService.findAll
-    (
-      {
-        limit:limit,
-        page:page,
-        // route: "http://192.168.6.138:3000/api/v1/persona"
-      });
+    return this.personaService.findAll({
+      limit:limit,
+      page:page,
+    });
   }
 
   @Get('nodefensor')
+  @Auth(ValidRoles.administrador,ValidRoles.ssjj, ValidRoles.ssjjn)
   listarNoDefensor(@Query() paginationDto :PaginationDto) {
     const {limit = 10,page= 1} = paginationDto
     return this.personaService.listarNoDefensor
@@ -42,35 +41,36 @@ export class PersonaController {
   }
 
   @Get("search")
+  @Auth(ValidRoles.administrador, ValidRoles.ssjj, ValidRoles.ssjjn)
   search(@Query() searchDto :SearchDto) {
     const {limit = 5,page= 1} = searchDto
-    return this.personaService.search
-    (
-      {
-        limit:limit,
-        page:page,
-        // route: "http://192.168.6.138:3000/api/v1/persona"
-      }
-      ,searchDto
+    return this.personaService.search({
+      limit:limit,
+      page:page,
+    }, searchDto
     )
   }
 
   @Get(':id')
+  @Auth(ValidRoles.administrador, ValidRoles.ssjj, ValidRoles.ssjjn)
   findOne(@Param('id',ParseUUIDPipe) id: string) {
     return this.personaService.findOne(id);
   }
 
   @Get('ci/:id')
+  @Auth(ValidRoles.administrador, ValidRoles.ssjj, ValidRoles.ssjjn)
   findOneCi(@Param('id') id: string) {
     return this.personaService.findOneCi(id);
   }
 
   @Patch(':id')
+  @Auth(ValidRoles.administrador, ValidRoles.ssjj, ValidRoles.ssjjn)
   update(@Param('id',ParseUUIDPipe) id: string, @Body() updatePersonaDto: UpdatePersonaDto) {
     return this.personaService.update(id, updatePersonaDto);
   }
 
   @Delete(':id')
+  @Auth(ValidRoles.administrador, ValidRoles.ssjj, ValidRoles.ssjjn)
   remove(@Param('id',ParseUUIDPipe) id: string) {
     return this.personaService.remove(id);
   }

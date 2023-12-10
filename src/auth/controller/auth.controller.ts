@@ -15,21 +15,25 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
   
   @Post()
+  @Auth(ValidRoles.administrador, ValidRoles.ssjj, ValidRoles.ssjjn)
   create(@Body() createUsuarioDto: CreateAuthDto) {
     return this.authService.create(createUsuarioDto);
   }
 
   @Post("create")
+  @Auth(ValidRoles.administrador, ValidRoles.ssjj, ValidRoles.ssjjn)
   createAll(@Body() createPersonaUsuarioDto: CreatePersonaUsuarioDto) {
     return this.authService.createAll(createPersonaUsuarioDto);
   }
 
   @Patch(':id')
+  @Auth(ValidRoles.administrador, ValidRoles.ssjj, ValidRoles.ssjjn)
   update(@Param('id',ParseUUIDPipe) id: string, @Body() updatePersonaUsuarioDto: UpdatePersonaUsuarioDto) {
     return this.authService.updateAll(id, updatePersonaUsuarioDto);
   }
 
   @Post("reset")
+  @Auth(ValidRoles.administrador, ValidRoles.ssjj, ValidRoles.ssjjn)
   resetPassword(@Body() resetPasswordUserDto: ResetPasswordUserDto) {
     return this.authService.resetPassword(resetPasswordUserDto);
   }

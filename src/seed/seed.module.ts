@@ -7,9 +7,10 @@ import { PersonaModule } from 'src/persona/persona.module';
 import { DefensorModule } from 'src/defensor/defensor.module';
 import { TipoExcusaModule } from 'src/tipo-excusa/tipo-excusa.module';
 import { TipoInformeModule } from 'src/tipo_informe/tipo_informe.module';
+import { UsuariosModule } from 'src/usuarios/usuarios.module';
 @Module({
   controllers: [SeedController],
   providers: [SeedService],  
-  imports:[MateriaModule, ProcesoModule, PersonaModule, DefensorModule, TipoExcusaModule, TipoInformeModule]
+  imports:[MateriaModule, ProcesoModule, PersonaModule, DefensorModule, TipoExcusaModule, TipoInformeModule, UsuariosModule]
 })
 export class SeedModule {}

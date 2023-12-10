@@ -13,6 +13,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AsignacionEstadoModule } from 'src/asignacion_estado/asignacion_estado.module';
 import { EstadoModule } from 'src/estado/estado.module';
 import { MailModule } from 'src/mail/mail.module';
+import { UsuariosModule } from 'src/usuarios/usuarios.module';
 
 @Module({
   controllers: [ProcesoController],
@@ -25,7 +26,8 @@ import { MailModule } from 'src/mail/mail.module';
             ConfigModule,
             AsignacionEstadoModule,
             EstadoModule,
-            MailModule
+            MailModule,
+            UsuariosModule
             ],
   exports:[ProcesoService]
 })

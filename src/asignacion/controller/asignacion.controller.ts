@@ -2,28 +2,29 @@ import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { AsignacionService } from '../service/asignacion.service';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { SearchAsignacionDto } from 'src/common/dtos/search.dto';
+import { Auth } from 'src/auth/decorators';
+import { ValidRoles } from 'src/auth/interfaces';
 
 
 @Controller('asignacion')
 export class AsignacionController {
   constructor(
     private readonly asignacionService: AsignacionService
-    ) {
+  ) {}
 
-    }
+  @Get()
+  @Auth(ValidRoles.administrador, ValidRoles.ssjjn)
+  findAll(@Query() paginationDto :PaginationDto) {
+    const {limit = 10,page= 1} = paginationDto
 
-    @Get()
-    findAll(@Query() paginationDto :PaginationDto) {
-      const {limit = 10,page= 1} = paginationDto
-
-      return this.asignacionService.findAll({
-        limit:limit,
-        page:page,
-        // route: "http://192.168.6.138:3000/api/v1/asignacion"
-      });
-    }
+    return this.asignacionService.findAll({
+      limit:limit,
+      page:page,
+    });
+  }
 
   @Get("search")
+  @Auth(ValidRoles.administrador, ValidRoles.ssjjn)
   search(@Query() searchDto :SearchAsignacionDto) {
     const {limit = 5,page= 1} = searchDto
     return this.asignacionService.search
@@ -31,13 +32,13 @@ export class AsignacionController {
       {
         limit:limit,
         page:page,
-        // route: "http://192.168.6.138:3000/api/v1/asignacion"
       }
       ,searchDto
     )
   }
 
   @Get(':id')
+  @Auth(ValidRoles.administrador, ValidRoles.juzgado, ValidRoles.ssjj, ValidRoles.ssjjn, ValidRoles.defensor)
   findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.asignacionService.findOne(id);
   }

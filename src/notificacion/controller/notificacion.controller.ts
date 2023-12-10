@@ -2,12 +2,15 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { NotificacionService } from '../service/notificacion.service';
 import { CreateNotificacionDto } from '../dto/create-notificacion.dto';
 import { UpdateNotificacionDto } from '../dto/update-notificacion.dto';
+import { Auth } from 'src/auth/decorators';
+import { ValidRoles } from 'src/auth/interfaces';
 
 @Controller('notificacion')
 export class NotificacionController {
   constructor(private readonly notificacionService: NotificacionService) {}
 
   @Post()
+  @Auth(ValidRoles.administrador, ValidRoles.juzgado, ValidRoles.ssjj, ValidRoles.ssjjn)
   create(@Body() createNotificacionDto: CreateNotificacionDto) {
     return this.notificacionService.create(createNotificacionDto);
   }

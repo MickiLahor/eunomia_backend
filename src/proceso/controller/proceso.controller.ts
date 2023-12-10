@@ -4,17 +4,21 @@ import { CreateProcesoDto } from '../dto/create-proceso.dto';
 import { UpdateProcesoDto } from '../dto/update-proceso.dto';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { SearchProcesoDto } from 'src/common/dtos/search.dto';
+import { Auth } from 'src/auth/decorators';
+import { ValidRoles } from 'src/auth/interfaces';
 
 @Controller('proceso')
 export class ProcesoController {
   constructor(private readonly procesoService: ProcesoService) {}
 
   @Post()
+  @Auth(ValidRoles.administrador, ValidRoles.juzgado)
   create(@Body() createProcesoDto: CreateProcesoDto) {
     return this.procesoService.create(createProcesoDto);
   }
 
   @Get()
+  @Auth(ValidRoles.administrador, ValidRoles.juzgado, ValidRoles.ssjj, ValidRoles.ssjjn)
   findAll(@Query() paginationDto :PaginationDto) {
 
     const {limit = 10,page= 1} = paginationDto
@@ -22,17 +26,18 @@ export class ProcesoController {
     return this.procesoService.findAll({
       limit:limit,
       page:page,
-      // route: "http://192.168.6.137:3000/api/v1/proceso"
     });
   }
 
   @Get('all')
+  @Auth(ValidRoles.administrador, ValidRoles.juzgado, ValidRoles.ssjj, ValidRoles.ssjjn)
   listarTodo() {
 
     return this.procesoService.all();
   }
 
   @Get("search")
+  @Auth(ValidRoles.administrador, ValidRoles.juzgado, ValidRoles.ssjj, ValidRoles.ssjjn)
   search(@Query() searchDto :SearchProcesoDto) {
     const {limit = 5,page= 1} = searchDto
     return this.procesoService.search
@@ -46,16 +51,19 @@ export class ProcesoController {
   }
 
   @Get(':id')
+  @Auth(ValidRoles.administrador, ValidRoles.juzgado, ValidRoles.ssjj, ValidRoles.ssjjn)
   findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.procesoService.findOne(id);
   }
 
   @Patch(':id')
+  @Auth(ValidRoles.administrador, ValidRoles.juzgado)
   update(@Param('id', ParseUUIDPipe) id: string, @Body() updateProcesoDto: UpdateProcesoDto) {
     return this.procesoService.update(id, updateProcesoDto);
   }
 
   @Delete(':id')
+  @Auth(ValidRoles.administrador, ValidRoles.juzgado)
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.procesoService.remove(id);
   }

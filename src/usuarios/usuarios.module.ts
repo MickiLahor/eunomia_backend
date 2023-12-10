@@ -18,7 +18,7 @@ import { CommonModule } from 'src/common/common.module';
           TypeOrmModule.forFeature([ Usuario,Persona, Rol ]),
           forwardRef(() => PersonaModule),
           forwardRef(() => CommonModule),
-          RolesModule,
+          forwardRef(() => RolesModule),
         ],
         exports: [ TypeOrmModule, UsuariosService ]
 })

@@ -12,6 +12,9 @@ import { Actividad } from 'src/actividad/entities/actividad.entity';
 import { MailModule } from 'src/mail/mail.module';
 import { Notificacion } from 'src/notificacion/entities/notificacion.entity';
 import { NotificacionModule } from 'src/notificacion/notificacion.module';
+import { AuthModule } from 'src/auth/auth.module';
+import { UsuariosModule } from 'src/usuarios/usuarios.module';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   controllers:[AsignacionController],
@@ -20,7 +23,8 @@ import { NotificacionModule } from 'src/notificacion/notificacion.module';
     TypeOrmModule.forFeature([Asignacion, Proceso, Defensor, Excusa, AsignacionEstado, Actividad, Notificacion]),
     CommonModule,
     MailModule,
-    NotificacionModule
+    NotificacionModule,
+    UsuariosModule,
   ],
   exports: [AsignacionService]
 })

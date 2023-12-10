@@ -1,8 +1,8 @@
 export class ZeusDto {
-    idOficina: string;
+    idOficina: number;
     descripcion: string;
     idEnte: number;
-    ente: number;
+    ente: string;
     idDepartamento: string;
     departamento: string;
     idMunicipio: string;
@@ -10,10 +10,10 @@ export class ZeusDto {
 }
 
 export class ZeusResponseDto {
-    id_oficina: string;
+    id_oficina: number;
     descripcion: string;
     id_ente: number;
-    ente: number;
+    ente: string;
     id_departamento: string;
     departamento: string;
     id_municipio: string;

@@ -10,11 +10,14 @@ import { ExcusaService } from 'src/excusa/service/excusa.service';
 import { InformeService } from 'src/informe/service/informe.service';
 import { CreateInformeDto } from 'src/informe/dto/create-informe.dto';
 import { mkdirSync } from 'fs';
+import { Auth } from 'src/auth/decorators';
+import { ValidRoles } from 'src/auth/interfaces';
 
 
 const MAX_PROFILE_PICTURE_SIZE_IN_BYTES = 10000000;
 
 @Controller('files')
+@Auth()
 export class FilesController {
   constructor(
     private readonly filesService: FilesService,

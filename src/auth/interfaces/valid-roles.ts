@@ -1,7 +1,10 @@
 
 export enum ValidRoles {
    administrador = 'Administrador',
-   operador = 'Operador',
-   judicial = 'Judicial',
-   defensor = 'Defensor'
+   defensor = 'Defensor',
+   juzgado = 'Juzgado',
+   ssjj = 'SSJJ',
+   ssjjn = 'SSJJ Nacional',
+   
+   
 }

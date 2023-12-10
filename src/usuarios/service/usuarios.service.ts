@@ -156,6 +156,18 @@ export class UsuariosService {
     await this.usuarioRepository.save(usuario)
     return { message:"Eliminado correctamente." };
   }
+
+  async findOneSimple(id: string) {
+    let usuario = await this.usuarioRepository.findOne(
+      {
+        where: { id, registro_activo:true },
+        relations: { persona: true, roles: true}
+      });
+    if ( !usuario ) {
+      throw new NotFoundException(`El usuario con id: ${id} no existe.`);
+    }
+    return usuario;
+  }
   
   private handleDBExpeptions(error: any) {
     if(error.code === '23505')

@@ -19,7 +19,7 @@ import { UsuariosModule } from 'src/usuarios/usuarios.module';
   imports:
         [
           ConfigModule,
-          CommonModule,
+          forwardRef(() => CommonModule),
           RolesModule,
           TypeOrmModule.forFeature([ Usuario ]),
           PassportModule.register( { defaultStrategy: 'jwt' } ),
