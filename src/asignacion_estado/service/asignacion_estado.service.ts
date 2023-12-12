@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
-import { CreateApersonamientoDefensor, CreateAsignacionEstadoDto } from '../dto/create-asignacion_estado.dto';
+import { CreateApersonamientoDefensorDto, CreateAsignacionEstadoDto } from '../dto/create-asignacion_estado.dto';
 import { UpdateAsignacionEstadoDto } from '../dto/update-asignacion_estado.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AsignacionEstado } from '../entities/asignacion_estado.entity';
@@ -38,7 +38,7 @@ export class AsignacionEstadoService {
     }
   }
 
-  async apersonamientoDefensor(createApersonamientoDefensorDto: CreateApersonamientoDefensor) {
+  async apersonamientoDefensor(createApersonamientoDefensorDto: CreateApersonamientoDefensorDto) {
     try {
       const apersonado = await this.asignacionEstadoRepository.find({
         where: {
@@ -64,11 +64,13 @@ export class AsignacionEstadoService {
             usuario_registro: createApersonamientoDefensorDto.usuario_registro,
             id_estado: (await this.estadoService.findOneDescripcion(Estado.Apersonado)).id
           })
-          return {...asignacionEstado, message:"Apersonamiento de defensor registrado correctamente", error: false};
+          const asignacionApersonamiento = await this.asignacionService.findOne(asignacionEstado.asignacion.id)
+          return {...asignacionApersonamiento, message:"Apersonamiento de defensor registrado correctamente", error: false};
         }
-        return {message:"No se puede registrar apersonamiento de un defensor excusado.", error: true};
+        return {message:"No se puede registrar apersonamiento de un defensor excusado.", error: true, print: false};
       }
-      return {message:"Ya existe un apersonamiento registrado por el defensor en el proceso.", error: true};
+      const asignacionApersonamientoReg = await this.asignacionService.findOne(createApersonamientoDefensorDto.id_asignacion)
+      return {...asignacionApersonamientoReg, message:"Ya existe un apersonamiento registrado por el defensor en el proceso.", error: true, print: true};
     }
     catch(error) {
       console.log(error);

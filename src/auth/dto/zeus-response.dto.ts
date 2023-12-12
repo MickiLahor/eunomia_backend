@@ -3,9 +3,9 @@ export class ZeusDto {
     descripcion: string;
     idEnte: number;
     ente: string;
-    idDepartamento: string;
+    idDepartamento: number;
     departamento: string;
-    idMunicipio: string;
+    idMunicipio: number;
     municipio: string;
 }
 
@@ -14,9 +14,9 @@ export class ZeusResponseDto {
     descripcion: string;
     id_ente: number;
     ente: string;
-    id_departamento: string;
+    id_departamento: number;
     departamento: string;
-    id_municipio: string;
+    id_municipio: number;
     municipio: string;
 }
 

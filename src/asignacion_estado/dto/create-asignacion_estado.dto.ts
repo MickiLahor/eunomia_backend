@@ -20,7 +20,7 @@ export class CreateAsignacionEstadoDto {
     usuario_registro: string;
 }
 
-export class CreateApersonamientoDefensor {
+export class CreateApersonamientoDefensorDto {
     // @IsDate()
     @IsDateString()
     fecha: Date;

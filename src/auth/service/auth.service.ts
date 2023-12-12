@@ -220,9 +220,9 @@ export class AuthService {
         descripcion: 'Defensor de Oficio',
         id_ente: 0,
         ente: 'Órgano Judicial',
-        id_departamento: '0',
+        id_departamento: 0,
         departamento: 'Bolivia',
-        id_municipio: 'Defensor',
+        id_municipio: 0,
         municipio: 'M'
       }}), user: user };
     }

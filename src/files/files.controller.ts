@@ -17,7 +17,6 @@ import { ValidRoles } from 'src/auth/interfaces';
 const MAX_PROFILE_PICTURE_SIZE_IN_BYTES = 10000000;
 
 @Controller('files')
-@Auth()
 export class FilesController {
   constructor(
     private readonly filesService: FilesService,
@@ -47,6 +46,7 @@ export class FilesController {
 
 
   @Post('excusa')
+  @Auth(ValidRoles.administrador, ValidRoles.juzgado, ValidRoles.ssjj, ValidRoles.ssjjn, ValidRoles.defensor)
   @UseInterceptors( FileInterceptor('archivo', {
     fileFilter:fileFilter, 
     storage: diskStorage({
@@ -79,6 +79,7 @@ export class FilesController {
   }
 
   @Post('informe')
+  @Auth(ValidRoles.administrador, ValidRoles.juzgado, ValidRoles.ssjj, ValidRoles.ssjjn, ValidRoles.defensor)
   @UseInterceptors( FileInterceptor('archivo', {
     fileFilter:fileFilter, 
     storage: diskStorage({
