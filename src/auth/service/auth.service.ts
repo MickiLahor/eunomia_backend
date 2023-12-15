@@ -200,9 +200,7 @@ export class AuthService {
         }
         ,relations: { persona: true, roles: true }
       }
-    );
-    console.log(user);
-    
+    );    
     
     if(!user) 
     return { message: `Acceso no autorizado a: ${usuario}`, error: "Unauthorized"  };

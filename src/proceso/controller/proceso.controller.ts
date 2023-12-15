@@ -6,6 +6,7 @@ import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { SearchProcesoDto } from 'src/common/dtos/search.dto';
 import { Auth } from 'src/auth/decorators';
 import { ValidRoles } from 'src/auth/interfaces';
+import { ReporteProcesoDto } from '../dto/reporte-proceso.dto';
 
 @Controller('proceso')
 export class ProcesoController {
@@ -50,6 +51,16 @@ export class ProcesoController {
     )
   }
 
+  @Get('report')
+  @Auth(ValidRoles.administrador, ValidRoles.juzgado, ValidRoles.ssjj, ValidRoles.ssjjn)
+  findProcesoByFechaMateriaDistrito(@Query() reporteProcesoDto: ReporteProcesoDto) {
+    reporteProcesoDto
+    return this.procesoService.findProcesoByFechaMateriaDistrito
+    (
+      reporteProcesoDto
+    )
+  }
+
   @Get(':id')
   @Auth(ValidRoles.administrador, ValidRoles.juzgado, ValidRoles.ssjj, ValidRoles.ssjjn)
   findOne(@Param('id', ParseUUIDPipe) id: string) {
@@ -67,4 +78,5 @@ export class ProcesoController {
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.procesoService.remove(id);
   }
+  
 }

@@ -21,6 +21,10 @@ export class CreateProcesoDto {
     @IsPositive()
     id_ciudad: number;
 
+    @IsNumber()
+    @IsPositive()
+    id_departamento: number;
+
     @IsString()
     @IsUUID()
     @MinLength(1)

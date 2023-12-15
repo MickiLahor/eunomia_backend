@@ -6,7 +6,7 @@ import { CreateAsignacionDto } from 'src/asignacion/dto/create-asignacion.dto';
 import { SearchProcesoDto } from 'src/common/dtos/search.dto';
 import { DefensorService } from 'src/defensor/service/defensor.service';
 import { MateriaService } from 'src/materia/service/materia.service';
-import { ILike, Repository } from 'typeorm';
+import { Between, ILike, Repository } from 'typeorm';
 import { CreateProcesoDto } from '../dto/create-proceso.dto';
 import { UpdateProcesoDto } from '../dto/update-proceso.dto';
 import { Proceso } from '../entities/proceso.entity';
@@ -15,6 +15,8 @@ import { Estado } from 'src/common/enums/enums';
 import { EstadoService } from 'src/estado/service/estado.service';
 import { CommonService } from 'src/common/common.service';
 import { MailService } from 'src/mail/service/mail.service';
+import { ReporteProcesoDto } from '../dto/reporte-proceso.dto';
+import { from } from 'rxjs';
 
 @Injectable()
 export class ProcesoService {
@@ -232,6 +234,40 @@ export class ProcesoService {
     proceso.registro_activo=false;
     await this.procesoRepository.save(proceso)
     return { message:"Eliminado correctamente." };
+  }
+
+  async findProcesoByFechaMateriaDistrito(reporteProcesoDto: ReporteProcesoDto) {
+    const {nurej = "", materia = "", departamento = 0, fecha_inicio = "", fecha_fin= ""} = reporteProcesoDto
+    let data = await this.procesoRepository.find({
+      where: [
+        { 
+          nurej: ILike(`%${nurej}%`), 
+          materia: [{descripcion: ILike(`%${materia}%`)}], 
+          id_departamento: departamento,
+          fecha_registro: Between(new Date(fecha_inicio), new Date(fecha_fin)),
+          registro_activo:true 
+        },
+      ],
+      relations: {
+        materia:true,
+        asignaciones:{
+          asignaciones_estados:{
+            estado:true
+          },
+          defensor:{
+            persona:true
+          }
+        }
+      },
+      // order: {fecha_registro: 'DESC',asignaciones:{fecha_registro:'DESC',asignaciones_estados:{fecha_registro:'DESC'}}},
+      // order: {asignaciones: {asignaciones_estados: {fecha_registro: 'DESC'}}},
+      order: {fecha_registro: 'DESC'}
+    });
+
+    for(let i=0;i<data.length;i++) {
+      data[i].zeus = await this.commonService.getOficinaZeusPro(data[i].id_oficina)
+    }
+    return data;
   }
 
   private handleDBExpeptions(error: any) {

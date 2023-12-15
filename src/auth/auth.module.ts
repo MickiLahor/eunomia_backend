@@ -31,8 +31,8 @@ import { UsuariosModule } from 'src/usuarios/usuarios.module';
                 secret: configService.get('JWT_SECRET'),
                 global:true,
                       signOptions: {
-                      expiresIn:'365d',
-                      algorithm:'HS256',
+                      expiresIn: configService.get('TOKEN_EXPIRES'),
+                      algorithm: configService.get('SIGN_ALGORITHM'),
                     }
               }
             }

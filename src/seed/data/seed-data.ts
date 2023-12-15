@@ -9,6 +9,7 @@ interface SeedProceso {
     demandado: string;
     id_oficina: number;
     id_ciudad: number;
+    id_departamento: number;
     id_materia: string;
     usuario_registro: string;
 }
@@ -84,6 +85,7 @@ export const initialData: SeedData = {
             demandado: "Hugo",
             id_oficina: 1,
             id_ciudad: 1,
+            id_departamento: 1,
             id_materia: "",
             usuario_registro: "wmlahor"
         },
@@ -93,6 +95,7 @@ export const initialData: SeedData = {
             demandado: "Walter",
             id_oficina: 1,
             id_ciudad: 1,
+            id_departamento: 1,
             id_materia: "",
             usuario_registro: "wmlahor"
         },
@@ -102,6 +105,7 @@ export const initialData: SeedData = {
             demandado: "Doña Martita",
             id_oficina: 1,
             id_ciudad: 1,
+            id_departamento: 1,
             id_materia: "",
             usuario_registro: "wmlahor"
         },
@@ -111,6 +115,7 @@ export const initialData: SeedData = {
             demandado: "Juan Pablo",
             id_oficina: 1,
             id_ciudad: 1,
+            id_departamento: 1,
             id_materia: "",
             usuario_registro: "wmlahor"
         },

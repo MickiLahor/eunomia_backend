@@ -28,6 +28,9 @@ export class Proceso {
     @Column('integer')
     id_ciudad: number;
 
+    @Column({type: 'integer'})
+    id_departamento: number;
+
     @Column('text')
     usuario_registro: string;
 
