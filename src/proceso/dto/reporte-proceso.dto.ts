@@ -15,11 +15,26 @@ export class ReporteProcesoDto {
     @Type(() => Number )
     departamento?: number;
 
-    @IsOptional()
-    // @IsDateString()
+    @IsDateString()
     fecha_inicio?: Date;
 
+    @IsDateString()
+    fecha_fin?: Date;
+}
+
+export class ReporteProcesoEstadoCantidadDto {
+
     @IsOptional()
-    // @IsDateString()
+    @Type(() => String )
+    materia?: string;
+
+    @IsOptional()
+    @Type(() => Number )
+    departamento?: number;
+
+    @IsDateString()
+    fecha_inicio?: Date;
+
+    @IsDateString()
     fecha_fin?: Date;
 }

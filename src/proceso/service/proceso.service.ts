@@ -15,8 +15,7 @@ import { Estado } from 'src/common/enums/enums';
 import { EstadoService } from 'src/estado/service/estado.service';
 import { CommonService } from 'src/common/common.service';
 import { MailService } from 'src/mail/service/mail.service';
-import { ReporteProcesoDto } from '../dto/reporte-proceso.dto';
-import { from } from 'rxjs';
+import { ReporteProcesoDto, ReporteProcesoEstadoCantidadDto } from '../dto/reporte-proceso.dto';
 
 @Injectable()
 export class ProcesoService {
@@ -238,36 +237,148 @@ export class ProcesoService {
 
   async findProcesoByFechaMateriaDistrito(reporteProcesoDto: ReporteProcesoDto) {
     const {nurej = "", materia = "", departamento = 0, fecha_inicio = "", fecha_fin= ""} = reporteProcesoDto
-    let data = await this.procesoRepository.find({
-      where: [
-        { 
-          nurej: ILike(`%${nurej}%`), 
-          materia: [{descripcion: ILike(`%${materia}%`)}], 
-          id_departamento: departamento,
-          fecha_registro: Between(new Date(fecha_inicio), new Date(fecha_fin)),
-          registro_activo:true 
-        },
-      ],
-      relations: {
-        materia:true,
-        asignaciones:{
-          asignaciones_estados:{
-            estado:true
+    let data: Proceso[]
+
+    if (departamento === 0 || departamento === null) {
+      data = await this.procesoRepository.find({
+        where: [
+          { 
+            nurej: ILike(`%${nurej}%`), 
+            materia: [{descripcion: ILike(`%${materia}%`)}], 
+            fecha_registro: Between(new Date(fecha_inicio), new Date(fecha_fin)),
+            registro_activo:true 
           },
-          defensor:{
-            persona:true
+        ],
+        relations: {
+          materia:true,
+          asignaciones:{
+            asignaciones_estados:{
+              estado:true
+            },
+            defensor:{
+              persona:true
+            }
           }
-        }
-      },
-      // order: {fecha_registro: 'DESC',asignaciones:{fecha_registro:'DESC',asignaciones_estados:{fecha_registro:'DESC'}}},
-      // order: {asignaciones: {asignaciones_estados: {fecha_registro: 'DESC'}}},
-      order: {fecha_registro: 'DESC'}
-    });
+        },
+        // order: {fecha_registro: 'DESC',asignaciones:{fecha_registro:'DESC',asignaciones_estados:{fecha_registro:'DESC'}}},
+        // order: {asignaciones: {asignaciones_estados: {fecha_registro: 'DESC'}}},
+        order: {fecha_registro: 'DESC', asignaciones: {fecha_registro: 'DESC'}}
+      });
+    } else {
+      data = await this.procesoRepository.find({
+        where: [
+          { 
+            nurej: ILike(`%${nurej}%`), 
+            materia: [{descripcion: ILike(`%${materia}%`)}], 
+            id_departamento: departamento,
+            fecha_registro: Between(new Date(fecha_inicio), new Date(fecha_fin)),
+            registro_activo:true 
+          },
+        ],
+        relations: {
+          materia:true,
+          asignaciones:{
+            asignaciones_estados:{
+              estado:true
+            },
+            defensor:{
+              persona:true
+            }
+          }
+        },
+        // order: {fecha_registro: 'DESC',asignaciones:{fecha_registro:'DESC',asignaciones_estados:{fecha_registro:'DESC'}}},
+        // order: {asignaciones: {asignaciones_estados: {fecha_registro: 'DESC'}}},
+        order: {fecha_registro: 'DESC', asignaciones: {fecha_registro: 'DESC'}}
+      });
+    }
 
     for(let i=0;i<data.length;i++) {
       data[i].zeus = await this.commonService.getOficinaZeusPro(data[i].id_oficina)
     }
     return data;
+  }
+
+  async findProcesoByFechaMateriaDistritoCantidad(reporteProcesoDto: ReporteProcesoEstadoCantidadDto) {
+    const {materia = "", departamento = 0, fecha_inicio = "", fecha_fin= ""} = reporteProcesoDto
+    let data: Proceso[]
+
+    if (departamento === 0 || departamento === null) {
+      data = await this.procesoRepository.find({
+        where: [
+          { 
+            materia: [{descripcion: ILike(`%${materia}%`)}], 
+            fecha_registro: Between(new Date(fecha_inicio), new Date(fecha_fin)),
+            asignaciones: [{asignaciones_estados: [{vigente: true}]}],
+            registro_activo:true 
+          },
+        ],
+        relations: {
+          materia:true,
+          asignaciones:{
+            asignaciones_estados:{
+              estado:true
+            },
+            // defensor:{
+            //   persona:true
+            // }
+          }
+        },
+        order: {fecha_registro: 'DESC', asignaciones: {fecha_registro: 'DESC'}}
+      });
+    } else {
+      data = await this.procesoRepository.find({
+        where: [
+          { 
+            materia: [{descripcion: ILike(`%${materia}%`)}], 
+            id_departamento: departamento,
+            fecha_registro: Between(new Date(fecha_inicio), new Date(fecha_fin)),
+            asignaciones: [{asignaciones_estados: [{vigente: true}]}],
+            registro_activo:true 
+          },
+        ],
+        relations: {
+          materia: true,
+          asignaciones: {
+            asignaciones_estados: {
+              estado: true
+            },
+            // defensor: {
+            //   persona: true
+            // }
+          }
+        },
+        order: {fecha_registro: 'DESC', asignaciones: {fecha_registro: 'DESC'}}
+      });
+    }
+    let asignado: number = 0
+    let reasignado: number = 0
+    let excusado: number = 0
+    let apersonado: number = 0
+    let concluido: number = 0
+
+    for (let i = 0; i < data.length; i++) {
+      switch (data[i].asignaciones[0].asignaciones_estados[0].estado.descripcion) {
+        case "Asignado":
+          asignado++
+          break;
+        case "Reasignado":
+          reasignado++
+          break;
+        case "Excusado":
+          excusado++
+          break;
+        case "Apersonado":
+          apersonado++
+          break;
+        case "Concluido":
+          concluido++
+          break;
+        default:
+          break;
+      }
+    }
+    return {asignado: asignado, reasignado: reasignado, excusado: excusado, apersonado: apersonado, concluido: concluido};
+    // return data
   }
 
   private handleDBExpeptions(error: any) {

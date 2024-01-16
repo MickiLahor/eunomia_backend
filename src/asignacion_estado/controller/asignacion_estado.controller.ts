@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { AsignacionEstadoService } from '../service/asignacion_estado.service';
-import { CreateApersonamientoDefensorDto, CreateAsignacionEstadoDto } from '../dto/create-asignacion_estado.dto';
+import { CreateEstadoDefensorDto, CreateAsignacionEstadoDto } from '../dto/create-asignacion_estado.dto';
 import { UpdateAsignacionEstadoDto } from '../dto/update-asignacion_estado.dto';
 import { Auth } from 'src/auth/decorators';
 import { ValidRoles } from 'src/auth/interfaces';
@@ -40,7 +40,12 @@ export class AsignacionEstadoController {
   }
 
   @Post('apersonamiento')
-  apersonamientoDefensor(@Body() createApersonamientoDefensorDto: CreateApersonamientoDefensorDto) {
+  apersonamientoDefensor(@Body() createApersonamientoDefensorDto: CreateEstadoDefensorDto) {
     return this.asignacionEstadoService.apersonamientoDefensor(createApersonamientoDefensorDto);
+  }
+
+  @Post('conclusion')
+  conclusionDefensor(@Body() createConclusionDefensorDto: CreateEstadoDefensorDto) {
+    return this.asignacionEstadoService.conclusionDefensor(createConclusionDefensorDto);
   }
 }

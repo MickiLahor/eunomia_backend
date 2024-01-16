@@ -6,7 +6,7 @@ import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { SearchProcesoDto } from 'src/common/dtos/search.dto';
 import { Auth } from 'src/auth/decorators';
 import { ValidRoles } from 'src/auth/interfaces';
-import { ReporteProcesoDto } from '../dto/reporte-proceso.dto';
+import { ReporteProcesoDto, ReporteProcesoEstadoCantidadDto } from '../dto/reporte-proceso.dto';
 
 @Controller('proceso')
 export class ProcesoController {
@@ -58,6 +58,16 @@ export class ProcesoController {
     return this.procesoService.findProcesoByFechaMateriaDistrito
     (
       reporteProcesoDto
+    )
+  }
+
+  @Get('report-cantidad')
+  @Auth(ValidRoles.administrador, ValidRoles.juzgado, ValidRoles.ssjj, ValidRoles.ssjjn)
+  findProcesoByFechaMateriaDistritoCantidad(@Query() reporteProcesoEstadoDto: ReporteProcesoEstadoCantidadDto) {
+    reporteProcesoEstadoDto
+    return this.procesoService.findProcesoByFechaMateriaDistritoCantidad
+    (
+      reporteProcesoEstadoDto
     )
   }
 
