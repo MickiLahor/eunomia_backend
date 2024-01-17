@@ -40,11 +40,13 @@ export class AsignacionEstadoController {
   }
 
   @Post('apersonamiento')
+  @Auth(ValidRoles.administrador, ValidRoles.juzgado)
   apersonamientoDefensor(@Body() createApersonamientoDefensorDto: CreateEstadoDefensorDto) {
     return this.asignacionEstadoService.apersonamientoDefensor(createApersonamientoDefensorDto);
   }
 
   @Post('conclusion')
+  @Auth(ValidRoles.administrador, ValidRoles.juzgado)
   conclusionDefensor(@Body() createConclusionDefensorDto: CreateEstadoDefensorDto) {
     return this.asignacionEstadoService.conclusionDefensor(createConclusionDefensorDto);
   }

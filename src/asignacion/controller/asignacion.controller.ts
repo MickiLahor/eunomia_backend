@@ -26,8 +26,50 @@ export class AsignacionController {
   @Get("search")
   @Auth(ValidRoles.administrador, ValidRoles.ssjjn)
   search(@Query() searchDto :SearchAsignacionDto) {
-    const {limit = 5,page= 1} = searchDto
+    const {limit = 10,page= 1} = searchDto
     return this.asignacionService.search
+    (
+      {
+        limit:limit,
+        page:page,
+      }
+      ,searchDto
+    )
+  }
+
+  @Get("search-departamento")
+  @Auth(ValidRoles.ssjj)
+  searchDepartamento(@Query() searchDto :SearchAsignacionDto) {
+    const {limit = 10,page= 1} = searchDto
+    return this.asignacionService.searchDepartamento
+    (
+      {
+        limit:limit,
+        page:page,
+      }
+      ,searchDto
+    )
+  }
+
+  @Get("search-oficina")
+  @Auth(ValidRoles.juzgado)
+  searchOficina(@Query() searchDto :SearchAsignacionDto) {
+    const {limit = 10,page= 1} = searchDto
+    return this.asignacionService.searchOficina
+    (
+      {
+        limit:limit,
+        page:page,
+      }
+      ,searchDto
+    )
+  }
+
+  @Get("search-defensor")
+  @Auth(ValidRoles.defensor)
+  searchDefensor(@Query() searchDto :SearchAsignacionDto) {
+    const {limit = 10,page= 1} = searchDto
+    return this.asignacionService.searchDefensor
     (
       {
         limit:limit,

@@ -262,7 +262,8 @@ export class ProcesoService {
         },
         // order: {fecha_registro: 'DESC',asignaciones:{fecha_registro:'DESC',asignaciones_estados:{fecha_registro:'DESC'}}},
         // order: {asignaciones: {asignaciones_estados: {fecha_registro: 'DESC'}}},
-        order: {fecha_registro: 'DESC', asignaciones: {fecha_registro: 'DESC'}}
+        // order: {fecha_registro: 'DESC', asignaciones: {fecha_registro: 'DESC'}}
+        order: {fecha_registro: 'DESC', asignaciones: {fecha_registro: 'DESC', asignaciones_estados:{fecha_registro: 'DESC'}}}
       });
     } else {
       data = await this.procesoRepository.find({
@@ -288,7 +289,7 @@ export class ProcesoService {
         },
         // order: {fecha_registro: 'DESC',asignaciones:{fecha_registro:'DESC',asignaciones_estados:{fecha_registro:'DESC'}}},
         // order: {asignaciones: {asignaciones_estados: {fecha_registro: 'DESC'}}},
-        order: {fecha_registro: 'DESC', asignaciones: {fecha_registro: 'DESC'}}
+        order: {fecha_registro: 'DESC', asignaciones: {fecha_registro: 'DESC', asignaciones_estados:{fecha_registro: 'DESC'}}}
       });
     }
 

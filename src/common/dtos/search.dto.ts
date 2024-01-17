@@ -109,6 +109,18 @@ export class SearchAsignacionDto {
 
     @IsOptional()
     @Type(() => Number )
+    id_departamento?: number;
+
+    @IsOptional()
+    @Type(() => Number )
+    id_oficina?: number;
+
+    @IsOptional()
+    @Type(() => String )
+    id_persona?: string;
+
+    @IsOptional()
+    @Type(() => Number )
     limit?: number;
 
     @IsOptional()

@@ -52,12 +52,10 @@ export class AsignacionService {
         {
           asignaciones_estados: {vigente: true},
           proceso: [
-            { nurej: ILike(`%${nurej}%`),registro_activo:true },
-            { demandado: ILike(`%${demandado}%`),registro_activo:true },
-            { demandante: ILike(`%${demandante}%`),registro_activo:true },
-            {materia:[
-              {descripcion: ILike(`%${materia}%`),registro_activo:true }
-            ]} 
+            { nurej: ILike(`%${nurej}%`), registro_activo: true },
+            { demandado: ILike(`%${demandado}%`), registro_activo: true },
+            { demandante: ILike(`%${demandante}%`), registro_activo: true },
+            { materia: [{descripcion: ILike(`%${materia}%`), registro_activo: true }]} 
           ],
         },
         {
@@ -79,7 +77,115 @@ export class AsignacionService {
     for(let i=0;i<data.items.length;i++) {
       data.items[i].proceso.zeus = await this.commonService.getOficinaZeusPro(data.items[i].proceso.id_oficina)
     }
+    return data; 
+  }
+
+  async searchDepartamento(options: IPaginationOptions, searchDto: SearchAsignacionDto) {
+    const {nurej = "",demandado= "",demandante="", defensor="",materia="", id_departamento=null} = searchDto
     
+    let data = await paginate<Asignacion>(this.asignacionRepository, options, {
+      where: [
+        {
+          asignaciones_estados: {vigente: true},
+          proceso: [
+            { nurej: ILike(`%${nurej}%`), registro_activo: true, id_departamento: id_departamento },
+            { demandado: ILike(`%${demandado}%`), registro_activo: true, id_departamento: id_departamento },
+            { demandante: ILike(`%${demandante}%`), registro_activo: true, id_departamento: id_departamento },
+            { materia: [{descripcion: ILike(`%${materia}%`), registro_activo: true }], id_departamento: id_departamento }
+          ],
+        },
+        {
+          proceso: {id_departamento: id_departamento},
+          asignaciones_estados: {vigente: true},
+          defensor: {
+            persona: {nombre_completo: ILike(`%${defensor}%`),registro_activo:true}
+          }
+        },    
+      ],
+      relations:{
+        asignaciones_estados:{estado:true},
+        defensor:{persona:true},
+        proceso:{materia:true}
+      },
+      order: {fecha_registro: 'DESC'}
+    });
+    for(let i=0;i<data.items.length;i++) {
+      data.items[i].proceso.zeus = await this.commonService.getOficinaZeusPro(data.items[i].proceso.id_oficina)
+    }
+    return data;
+  }
+
+  async searchOficina(options: IPaginationOptions, searchDto: SearchAsignacionDto) {
+    const {nurej = "",demandado= "",demandante="", defensor="",materia="", id_oficina=null} = searchDto
+    let data = await paginate<Asignacion>(this.asignacionRepository, options, {
+      where:    
+      [
+        {
+          asignaciones_estados: {vigente: true},
+          proceso: [
+            { nurej: ILike(`%${nurej}%`), registro_activo: true, id_oficina: id_oficina },
+            { demandado: ILike(`%${demandado}%`), registro_activo: true, id_oficina: id_oficina },
+            { demandante: ILike(`%${demandante}%`), registro_activo: true, id_oficina: id_oficina },
+            { materia: [{descripcion: ILike(`%${materia}%`), registro_activo: true }], id_oficina: id_oficina},
+          ],
+        },
+        {
+          proceso: { id_oficina: id_oficina },
+          asignaciones_estados: {vigente: true},
+          defensor:
+          {
+            persona:
+              {nombre_completo: ILike(`%${defensor}%`),registro_activo:true}
+          }
+        },    
+      ],
+      relations:{
+        asignaciones_estados:{estado:true},
+        defensor:{persona:true},
+        proceso:{materia:true}
+      },
+      order: {fecha_registro: 'DESC'}
+    });
+    for(let i=0;i<data.items.length;i++) {
+      data.items[i].proceso.zeus = await this.commonService.getOficinaZeusPro(data.items[i].proceso.id_oficina)
+    }
+    return data; 
+  }
+
+  async searchDefensor(options: IPaginationOptions, searchDto: SearchAsignacionDto) {
+    const {nurej = "",demandado= "",demandante="", defensor="",materia="", id_persona=null} = searchDto
+    let data = await paginate<Asignacion>(this.asignacionRepository, options, {
+      where:    
+      [
+        {
+          asignaciones_estados: {vigente: true},
+          defensor: {persona: {id: id_persona}},
+          proceso: [
+            { nurej: ILike(`%${nurej}%`), registro_activo: true },
+            { demandado: ILike(`%${demandado}%`), registro_activo: true },
+            { demandante: ILike(`%${demandante}%`), registro_activo: true },
+            { materia: [{descripcion: ILike(`%${materia}%`), registro_activo: true }]}
+          ],
+        },
+        {
+          asignaciones_estados: {vigente: true},
+          defensor:
+          {
+            persona:
+              { nombre_completo: ILike(`%${defensor}%`), registro_activo: true, id: id_persona }
+          }
+        },    
+      ],
+      relations:{
+        asignaciones_estados:{estado:true},
+        defensor:{persona:true},
+        proceso:{materia:true}
+      },
+      order: {fecha_registro: 'DESC'}
+    });
+    for(let i=0;i<data.items.length;i++) {
+      data.items[i].proceso.zeus = await this.commonService.getOficinaZeusPro(data.items[i].proceso.id_oficina)
+    }
     return data; 
   }
 
