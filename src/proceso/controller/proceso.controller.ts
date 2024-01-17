@@ -31,16 +31,16 @@ export class ProcesoController {
   }
 
   @Get('all')
-  @Auth(ValidRoles.administrador, ValidRoles.juzgado, ValidRoles.ssjj, ValidRoles.ssjjn)
+  @Auth(ValidRoles.administrador, ValidRoles.ssjjn)
   listarTodo() {
 
     return this.procesoService.all();
   }
 
   @Get("search")
-  @Auth(ValidRoles.administrador, ValidRoles.juzgado, ValidRoles.ssjj, ValidRoles.ssjjn)
+  @Auth(ValidRoles.administrador, ValidRoles.ssjjn)
   search(@Query() searchDto :SearchProcesoDto) {
-    const {limit = 5,page= 1} = searchDto
+    const {limit = 10,page= 1} = searchDto
     return this.procesoService.search
     (
       {
@@ -51,8 +51,36 @@ export class ProcesoController {
     )
   }
 
+  @Get("search-departamento")
+  @Auth(ValidRoles.ssjj)
+  searchDepartamento(@Query() searchDto :SearchProcesoDto) {
+    const {limit = 10,page= 1} = searchDto
+    return this.procesoService.searchDepartamento
+    (
+      {
+        limit:limit,
+        page:page,
+      }
+      ,searchDto
+    )
+  }
+
+  @Get("search-oficina")
+  @Auth(ValidRoles.juzgado)
+  searchOficina(@Query() searchDto :SearchProcesoDto) {
+    const {limit = 10,page= 1} = searchDto
+    return this.procesoService.searchOficina
+    (
+      {
+        limit:limit,
+        page:page,
+      }
+      ,searchDto
+    )
+  }
+
   @Get('report')
-  @Auth(ValidRoles.administrador, ValidRoles.juzgado, ValidRoles.ssjj, ValidRoles.ssjjn)
+  @Auth(ValidRoles.administrador, ValidRoles.ssjj, ValidRoles.ssjjn)
   findProcesoByFechaMateriaDistrito(@Query() reporteProcesoDto: ReporteProcesoDto) {
     reporteProcesoDto
     return this.procesoService.findProcesoByFechaMateriaDistrito
@@ -62,7 +90,7 @@ export class ProcesoController {
   }
 
   @Get('report-cantidad')
-  @Auth(ValidRoles.administrador, ValidRoles.juzgado, ValidRoles.ssjj, ValidRoles.ssjjn)
+  @Auth(ValidRoles.administrador, ValidRoles.ssjj, ValidRoles.ssjjn)
   findProcesoByFechaMateriaDistritoCantidad(@Query() reporteProcesoEstadoDto: ReporteProcesoEstadoCantidadDto) {
     reporteProcesoEstadoDto
     return this.procesoService.findProcesoByFechaMateriaDistritoCantidad

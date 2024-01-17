@@ -77,6 +77,14 @@ export class SearchProcesoDto {
 
     @IsOptional()
     @Type(() => Number )
+    id_departamento?: number;
+
+    @IsOptional()
+    @Type(() => Number )
+    id_oficina?: number;
+
+    @IsOptional()
+    @Type(() => Number )
     limit?: number;
 
     @IsOptional()

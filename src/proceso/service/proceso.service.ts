@@ -142,6 +142,72 @@ export class ProcesoService {
     return data;
   }
 
+  async searchDepartamento(options: IPaginationOptions, searchDto: SearchProcesoDto) {
+    const {nurej = "", demandado = "", demandante = "", id_departamento = 0} = searchDto
+    let data = await paginate<Proceso>(this.procesoRepository, options, {
+      where:   
+      [
+        
+        { nurej: ILike(`%${nurej}%`),registro_activo:true, asignaciones: {asignaciones_estados: {vigente: true}}, id_departamento: id_departamento },
+        { demandado: ILike(`%${demandado}%`),registro_activo:true, asignaciones: {asignaciones_estados: {vigente: true}}, id_departamento: id_departamento },
+        { demandante: ILike(`%${demandante}%`),registro_activo:true, asignaciones: {asignaciones_estados: {vigente: true}}, id_departamento: id_departamento },
+        
+      ],
+      relations:{
+        materia:true,
+        asignaciones:{
+          asignaciones_estados:{
+            estado:true
+          },
+          defensor:{
+            persona:true
+          }
+        }
+      },
+      // order: {fecha_registro: 'DESC',asignaciones:{fecha_registro:'DESC',asignaciones_estados:{fecha_registro:'DESC'}}},
+      // order: {asignaciones: {asignaciones_estados: {fecha_registro: 'DESC'}}},
+      order: {fecha_registro: 'DESC'}
+    });
+
+    for(let i=0;i<data.items.length;i++) {
+      data.items[i].zeus = await this.commonService.getOficinaZeusPro(data.items[i].id_oficina)
+    }
+    return data;
+  }
+
+  async searchOficina(options: IPaginationOptions, searchDto: SearchProcesoDto) {
+    const {nurej = "", demandado = "", demandante = "", id_oficina = 0} = searchDto
+    let data = await paginate<Proceso>(this.procesoRepository, options, {
+      where:   
+      [
+        
+        { nurej: ILike(`%${nurej}%`),registro_activo:true, asignaciones: {asignaciones_estados: {vigente: true}}, id_oficina: id_oficina },
+        { demandado: ILike(`%${demandado}%`),registro_activo:true, asignaciones: {asignaciones_estados: {vigente: true}}, id_oficina: id_oficina },
+        { demandante: ILike(`%${demandante}%`),registro_activo:true, asignaciones: {asignaciones_estados: {vigente: true}}, id_oficina: id_oficina },
+        
+      ],
+      relations:{
+        materia:true,
+        asignaciones:{
+          asignaciones_estados:{
+            estado:true
+          },
+          defensor:{
+            persona:true
+          }
+        }
+      },
+      // order: {fecha_registro: 'DESC',asignaciones:{fecha_registro:'DESC',asignaciones_estados:{fecha_registro:'DESC'}}},
+      // order: {asignaciones: {asignaciones_estados: {fecha_registro: 'DESC'}}},
+      order: {fecha_registro: 'DESC'}
+    });
+
+    for(let i=0;i<data.items.length;i++) {
+      data.items[i].zeus = await this.commonService.getOficinaZeusPro(data.items[i].id_oficina)
+    }
+    return data;
+  }
+
   // async search(
   //   options: IPaginationOptions, searchDto: SearchProcesoDto
   // ): Promise<Proceso[]> {
