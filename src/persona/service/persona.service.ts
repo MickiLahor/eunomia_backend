@@ -125,6 +125,45 @@ export class PersonaService {
     return persona
   }
 
+  async searchDepartamento(options: IPaginationOptions, searchDto: SearchDto) {
+    const {ci = "", nombre= "", materno= "", paterno="", id_departamento=0} = searchDto
+    let persona = await paginate<Persona>(this.personaRepository, options, {
+      where: [
+        { ci: ILike(`%${ci}%`), usuario: {id_departamento: id_departamento} },
+        { nombre: ILike(`%${nombre}%`), usuario: {id_departamento: id_departamento} },
+        { paterno: ILike(`%${paterno}%`), usuario: {id_departamento: id_departamento} },
+        { materno: ILike(`%${materno}%`), usuario: {id_departamento: id_departamento} }
+      ],
+      relations: {
+        usuario: { roles: true },
+        defensor: { materia: true }
+      },
+      order: {fecha_registro: 'DESC'}
+    });
+    
+    if (persona.items.length !== 0) {
+      let zeus = null
+      for (let i = 0; i < persona.items.length; i++) {
+        if (persona.items[i].usuario.id_oficina != null) {
+          zeus = await this.commonService.getOficinaZeusPro(persona.items[i].usuario.id_oficina)
+          persona.items[i] = Object.assign(persona.items[i], {zeus});
+        } else {
+          const zeus = {id_departamento: null, departamento: null, id_municipio: null, municipio: null}
+          const departamentos = await this.commonService.getDepartamentoZeusPro()
+          const municipios = await this.commonService.getMunicipioZeusPro(persona.items[i].usuario.id_departamento)
+          const departamento = departamentos.find((dep) => dep.id_departamento === persona.items[i].usuario.id_departamento)
+          const municipio = municipios.find((mun) => mun.id_municipio === persona.items[i].usuario.id_ciudad)
+          zeus.id_departamento = departamento.id_departamento
+          zeus.departamento = departamento.descripcion
+          zeus.id_municipio = municipio.id_municipio
+          zeus.municipio = municipio.descripcion
+          persona.items[i] = Object.assign(persona.items[i], {zeus});
+        }
+      }
+    }
+    return persona
+  }
+
   async findOne(id: string) {
     let persona = await this.personaRepository.findOne(
       {

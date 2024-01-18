@@ -133,6 +133,32 @@ export class UsuariosService {
     });
   }
 
+  async searchDepartamento(options: IPaginationOptions, searchDto: SearchUsuarioDto) {
+    const {ci = "",nombres= "", usuario="", rol="", id_departamento=0} = searchDto
+    return paginate<Usuario>(this.usuarioRepository, options, {
+      where:    
+      [
+        { usuario: ILike(`%${usuario}%`), registro_activo:true, id_departamento: id_departamento },
+        {
+          persona: [
+            { ci: ILike(`%${ci}%`), registro_activo:true },
+            { nombre_completo: ILike(`%${nombres}%`), registro_activo:true },
+          ], id_departamento: id_departamento
+        },
+        {
+          roles: [
+            { descripcion: ILike(`%${rol}%`), registro_activo:true },
+          ], id_departamento: id_departamento
+        },
+      ],
+      relations: {
+        persona: { defensor: true },
+        roles: true
+      },
+      order: { fecha_registro: 'DESC' }
+    });
+  }
+
   // update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
   //   return `This action updates a #${id} usuario`;
   // }

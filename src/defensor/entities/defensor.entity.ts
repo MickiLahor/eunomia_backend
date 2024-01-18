@@ -8,10 +8,10 @@ export class Defensor {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column('text')
+    @Column({type: 'text', nullable: true})
     direccion_oficina: string;
 
-    @Column('text')
+    @Column({type: 'text', nullable: true})
     telefono_oficina: string;
 
     @Column('text')

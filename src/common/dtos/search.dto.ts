@@ -25,6 +25,10 @@ export class SearchDto {
 
     @IsOptional()
     @Type(() => Number )
+    id_departamento?: number;
+
+    @IsOptional()
+    @Type(() => Number )
     limit?: number;
 
     @IsOptional()
@@ -50,6 +54,10 @@ export class SearchUsuarioDto {
     @IsOptional()
     @Type(() => String )
     rol?: string;
+
+    @IsOptional()
+    @Type(() => Number )
+    id_departamento?: number;
 
     @IsOptional()
     @Type(() => Number )
@@ -147,6 +155,14 @@ export class SearchDefendorDto {
     @IsOptional()
     @Type(() => String )
     nombre_completo?: string;
+
+    @IsOptional()
+    @Type(() => String )
+    ci?: string;
+
+    @IsOptional()
+    @Type(() => Number )
+    id_departamento?: number;
 
     @IsOptional()
     @Type(() => Number )

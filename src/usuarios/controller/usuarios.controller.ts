@@ -24,8 +24,19 @@ export class UsuariosController {
   @Get("search")
   @Auth(ValidRoles.administrador, ValidRoles.ssjj, ValidRoles.ssjjn)
   search(@Query() searchDto :SearchUsuarioDto) {
-    const {limit = 5,page= 1} = searchDto
+    const {limit = 10,page= 1} = searchDto
     return this.usuariosService.search({
+      limit:limit,
+      page:page,
+    }, searchDto
+    )
+  }
+
+  @Get("search-departamento")
+  @Auth(ValidRoles.administrador, ValidRoles.ssjj, ValidRoles.ssjjn)
+  searchDepartamento(@Query() searchDto :SearchUsuarioDto) {
+    const {limit = 10,page= 1} = searchDto
+    return this.usuariosService.searchDepartamento({
       limit:limit,
       page:page,
     }, searchDto

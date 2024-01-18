@@ -16,13 +16,13 @@ export class RolesController {
   }
 
   @Get()
-  @Auth(ValidRoles.administrador)
+  @Auth(ValidRoles.administrador, ValidRoles.ssjj, ValidRoles.ssjjn)
   findAll() {
     return this.rolesService.findAll();
   }
 
   @Get(':id')
-  @Auth(ValidRoles.administrador)
+  @Auth(ValidRoles.administrador, ValidRoles.ssjj, ValidRoles.ssjjn)
   findOne(@Param('id',ParseUUIDPipe) id: string) {
     return this.rolesService.findOne(id);
   }

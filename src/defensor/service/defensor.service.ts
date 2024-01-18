@@ -57,12 +57,43 @@ export class DefensorService {
   }
 
   async search(options: IPaginationOptions, searchDto: SearchDefendorDto) {
-    const { matricula = "", nombre_completo="" } = searchDto
+    const { matricula = "", nombre_completo="", ci="" } = searchDto
     let defensor = await paginate<Defensor>(this.defensorRepository, options, {
       where:    
       [
         { matricula: ILike(`%${matricula}%`),registro_activo:true},
         { persona: { nombre_completo: ILike(`%${nombre_completo}%`),registro_activo:true } },
+        { persona: { ci: ILike(`%${ci}%`),registro_activo:true } },
+      ],
+      relations:{persona: true, materia: true},
+      order: {fecha_registro: 'DESC'}
+    });
+
+    if (defensor.items.length !== 0) {
+      for (let i = 0; i < defensor.items.length; i++) {
+          const zeus = {id_departamento: null, departamento: null, id_municipio: null, municipio: null}
+          const departamentos = await this.commonService.getDepartamentoZeusPro()
+          const municipios = await this.commonService.getMunicipioZeusPro(defensor.items[i].id_departamento)
+          const departamento = departamentos.find((dep) => dep.id_departamento === defensor.items[i].id_departamento)
+          const municipio = municipios.find((mun) => mun.id_municipio === defensor.items[i].id_ciudad)
+          zeus.id_departamento = departamento.id_departamento
+          zeus.departamento = departamento.descripcion
+          zeus.id_municipio = municipio.id_municipio
+          zeus.municipio = municipio.descripcion
+          defensor.items[i] = Object.assign(defensor.items[i], {zeus});
+      }
+    }
+    return defensor
+  }
+
+  async searchDepartamento(options: IPaginationOptions, searchDto: SearchDefendorDto) {
+    const { matricula = "", nombre_completo="", ci="", id_departamento=0 } = searchDto
+    let defensor = await paginate<Defensor>(this.defensorRepository, options, {
+      where:    
+      [
+        { matricula: ILike(`%${matricula}%`), registro_activo:true, id_departamento: id_departamento },
+        { persona: { nombre_completo: ILike(`%${nombre_completo}%`), registro_activo: true }, id_departamento: id_departamento },
+        { persona: { ci: ILike(`%${ci}%`), registro_activo: true }, id_departamento: id_departamento },
       ],
       relations:{persona: true, materia: true},
       order: {fecha_registro: 'DESC'}

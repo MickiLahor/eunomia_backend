@@ -34,7 +34,7 @@ export class DefensorController {
   }
 
   @Get("search")
-  @Auth(ValidRoles.administrador, ValidRoles.ssjj, ValidRoles.ssjjn)
+  @Auth(ValidRoles.administrador, ValidRoles.ssjjn)
   search(@Query() searchDto :SearchDefendorDto) {
     const {limit = 10,page= 1} = searchDto
     return this.defensorService.search({
@@ -42,9 +42,20 @@ export class DefensorController {
       page:page,
     }
     ,searchDto
-  )
+    )
   }
 
+  @Get("search-departamento")
+  @Auth(ValidRoles.ssjj)
+  searchDepartamento(@Query() searchDto :SearchDefendorDto) {
+    const {limit = 10,page= 1} = searchDto
+    return this.defensorService.searchDepartamento({
+      limit:limit,
+      page:page,
+    }
+    ,searchDto
+    )
+  }
 
   @Get(':id')
   @Auth(ValidRoles.administrador, ValidRoles.ssjj, ValidRoles.ssjjn)

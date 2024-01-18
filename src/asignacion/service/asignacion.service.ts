@@ -81,7 +81,7 @@ export class AsignacionService {
   }
 
   async searchDepartamento(options: IPaginationOptions, searchDto: SearchAsignacionDto) {
-    const {nurej = "",demandado= "",demandante="", defensor="",materia="", id_departamento=null} = searchDto
+    const {nurej = "",demandado= "",demandante="", defensor="",materia="", id_departamento=0} = searchDto
     
     let data = await paginate<Asignacion>(this.asignacionRepository, options, {
       where: [
@@ -116,7 +116,7 @@ export class AsignacionService {
   }
 
   async searchOficina(options: IPaginationOptions, searchDto: SearchAsignacionDto) {
-    const {nurej = "",demandado= "",demandante="", defensor="",materia="", id_oficina=null} = searchDto
+    const {nurej = "",demandado= "",demandante="", defensor="",materia="", id_oficina=0} = searchDto
     let data = await paginate<Asignacion>(this.asignacionRepository, options, {
       where:    
       [
@@ -153,7 +153,7 @@ export class AsignacionService {
   }
 
   async searchDefensor(options: IPaginationOptions, searchDto: SearchAsignacionDto) {
-    const {nurej = "",demandado= "",demandante="", defensor="",materia="", id_persona=null} = searchDto
+    const {nurej = "",demandado= "",demandante="", defensor="",materia="", id_persona=""} = searchDto
     let data = await paginate<Asignacion>(this.asignacionRepository, options, {
       where:    
       [

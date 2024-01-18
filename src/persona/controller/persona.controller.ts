@@ -41,10 +41,21 @@ export class PersonaController {
   }
 
   @Get("search")
-  @Auth(ValidRoles.administrador, ValidRoles.ssjj, ValidRoles.ssjjn)
+  @Auth(ValidRoles.administrador, ValidRoles.ssjjn)
   search(@Query() searchDto :SearchDto) {
     const {limit = 5,page= 1} = searchDto
     return this.personaService.search({
+      limit:limit,
+      page:page,
+    }, searchDto
+    )
+  }
+
+  @Get("search-departamento")
+  @Auth(ValidRoles.ssjj)
+  searchDepartamento(@Query() searchDto :SearchDto) {
+    const {limit = 5,page= 1} = searchDto
+    return this.personaService.searchDepartamento({
       limit:limit,
       page:page,
     }, searchDto

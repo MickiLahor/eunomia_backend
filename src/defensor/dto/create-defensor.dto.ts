@@ -2,11 +2,11 @@ import { IsDate, IsDateString, IsEmail, IsNumber, IsOptional, IsString, IsUUID, 
 
 export class CreateDefensorDto {
     @IsString()
-    @MinLength(1)
+    @IsOptional()
     direccion_oficina: string;
 
     @IsString()
-    @MinLength(1)
+    @IsOptional()
     telefono_oficina: string;
 
     @IsString()
