@@ -91,7 +91,7 @@ export class DefensorService {
     let defensor = await paginate<Defensor>(this.defensorRepository, options, {
       where:    
       [
-        { matricula: ILike(`%${matricula}%`), registro_activo:true, id_departamento: id_departamento },
+        { matricula: ILike(`%${matricula}%`), id_departamento: id_departamento },
         { persona: { nombre_completo: ILike(`%${nombre_completo}%`), registro_activo: true }, id_departamento: id_departamento },
         { persona: { ci: ILike(`%${ci}%`), registro_activo: true }, id_departamento: id_departamento },
       ],

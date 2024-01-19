@@ -70,7 +70,7 @@ export class DefensorController {
   }
 
   @Delete(':id')
-  @Auth(ValidRoles.administrador)
+  @Auth(ValidRoles.administrador, ValidRoles.ssjj, ValidRoles.ssjjn)
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.defensorService.remove(id);
   }

@@ -62,7 +62,7 @@ export class UsuariosController {
   }
 
   @Delete(':id')
-  @Auth(ValidRoles.administrador, ValidRoles.ssjj, ValidRoles.ssjjn)
+  @Auth(ValidRoles.administrador)
   remove(@Param('id',ParseUUIDPipe) id: string) {
     return this.usuariosService.remove(id);
   }

@@ -55,7 +55,6 @@ export class ActividadService {
     const actividad = await this.actividadRepository.preload({id, ...updateActividadDto });
     if ( !actividad ) throw new NotFoundException(`La actividad con el id: ${id} no existe`);
     if(actividad.registro_activo===false) throw new NotFoundException(`La actividad con el id: ${id} fue dado de baja`);
-    console.log("🚀 ~ file: actividad.service.ts:60 ~ ActividadService ~ update ~ actividad.finalizado:", actividad.finalizado)
     try {
       await this.actividadRepository.save(actividad);
       return {...actividad, message: 'Actualización correcta.', error: false};
