@@ -57,13 +57,14 @@ export class DefensorService {
   }
 
   async search(options: IPaginationOptions, searchDto: SearchDefendorDto) {
-    const { matricula = "", nombre_completo="", ci="" } = searchDto
+    const { matricula = "", nombre_completo="", ci="", materia="" } = searchDto
     let defensor = await paginate<Defensor>(this.defensorRepository, options, {
       where:    
       [
-        { matricula: ILike(`%${matricula}%`),registro_activo:true},
-        { persona: { nombre_completo: ILike(`%${nombre_completo}%`),registro_activo:true } },
-        { persona: { ci: ILike(`%${ci}%`),registro_activo:true } },
+        { matricula: ILike(`%${matricula}%`)},
+        { persona: { nombre_completo: ILike(`%${nombre_completo}%`), registro_activo:true } },
+        { persona: { ci: ILike(`%${ci}%`), registro_activo:true } },
+        { materia: { descripcion: ILike(`%${materia}%`), registro_activo:true } },
       ],
       relations:{persona: true, materia: true},
       order: {fecha_registro: 'DESC'}
@@ -87,13 +88,14 @@ export class DefensorService {
   }
 
   async searchDepartamento(options: IPaginationOptions, searchDto: SearchDefendorDto) {
-    const { matricula = "", nombre_completo="", ci="", id_departamento=0 } = searchDto
+    const { matricula = "", nombre_completo="", ci="", materia="", id_departamento=0 } = searchDto
     let defensor = await paginate<Defensor>(this.defensorRepository, options, {
       where:    
       [
         { matricula: ILike(`%${matricula}%`), id_departamento: id_departamento },
         { persona: { nombre_completo: ILike(`%${nombre_completo}%`), registro_activo: true }, id_departamento: id_departamento },
         { persona: { ci: ILike(`%${ci}%`), registro_activo: true }, id_departamento: id_departamento },
+        { materia: { descripcion: ILike(`%${materia}%`), registro_activo:true }, id_departamento: id_departamento },
       ],
       relations:{persona: true, materia: true},
       order: {fecha_registro: 'DESC'}

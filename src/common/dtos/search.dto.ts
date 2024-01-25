@@ -161,6 +161,10 @@ export class SearchDefendorDto {
     ci?: string;
 
     @IsOptional()
+    @Type(() => String )
+    materia?: string;
+
+    @IsOptional()
     @Type(() => Number )
     id_departamento?: number;
 

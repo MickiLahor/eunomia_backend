@@ -9,6 +9,7 @@ import { TipoInformeModule } from 'src/tipo_informe/tipo_informe.module';
 import { UsuariosModule } from 'src/usuarios/usuarios.module';
 import { AuthModule } from 'src/auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
+import { ExcusaModule } from 'src/excusa/excusa.module';
 
 @Module({
   controllers: [InformeController],
@@ -17,7 +18,8 @@ import { PassportModule } from '@nestjs/passport';
     TypeOrmModule.forFeature([Informe,Asignacion]), 
     AsignacionModule, 
     TipoInformeModule,
-    UsuariosModule
+    UsuariosModule,
+    ExcusaModule
   ],
   exports: [InformeService]
 })

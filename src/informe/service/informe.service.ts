@@ -6,6 +6,7 @@ import { Informe } from '../entities/informe.entity';
 import { AsignacionService } from 'src/asignacion/service/asignacion.service';
 import { Repository } from 'typeorm';
 import { TipoInformeService } from 'src/tipo_informe/service/tipo_informe.service';
+import { ExcusaService } from 'src/excusa/service/excusa.service';
 
 @Injectable()
 export class InformeService {
@@ -15,22 +16,27 @@ export class InformeService {
     @InjectRepository(Informe)
     private readonly informeRepository: Repository<Informe>,
     private readonly asignacionService: AsignacionService,  
-    private readonly tipoInformeService: TipoInformeService,  
+    private readonly tipoInformeService: TipoInformeService,
+    private readonly excusaService: ExcusaService,  
       
   ){}
   async create(createInformeDto: CreateInformeDto) {
     try {
-      const informe = this.informeRepository.create({
-        ...createInformeDto,
-        asignacion : await this.asignacionService.findOne(createInformeDto.id_asignacion),
-        tipo_informe : await this.tipoInformeService.findOne(createInformeDto.id_tipo_informe),
-        url: createInformeDto.archivo,
-        fecha_registro:new Date(),
-        registro_activo: true
-      });
-
-      await this.informeRepository.save(informe);
-      return { ...informe, message: "Registro correcto.", error: false };
+      const excusaAsignacion = await this.excusaService.findForAsignacion(createInformeDto.id_asignacion)
+      if (excusaAsignacion.length === 0) {
+        const informe = this.informeRepository.create({
+          ...createInformeDto,
+          asignacion : await this.asignacionService.findOne(createInformeDto.id_asignacion),
+          tipo_informe : await this.tipoInformeService.findOne(createInformeDto.id_tipo_informe),
+          url: createInformeDto.archivo,
+          fecha_registro:new Date(),
+          registro_activo: true
+        });
+  
+        await this.informeRepository.save(informe);
+        return { ...informe, message: "Registro correcto.", error: false };
+      }
+      return {message:"Existe una excusa registrada por el defensor en el proceso.", error: true};
     }
     catch(error) {
       console.log(error);
