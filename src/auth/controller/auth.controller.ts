@@ -9,6 +9,7 @@ import { Usuario } from 'src/usuarios/entities/usuario.entity';
 import { CreatePersonaUsuarioDto } from '../dto/create-persona-usuario.dto';
 import { HttpStatusCode } from 'axios';
 import { UpdatePersonaUsuarioDto } from '../dto/update-persona-usuario.dto';
+import { SegipDto } from '../dto/segip.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -54,5 +55,11 @@ export class AuthController {
         ok:true,
         user
       };
+    }
+
+    @Post("segip")
+    @Auth(ValidRoles.administrador, ValidRoles.ssjj, ValidRoles.ssjjn)
+    segipConsulta(@Body() segipDto: SegipDto) {
+      return this.authService.buscarSegip(segipDto);
     }
 }

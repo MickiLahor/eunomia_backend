@@ -17,6 +17,7 @@ import { Roles } from 'src/common/enums/enums';
 import { DefensorService } from 'src/defensor/service/defensor.service';
 import { UpdatePersonaUsuarioDto } from '../dto/update-persona-usuario.dto';
 import { UsuariosService } from 'src/usuarios/service/usuarios.service';
+import { SegipDto, SegipRespondeDto } from '../dto/segip.dto';
 
 @Injectable()
 export class AuthService {
@@ -250,6 +251,35 @@ export class AuthService {
     
     return token;
 
+  }
+
+  async buscarSegip(segipDto: SegipDto): Promise<SegipRespondeDto> {
+    try {
+      segipDto.ciUsuario = this.configService.get('SEGIP_USER')
+      segipDto.aplicacion = this.configService.get('SEGIP_APP')
+      const datosSegip = await fetch(this.configService.get('URL_SEGIP'), {
+        method: 'POST',
+        body: JSON.stringify(segipDto),
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const data = await datosSegip.json();
+      
+      
+      // if (data.cedulaIdentidad == null) {
+        return {
+          ci: data.cedulaIdentidad,
+          nombres: data.nombres,
+          paterno: data.paterno,
+          materno: data.materno,
+          domicilio: data.domicilio,
+          mensaje: data.mensaje,
+          estado: data.estado
+        };
+      // }
+    } catch (error) {
+      console.log(error);
+      this.handleDBExpeptions(error);
+    }
   }
   
   private handleDBExpeptions(error: any) {
